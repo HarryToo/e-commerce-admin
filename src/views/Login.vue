@@ -41,6 +41,8 @@
 import {defineComponent, reactive} from 'vue'
 import {ElMessage} from 'element-plus'
 import {useRouter} from 'vue-router'
+import dynamicRoutes from "@/router/dynamic";
+import router from "@/router";
 
 export default defineComponent({
   name: 'Login',
@@ -59,9 +61,9 @@ export default defineComponent({
   setup() {
     const router = useRouter()
     const form = reactive({
-      account: '',
-      password: '',
-      code: ''
+      account: 'asda',
+      password: 'asdas',
+      code: 'asdasd'
     })
     const login = () => {
       if (!form.account) {
@@ -74,6 +76,7 @@ export default defineComponent({
         return ElMessage.error('请输入验证码')
       }
       ElMessage.success('登陆成功')
+      router.addRoute('Main', dynamicRoutes[0])
       router.replace('/')
     }
     return {

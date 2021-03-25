@@ -7,7 +7,9 @@
       <el-aside width="240px">
         <side-menu-bar></side-menu-bar>
       </el-aside>
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -18,7 +20,7 @@ import HeaderBar from "@/components/view-part/HeaderBar";
 import SideMenuBar from "@/components/view-part/SideMenuBar";
 
 export default defineComponent({
-  name: 'Home',
+  name: 'Main',
   components: {
     HeaderBar,
     SideMenuBar

@@ -1,13 +1,6 @@
 <template>
-  <el-menu
-      :uniqueOpened="true"
-      default-active="2"
-      class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose"
-      background-color="#0D0D0D"
-      text-color="#FFFFFF"
-      active-text-color="#FFFFFF">
+  <el-menu :uniqueOpened="true" default-active="2" class="el-menu-vertical-demo" background-color="#0D0D0D"
+           text-color="#FFFFFF" active-text-color="#FFFFFF">
     <el-submenu index="1">
       <template #title>
         <i class="el-icon-location"></i>
