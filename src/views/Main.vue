@@ -8,7 +8,7 @@
         <side-menu-bar></side-menu-bar>
       </el-aside>
       <el-main>
-        <template v-if="$route.path !== '/main/dataCenter'">
+        <template v-if="/^\/main\/.+\/.+$/.test($route.path)">
           <breadcrumb-nav></breadcrumb-nav>
           <div class="main-cont">
             <router-view></router-view>

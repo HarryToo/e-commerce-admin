@@ -19,7 +19,7 @@
             <el-dropdown-menu>
               <el-dropdown-item>
                 <router-link to="/resetPassword" custom v-slot="{navigate}">
-                  <span @click="navigate">修改密码</span>
+                  <div @click="navigate">修改密码</div>
                 </router-link>
               </el-dropdown-item>
             </el-dropdown-menu>

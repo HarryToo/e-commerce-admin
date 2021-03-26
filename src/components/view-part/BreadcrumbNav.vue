@@ -38,7 +38,7 @@ export default defineComponent({
 <style scoped lang="scss">
 .breadcrumb-nav-wrapper {
   width: 100%;
-  height: 58px;
+  height: 50px;
   padding: 0 10px;
   display: flex;
   align-items: center;
