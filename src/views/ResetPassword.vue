@@ -97,6 +97,7 @@ export default defineComponent({
     flex-direction: column;
     align-items: center;
     background-color: #FFFFFF;
+    border-radius: 4px;
 
     .title {
       line-height: 32px;

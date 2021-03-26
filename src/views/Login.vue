@@ -111,6 +111,7 @@ export default defineComponent({
       height: 550px;
       display: flex;
       background-color: #FFFFFF;
+      border-radius: 4px;
 
       .cover {
         width: 480px;

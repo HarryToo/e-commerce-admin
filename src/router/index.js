@@ -45,7 +45,7 @@ router.beforeEach((to, from, next) => {
         } else {
             if (!store.getters['permission/permissionRoutes'].length) {
                 // 加载动态路由
-                store.dispatch('permission/loadPermission').then(() => {
+                store.dispatch('permission/loadPermissionTree').then(() => {
                     store.getters['permission/permissionRoutes'].forEach((route) => {
                         router.addRoute('Main', route)
                     })

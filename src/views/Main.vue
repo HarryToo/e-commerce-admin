@@ -8,7 +8,13 @@
         <side-menu-bar></side-menu-bar>
       </el-aside>
       <el-main>
-        <router-view></router-view>
+        <template v-if="$route.path !== '/main/dataCenter'">
+          <breadcrumb-nav></breadcrumb-nav>
+          <div class="main-cont">
+            <router-view></router-view>
+          </div>
+        </template>
+        <router-view v-else></router-view>
       </el-main>
     </el-container>
   </el-container>
@@ -18,12 +24,14 @@
 import {defineComponent} from 'vue'
 import HeaderBar from "@/components/view-part/HeaderBar";
 import SideMenuBar from "@/components/view-part/SideMenuBar";
+import BreadcrumbNav from "@/components/view-part/BreadcrumbNav";
 
 export default defineComponent({
   name: 'Main',
   components: {
     HeaderBar,
-    SideMenuBar
+    SideMenuBar,
+    BreadcrumbNav
   }
 })
 </script>
@@ -45,6 +53,19 @@ export default defineComponent({
 
     &::-webkit-scrollbar {
       display: none
+    }
+  }
+
+  .el-main {
+    display: flex;
+    flex-direction: column;
+
+    .main-cont {
+      margin-top: 10px;
+      flex-grow: 1;
+      padding: 30px;
+      background-color: #FFFFFF;
+      border-radius: 4px;
     }
   }
 }
