@@ -1,12 +1,12 @@
 <template>
-  <div>数据概览</div>
+  <div>用户管理</div>
 </template>
 
 <script>
 import {defineComponent} from 'vue'
 
 export default defineComponent({
-  name: "DataCenter"
+  name: "UserList"
 })
 </script>
 

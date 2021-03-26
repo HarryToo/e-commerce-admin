@@ -1,12 +1,12 @@
 <template>
-  <div>数据概览</div>
+  <div>操作日志</div>
 </template>
 
 <script>
 import {defineComponent} from 'vue'
 
 export default defineComponent({
-  name: "DataCenter"
+  name: "PermissionLog"
 })
 </script>
 

@@ -1,7 +1,20 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import dynamicRoutes from "@/router/dynamic";
+import store from '@/store'
+import permission from "@/store/modules/permission";
 
-const routes = [
+const staticRoutes = [
+    {
+        path: '/',
+        redirect: '/main/dataCenter'
+    },
+    {
+        path: '/main',
+        name: 'Main',
+        meta: {
+            title: '主界面'
+        },
+        component: () => import('@/views/Main')
+    },
     {
         path: '/login',
         name: 'Login',
@@ -17,30 +30,46 @@ const routes = [
             title: '修改密码'
         },
         component: () => import('@/views/ResetPassword')
-    },
-    {
-        path: '/',
-        name: 'Main',
-        component: () => import('@/views/Main'),
-        children: []
-    },
-    {
-        path: '/:pathMatch(.*)',
-        name: 'NotFound',
-        meta: {
-            title: '404'
-        },
-        component: () => import('@/views/NotFound')
     }
 ]
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
-    routes: routes
+    routes: staticRoutes
 })
 
 router.beforeEach((to, from, next) => {
-    next()
+    if (sessionStorage.getItem('token')) {
+        if (to.path === '/login') {
+            next('/')
+        } else {
+            if (!store.getters['permission/permissionRoutes'].length) {
+                // 加载动态路由
+                store.dispatch('permission/loadPermission').then(() => {
+                    store.getters['permission/permissionRoutes'].forEach((route) => {
+                        router.addRoute('Main', route)
+                    })
+                    router.addRoute({
+                        path: '/:pathMatch(.*)',
+                        name: 'NotFound',
+                        meta: {
+                            title: '404'
+                        },
+                        component: () => import('@/views/NotFound')
+                    })
+                    next({...to, replace: true})
+                })
+            } else {
+                next()
+            }
+        }
+    } else {
+        if (to.path === '/login') {
+            next()
+        } else {
+            next('/login')
+        }
+    }
 })
 
 router.afterEach((to, from, failure) => {

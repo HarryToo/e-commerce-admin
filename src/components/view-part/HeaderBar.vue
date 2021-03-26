@@ -48,6 +48,8 @@ export default defineComponent({
       ElMessageBox.confirm('确定退出登录？', '提示', {
         type: 'warning'
       }).then(() => {
+        sessionStorage.removeItem('token')
+        sessionStorage.removeItem('permission')
         router.replace('/login')
       }).catch((err) => {
         console.log(err);
