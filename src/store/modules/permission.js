@@ -1,5 +1,5 @@
 import dynamicRoutes from "@/router/dynamic"
-import permissionMockData from "@/mock/permission"
+import $api from "@/api"
 
 /**
  * 权限动态路由生成
@@ -76,9 +76,9 @@ export default {
         }
     },
     actions: {
-        // 获取权限数据并保存sessionStorage
-        loadPermissionTree({commit}) {
-            commit('setPermissionTree', permissionMockData)
+        // 获取权限数据
+        async loadPermissionTree({commit}) {
+            commit('setPermissionTree', await $api.accountApi.getPermission())
         }
     },
     modules: {}

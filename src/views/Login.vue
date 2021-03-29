@@ -41,6 +41,7 @@
 import {defineComponent, reactive} from 'vue'
 import {ElMessage} from 'element-plus'
 import {useRouter} from 'vue-router'
+import $api from '@/api'
 
 export default defineComponent({
   name: 'Login',
@@ -63,7 +64,7 @@ export default defineComponent({
       password: 'asdas',
       code: 'asdasd'
     })
-    const login = () => {
+    const login = async () => {
       if (!form.account) {
         return ElMessage.error('请输入正确的账号')
       }
@@ -73,9 +74,12 @@ export default defineComponent({
       if (!form.code) {
         return ElMessage.error('请输入验证码')
       }
-      ElMessage.success('登陆成功')
-      sessionStorage.setItem('token', 'token')
-      router.replace('/')
+      const {code, token} = await $api.accountApi.login(form)
+      if (code === 200) {
+        ElMessage.success('登陆成功')
+        sessionStorage.setItem('token', token)
+        await router.replace('/')
+      }
     }
     return {
       form,

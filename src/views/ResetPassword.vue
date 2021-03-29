@@ -4,7 +4,7 @@
       <header-bar></header-bar>
     </el-header>
     <el-main>
-      <div class="reset-form">
+      <div class="reset-form block-view">
         <div class="title">修改密码</div>
         <div class="input-groups">
           <label class="input-group">
@@ -28,7 +28,7 @@
 import {defineComponent, reactive} from 'vue'
 import {ElMessage} from 'element-plus'
 import {useRouter} from 'vue-router'
-import HeaderBar from "@/components/view-part/HeaderBar";
+import HeaderBar from "@/views/main/components/HeaderBar";
 
 export default defineComponent({
   name: "ResetPassword",
@@ -96,8 +96,6 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #FFFFFF;
-    border-radius: 4px;
 
     .title {
       line-height: 32px;

@@ -22,15 +22,16 @@
 </template>
 
 <script>
-import {defineComponent} from 'vue'
-import {mapGetters} from 'vuex'
+import {defineComponent, computed} from 'vue'
+import {useStore} from 'vuex'
 
 export default defineComponent({
   name: "SideMenuBar",
-  computed: {
-    ...mapGetters('permission', [
-      'sideMenus'
-    ])
+  setup() {
+    const store = useStore()
+    return {
+      sideMenus: computed(() => store.getters['permission/sideMenus'])
+    }
   }
 })
 </script>

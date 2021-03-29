@@ -1,6 +1,5 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import store from '@/store'
-import permission from "@/store/modules/permission";
 
 const staticRoutes = [
     {

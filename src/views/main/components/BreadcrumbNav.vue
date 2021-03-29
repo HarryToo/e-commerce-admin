@@ -1,5 +1,5 @@
 <template>
-  <div class="breadcrumb-nav-wrapper">
+  <div class="breadcrumb-nav-wrapper block-view">
     <div class="breadcrumb-nav">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item v-for="route in historyList" :key="route.path">{{ route.meta.title }}</el-breadcrumb-item>
@@ -39,11 +39,10 @@ export default defineComponent({
 .breadcrumb-nav-wrapper {
   width: 100%;
   height: 50px;
+  margin-bottom: 10px;
   padding: 0 10px;
   display: flex;
   align-items: center;
-  background-color: #FFFFFF;
-  border-radius: 4px;
 
   .breadcrumb-nav {
     padding-left: 18px;

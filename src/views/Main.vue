@@ -1,6 +1,6 @@
 <template>
   <el-container style="height: 100%;">
-    <el-header height="55px">
+    <el-header height="54px">
       <header-bar></header-bar>
     </el-header>
     <el-container>
@@ -8,13 +8,18 @@
         <side-menu-bar></side-menu-bar>
       </el-aside>
       <el-main>
-        <template v-if="/^\/main\/.+\/.+$/.test($route.path)">
-          <breadcrumb-nav></breadcrumb-nav>
-          <div class="main-cont">
-            <router-view></router-view>
-          </div>
-        </template>
-        <router-view v-else></router-view>
+        <transition name="el-fade-in-linear" mode="out-in">
+          <breadcrumb-nav v-if="/^\/main\/.+\/.+$/.test($route.path)"></breadcrumb-nav>
+        </transition>
+        <div class="main-cont" :class="{'block-view': !$route.meta.noBackground}">
+          <router-view v-slot="{ Component }">
+            <transition name="el-fade-in-linear" mode="out-in">
+              <keep-alive>
+                <component :is="Component"/>
+              </keep-alive>
+            </transition>
+          </router-view>
+        </div>
       </el-main>
     </el-container>
   </el-container>
@@ -22,9 +27,9 @@
 
 <script>
 import {defineComponent} from 'vue'
-import HeaderBar from "@/components/view-part/HeaderBar";
-import SideMenuBar from "@/components/view-part/SideMenuBar";
-import BreadcrumbNav from "@/components/view-part/BreadcrumbNav";
+import HeaderBar from "./main/components/HeaderBar";
+import SideMenuBar from "./main/components/SideMenuBar";
+import BreadcrumbNav from "./main/components/BreadcrumbNav";
 
 export default defineComponent({
   name: 'Main',
@@ -61,11 +66,7 @@ export default defineComponent({
     flex-direction: column;
 
     .main-cont {
-      margin-top: 10px;
       flex-grow: 1;
-      padding: 30px;
-      background-color: #FFFFFF;
-      border-radius: 4px;
     }
   }
 }
