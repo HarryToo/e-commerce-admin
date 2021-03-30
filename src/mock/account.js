@@ -2,13 +2,18 @@ import Mock from 'mockjs'
 
 const apiBaseUrl = process.env.VUE_APP_API_MOCK_URL
 
+function getUrl(url) {
+    const fullUrl = apiBaseUrl + url
+    return RegExp(fullUrl.replace(/\//g, '\\/') + '.*')
+}
+
 // 登录
 Mock.mock(apiBaseUrl + '/login', 'post', {
     code: 200,
     token: '@string("lower", 50)'
 })
 // 获取用户权限
-Mock.mock(apiBaseUrl + '/permission', 'get', [
+Mock.mock(getUrl('/permission'), 'get', [
     {
         name: '数据概览',
         path: 'dataCenter',

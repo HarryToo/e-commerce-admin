@@ -12,6 +12,7 @@
     "echarts": "^5.0.2",
     "element-plus": "^1.0.2-beta.35",
     "mockjs": "^1.1.0",
+    "moment": "^2.29.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"

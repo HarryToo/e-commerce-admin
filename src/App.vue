@@ -15,7 +15,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-* {
+*:not([class^=el-]) {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -57,4 +57,6 @@ body {
   -webkit-line-clamp: 3;
   overflow: hidden;
 }
+
+//.el-date-editor .el-range-separator
 </style>

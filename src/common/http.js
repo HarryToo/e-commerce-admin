@@ -19,7 +19,13 @@ $http.interceptors.request.use(function (config) {
 
 // 添加响应拦截器
 $http.interceptors.response.use(function (response) {
-    console.log('请求：' + response.config.url, typeof response.config.data === 'string' ? JSON.parse(response.config.data) : response.config.data, response.data);
+    let reqData
+    if (response.config.method === 'get') {
+        reqData = response.config.params
+    } else {
+        reqData = typeof response.config.data === 'string' ? JSON.parse(response.config.data) : response.config.data;
+    }
+    console.log(response.config.method + '请求：' + response.config.url + '\n', reqData, response.data);
     // 对响应数据做点什么
     return response.data;
 }, function (error) {

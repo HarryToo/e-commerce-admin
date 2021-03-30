@@ -27,9 +27,9 @@
 
 <script>
 import {defineComponent} from 'vue'
-import HeaderBar from "./main/components/HeaderBar";
-import SideMenuBar from "./main/components/SideMenuBar";
-import BreadcrumbNav from "./main/components/BreadcrumbNav";
+import HeaderBar from "./main/components/HeaderBar"
+import SideMenuBar from "./main/components/SideMenuBar"
+import BreadcrumbNav from "./main/components/BreadcrumbNav"
 
 export default defineComponent({
   name: 'Main',
