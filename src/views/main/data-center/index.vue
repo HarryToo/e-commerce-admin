@@ -13,8 +13,12 @@
         </div>
       </div>
       <div class="column-r">
-        <div class="column-r-t block-view"></div>
-        <div class="column-r-b block-view"></div>
+        <div class="column-r-t block-view">
+          <organization-student-ranking></organization-student-ranking>
+        </div>
+        <div class="column-r-b block-view">
+          <order-proportion></order-proportion>
+        </div>
       </div>
     </div>
   </div>
@@ -25,13 +29,17 @@ import {defineComponent} from 'vue'
 import ColumnStatistics from "./components/ColumnStatistics"
 import OrderStatistics from "./components/OrderStatistics"
 import CustomerStatistics from "./components/CustomerStatistics"
+import OrganizationStudentRanking from "./components/OrganizationStudentRanking"
+import OrderProportion from "./components/OrderProportion"
 
 export default defineComponent({
   name: "DataCenter",
   components: {
     ColumnStatistics,
     OrderStatistics,
-    CustomerStatistics
+    CustomerStatistics,
+    OrganizationStudentRanking,
+    OrderProportion
   }
 })
 </script>

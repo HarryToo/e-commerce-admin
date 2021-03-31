@@ -1,7 +1,7 @@
-import mock from '@/utils/mock'
+import $mock from '@/utils/mock'
 
 // 订单统计图表数据
-mock.get('/order/statisticsChartData', {
+$mock.get('/order/statisticsChartData', {
     normal: [
         ['2021/3/30 0:00', '@integer(1, 10)'],
         ['2021/3/30 4:00', '@integer(1, 10)'],
@@ -20,4 +20,10 @@ mock.get('/order/statisticsChartData', {
         ['2021/3/30 20:00', '@integer(1, 10)'],
         ['2021/3/30 24:00', '@integer(1, 10)']
     ]
+})
+// 订单比例图表数据
+$mock.get('/order/ProportionChartData', {
+    normal: '@integer(1000, 5000)',
+    back: '@integer(1000, 5000)',
+    exchange: '@integer(1000, 5000)'
 })

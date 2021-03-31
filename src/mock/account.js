@@ -1,12 +1,12 @@
-import mock from '@/utils/mock'
+import $mock from '@/utils/mock'
 
 // 登录
-mock.post('/login', {
+$mock.post('/login', {
     code: 200,
     token: '@string("lower", 50)'
 })
 // 获取用户权限
-mock.get('/permission', [
+$mock.get('/permission', [
     {
         name: '数据概览',
         path: 'dataCenter',

@@ -42,8 +42,7 @@ export default defineComponent({
           textStyle: {
             fontSize: 14,
             color: '#555555'
-          },
-          data: ['正式学员', '试用学员']
+          }
         },
         grid: {
           top: 34,
