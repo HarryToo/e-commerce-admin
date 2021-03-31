@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const $http = axios.create({
+const http = axios.create({
     baseURL: process.env.VUE_APP_API_MOCK_URL,
     timeout: 5000,
     headers: {
@@ -9,7 +9,7 @@ const $http = axios.create({
 });
 
 // 添加请求拦截器
-$http.interceptors.request.use(function (config) {
+http.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
     return config;
 }, function (error) {
@@ -18,7 +18,7 @@ $http.interceptors.request.use(function (config) {
 })
 
 // 添加响应拦截器
-$http.interceptors.response.use(function (response) {
+http.interceptors.response.use(function (response) {
     let reqData
     if (response.config.method === 'get') {
         reqData = response.config.params
@@ -33,4 +33,17 @@ $http.interceptors.response.use(function (response) {
     return Promise.reject(error);
 })
 
-export default $http
+export default {
+    get(url, params) {
+        return http.get(url, {params})
+    },
+    post(url, params) {
+        return http.post(url, params)
+    },
+    put(url, params) {
+        return http.put(url, params)
+    },
+    del(url, params) {
+        return http.delete(url, {params})
+    }
+}

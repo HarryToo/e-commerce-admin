@@ -1,14 +1,7 @@
-import Mock from 'mockjs'
-
-const apiBaseUrl = process.env.VUE_APP_API_MOCK_URL
-
-function getUrl(url) {
-    const fullUrl = apiBaseUrl + url
-    return RegExp(fullUrl.replace(/\//g, '\\/') + '.*')
-}
+import mock from '@/utils/mock'
 
 // 订单统计图表数据
-Mock.mock(getUrl('/order/statisticsChartData'), 'get', {
+mock.get('/order/statisticsChartData', {
     normal: [
         ['2021/3/30 0:00', '@integer(1, 10)'],
         ['2021/3/30 4:00', '@integer(1, 10)'],

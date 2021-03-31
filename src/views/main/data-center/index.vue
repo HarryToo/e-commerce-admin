@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import {defineComponent, ref} from 'vue'
+import {defineComponent} from 'vue'
 import ColumnStatistics from "./components/ColumnStatistics"
 import OrderStatistics from "./components/OrderStatistics"
 import CustomerStatistics from "./components/CustomerStatistics"

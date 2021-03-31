@@ -86,24 +86,22 @@ export default defineComponent({
             type: 'bar',
             data: data.official,
             // data: [['2021/3/30 0:00', 1], ['2021/3/30 4:00', 2], ['2021/3/30 8:00', 4], ['2021/3/30 12:00', 2], ['2021/3/30 16:00', 3], ['2021/3/30 20:00', 4], ['2021/3/30 24:00', 3]],
-            symbol: 'circle',
-            symbolSize: 8,
+            barGap: 0,
+            barMaxWidth: 26,
             itemStyle: {
               color: '#34C758'
-            },
-            barMaxWidth: 30
+            }
           },
           {
             name: '试用学员',
             type: 'bar',
             data: data.trial,
             // data: [['2021/3/30 0:00', 0], ['2021/3/30 4:00', 1], ['2021/3/30 8:00', 3], ['2021/3/30 12:00', 3], ['2021/3/30 16:00', 2], ['2021/3/30 20:00', 3], ['2021/3/30 24:00', 4]],
-            symbol: 'circle',
-            symbolSize: 8,
+            barGap: 0,
+            barMaxWidth: 26,
             itemStyle: {
               color: '#FF9502'
-            },
-            barMaxWidth: 30
+            }
           }
         ]
       }
