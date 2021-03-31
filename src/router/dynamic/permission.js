@@ -2,27 +2,27 @@ export default [
     {
         path: 'permission',
         redirect: to => {
-            return to.path + '/roleList'
+            return to.path + '/role'
         },
         meta: {
             title: '权限管理'
         }
     },
     {
-        path: 'permission/roleList',
+        path: 'permission/role',
         name: 'RoleList',
         meta: {
             title: '角色管理'
         },
-        component: () => import('@/views/main/permission/role/RoleList')
+        component: () => import('@/views/main/permission/role')
     },
     {
-        path: 'permission/userList',
+        path: 'permission/user',
         name: 'UserList',
         meta: {
             title: '用户管理'
         },
-        component: () => import('@/views/main/permission/user/UserList')
+        component: () => import('@/views/main/permission/user')
     },
     {
         path: 'permission/permissionLog',

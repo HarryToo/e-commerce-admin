@@ -15,7 +15,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-*:not([class^=el-]) {
+$orange: #F9612E;
+
+*:not([class^=el-]), body.el-popup-parent--hidden {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -58,5 +60,54 @@ body {
   overflow: hidden;
 }
 
-//.el-date-editor .el-range-separator
+h3 {
+  margin-bottom: 15px !important;
+  font-size: 16px;
+  color: #101010;
+}
+
+// 自定义按钮颜色
+.el-button.custom, .el-button.custom:focus {
+  color: #FFFFFF;
+  background-color: $orange;
+  border: none;
+
+  &:hover, &:active {
+    color: #FFFFFF;
+    background-color: $orange;
+    opacity: 0.8;
+  }
+}
+
+// 自定义表格操作菜单文字颜色
+.el-table .el-button--text, .el-table .el-button--text:focus {
+  color: $orange;
+
+  &:hover, &:active {
+    color: $orange;
+    opacity: 0.8;
+  }
+}
+
+// 表格分页器居右
+.el-pagination {
+  display: flex;
+  justify-content: flex-end;
+}
+
+//自定义dialog样式
+.el-dialog.custom {
+  border-radius: 8px;
+
+  .el-dialog__header {
+    padding: 12px 20px;
+    border-radius: 8px 8px 0 0;
+    background-color: #EEEEEE;
+
+    .el-dialog__title {
+      font-size: 14px;
+      color: #101010;
+    }
+  }
+}
 </style>

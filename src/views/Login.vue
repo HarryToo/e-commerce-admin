@@ -60,9 +60,9 @@ export default defineComponent({
   setup() {
     const router = useRouter()
     const form = reactive({
-      account: 'asda',
-      password: 'asdas',
-      code: 'asdasd'
+      account: 'admin',
+      password: 'admin',
+      code: '123456'
     })
     const login = async () => {
       if (!form.account) {

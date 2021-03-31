@@ -1,7 +1,5 @@
 import permissionRoutes from './permission'
 
-console.log(permissionRoutes);
-
 const dynamicRoutes = [
     {
         path: 'dataCenter',
