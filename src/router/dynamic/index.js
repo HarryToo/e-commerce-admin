@@ -1,8 +1,6 @@
 import permissionRoutes from './permission'
 import shoplistRoutes from './shoplist'//商品列表
 
-console.log(permissionRoutes);
-
 const dynamicRoutes = [
     {
         path: 'dataCenter',

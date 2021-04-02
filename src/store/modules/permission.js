@@ -78,7 +78,7 @@ export default {
     actions: {
         // 获取权限数据
         async loadPermissionTree({commit}) {
-            commit('setPermissionTree', await $api.accountApi.getPermission())
+            commit('setPermissionTree', await $api.permissionApi.getAccountPermission())
         }
     },
     modules: {}

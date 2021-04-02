@@ -11,7 +11,7 @@
         <transition name="el-fade-in-linear" mode="out-in">
           <breadcrumb-nav v-if="/^\/main\/.+\/.+$/.test($route.path)"></breadcrumb-nav>
         </transition>
-        <div class="main-cont" :class="{'block-view': !$route.meta.noBackground}">
+        <div class="main-area" :class="{'block-view': !$route.meta.noBackground}">
           <router-view v-slot="{ Component }">
             <transition name="el-fade-in-linear" mode="out-in">
               <keep-alive>
@@ -65,8 +65,14 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
 
-    .main-cont {
+    .main-area {
       flex-grow: 1;
+
+      ::v-deep .options-area {
+        height: 90px;
+        padding: 0 25px;
+        border-bottom: 1px solid #EEEEEE;
+      }
     }
   }
 }
