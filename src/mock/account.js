@@ -32,5 +32,21 @@ $mock.get('/permission', [
                 permission: ['view', 'edit', 'add', 'delete']
             }
         ]
-    }
+    },
+	{
+	    name: '商品列表',
+	    path: 'goodlist',
+	    children: [
+	        {
+	            name: '个人采集库',
+	            path: 'goodlist/PersonalCollectionLibrary',
+	            permission: ['view', 'edit', 'add', 'delete']
+	        },
+	        {
+	            name: '平台商品库',
+	            path: 'goodlist/PlatformGoodLibrary',
+	            permission: ['view', 'edit', 'add', 'delete']
+	        }
+	    ]
+	}
 ])
