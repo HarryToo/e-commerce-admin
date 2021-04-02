@@ -17,5 +17,18 @@ export default {
         edit: (data) => $http.post('/permission/editRole', data),
         // 删除角色
         del: (data) => $http.del('/permission/deleteRole', data)
+    },
+    // 部门
+    department: {
+        // 部门列表
+        getList: (data) => $http.get('/permission/departmentList', data),
+        // 部门详情
+        getDetail: (data) => $http.get('/permission/departmentDetail', data),
+        // 添加部门
+        add: (data) => $http.post('/permission/addDepartment', data),
+        // 编辑部门
+        edit: (data) => $http.post('/permission/editDepartment', data),
+        // 删除部门
+        del: (data) => $http.del('/permission/deleteDepartment', data)
     }
 }

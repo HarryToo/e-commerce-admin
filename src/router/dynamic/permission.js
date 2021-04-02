@@ -17,6 +17,14 @@ export default [
         component: () => import('@/views/main/permission/role')
     },
     {
+        path: 'permission/department',
+        name: 'DepartmentList',
+        meta: {
+            title: '部门管理'
+        },
+        component: () => import('@/views/main/permission/department')
+    },
+    {
         path: 'permission/user',
         name: 'UserList',
         meta: {
