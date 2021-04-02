@@ -18,6 +18,6 @@ export default {
         Mock.mock(apiMockUrl + url, 'put', responseData)
     },
     del(url, responseData) {
-        Mock.mock(apiMockUrl + url, 'delete', responseData)
+        Mock.mock(getUrl(url), 'delete', responseData)
     }
 }

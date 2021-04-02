@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100%;display: flex;flex-direction: column;">
     <div class="options-area">
-      <el-button class="custom" size="small" @click="addDialogVisible = true">添加角色</el-button>
+      <el-button class="custom" size="small" @click="add" v-permission="[$route, 'add']">添加角色</el-button>
     </div>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
       <el-table :data="dataList" stripe style="width: 100%">
@@ -9,9 +9,10 @@
         <el-table-column prop="description" label="角色描述"></el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="scope">
-            <el-button type="text" size="small">编辑</el-button>
-            <el-button @click="handleClick(scope.row)" type="text" size="small">详情</el-button>
-            <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
+            <el-button @click="detail(scope.row)" type="text" size="small" v-permission="[$route, 'view']">详情
+            </el-button>
+            <el-button @click="edit(scope.row)" type="text" size="small" v-permission="[$route, 'edit']">编辑</el-button>
+            <el-button @click="del(scope.row)" type="text" size="small" v-permission="[$route, 'delete']">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -20,16 +21,19 @@
       </el-pagination>
     </div>
 
-    <el-dialog custom-class="custom" title="添加角色" v-model="addDialogVisible" :close-on-click-modal="false">
-      <detail></detail>
+    <el-dialog custom-class="custom" :title="dialogTitle" v-model="dialogVisible" :close-on-click-modal="false">
+      <detail :id="currDataId" :mode="dialogMode"></detail>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import {defineComponent, ref} from 'vue'
+import {defineComponent, ref, provide, computed} from 'vue'
 import Detail from './components/Detail'
+import {ElMessageBox} from 'element-plus'
 import $api from '@/api'
+
+const moduleName = '角色'
 
 export default defineComponent({
   name: "RoleList",
@@ -37,14 +41,25 @@ export default defineComponent({
     Detail
   },
   setup() {
-    const addDialogVisible = ref(true)
+    const dialogVisible = ref(false)
+    const currDataId = ref(false)
+    const dialogMode = ref('add')
 
     const page = ref(1)
     const dataList = ref([])
     const dataTotal = ref(0)
 
+    const dialogTitle = computed(() => {
+      const titles = {
+        add: `添加${moduleName}`,
+        view: `${moduleName}详情`,
+        edit: `编辑${moduleName}`
+      }
+      return titles[dialogMode.value]
+    })
+
     const getRoleList = async () => {
-      const {list, total} = await $api.permissionApi.getRoleList({
+      const {list, total} = await $api.permissionApi.role.getList({
         page: page.value,
         pageSize: 10
       })
@@ -53,17 +68,65 @@ export default defineComponent({
     }
     getRoleList()
 
+    const openDialog = () => {
+      dialogVisible.value = true
+    }
+
+    const closeDialog = () => {
+      dialogVisible.value = false
+    }
+
     const pageChange = (index) => {
       page.value = index
       getRoleList()
     }
 
+    const add = () => {
+      currDataId.value = ''
+      dialogMode.value = 'add'
+      openDialog()
+    }
+
+    const detail = (data) => {
+      currDataId.value = data.id
+      dialogMode.value = 'view'
+      openDialog()
+    }
+
+    const edit = (data) => {
+      currDataId.value = data.id
+      dialogMode.value = 'edit'
+      openDialog()
+    }
+
+    const del = (data) => {
+      ElMessageBox.confirm(`确认删除${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
+        const {code} = await $api.permissionApi.role.del({
+          id: data.id
+        })
+        if (code === 200) {
+          await getRoleList()
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+    }
+
+    provide('closeDialog', closeDialog)
+
     return {
-      addDialogVisible,
+      dialogVisible,
+      currDataId,
+      dialogMode,
+      dialogTitle,
       page,
       dataTotal,
       dataList,
-      pageChange
+      pageChange,
+      detail,
+      add,
+      edit,
+      del
     }
   }
 })
