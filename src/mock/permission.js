@@ -27,6 +27,22 @@ $mock.get('/permission/byAccount', [
                 permission: ['view', 'edit', 'add', 'delete']
             }
         ]
+    },
+    {
+        name: '商品列表',
+        path: 'goodlist',
+        children: [
+            {
+                name: '个人采集库',
+                path: 'goodlist/PersonalCollectionLibrary',
+                permission: ['view', 'edit', 'add', 'delete']
+            },
+            {
+                name: '平台商品库',
+                path: 'goodlist/PlatformGoodLibrary',
+                permission: ['view', 'edit', 'add', 'delete']
+            }
+        ]
     }
 ])
 // 角色列表
@@ -39,3 +55,10 @@ $mock.get('/permission/roleList', {
     ],
     total: 30
 })
+// 当前角色可以分配和管理的权限
+$mock.get('/permission/controllable', [
+    {
+        name: '@cword(4, 6)',
+        description: '@cword(10, 30)'
+    }
+])
