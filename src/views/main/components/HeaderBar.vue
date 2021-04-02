@@ -45,9 +45,7 @@ export default defineComponent({
   setup() {
     const router = useRouter()
     const logout = () => {
-      ElMessageBox.confirm('确定退出登录？', '提示', {
-        type: 'warning'
-      }).then(() => {
+      ElMessageBox.confirm('确定退出登录？', {type: 'warning'}).then(() => {
         sessionStorage.removeItem('token')
         sessionStorage.removeItem('permission')
         router.replace('/login')

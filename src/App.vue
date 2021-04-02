@@ -16,6 +16,7 @@ export default defineComponent({
 
 <style lang="scss">
 $orange: #F9612E;
+$activeOrange: #FF3E00;
 
 *:not([class^=el-]), body.el-popup-parent--hidden {
   margin: 0;
@@ -72,10 +73,15 @@ h3 {
   background-color: $orange;
   border: none;
 
-  &:hover, &:active {
+  &:hover {
     color: #FFFFFF;
     background-color: $orange;
     opacity: 0.8;
+  }
+
+  &:active {
+    color: #FFFFFF;
+    background-color: $activeOrange;
   }
 }
 
@@ -83,9 +89,13 @@ h3 {
 .el-table .el-button--text, .el-table .el-button--text:focus {
   color: $orange;
 
-  &:hover, &:active {
+  &:hover {
     color: $orange;
     opacity: 0.8;
+  }
+
+  &:active {
+    color: $activeOrange;
   }
 }
 
@@ -100,12 +110,18 @@ h3 {
   border-radius: 8px;
 
   .el-dialog__header {
-    padding: 12px 20px;
+    padding: 10px 20px;
     border-radius: 8px 8px 0 0;
     background-color: #EEEEEE;
 
     .el-dialog__title {
       font-size: 14px;
+      color: #101010;
+    }
+
+    .el-dialog__headerbtn {
+      top: 14px;
+      font-size: 18px;
       color: #101010;
     }
   }
