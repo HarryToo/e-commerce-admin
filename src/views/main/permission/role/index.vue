@@ -21,7 +21,8 @@
       </el-pagination>
     </div>
 
-    <el-dialog custom-class="custom" :title="dialogTitle" v-model="dialogVisible" :close-on-click-modal="false">
+    <el-dialog custom-class="custom" :title="dialogTitle" v-model="dialogVisible" :close-on-click-modal="false"
+               destroy-on-close>
       <detail :id="currDataId" :mode="dialogMode"></detail>
     </el-dialog>
   </div>

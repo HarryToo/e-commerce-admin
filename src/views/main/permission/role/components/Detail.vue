@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import {defineComponent, ref, inject, toRefs, watchEffect, nextTick} from 'vue'
+import {defineComponent, ref, inject, toRefs, onMounted} from 'vue'
 import $api from '@/api'
 
 export default defineComponent({
@@ -78,33 +78,32 @@ export default defineComponent({
       console.log(node, isChecked, haveCheckedSubNode);
     }
 
+    // 获取详情
+    const getDetail = async () => {
+      detail.value = await $api.permissionApi.role.getDetail({
+        id: id.value
+      })
+    }
+
+    onMounted(() => {
+      if (id.value) {
+        getDetail()
+      }
+    })
+
     // 添加/编辑
     const submit = async () => {
       if (await detailForm.value.validate()) {
-        let handlerName = 'addRole', param = detail.value
+        let param = detail.value
         if (mode.value === 'edit') {
-          handlerName = 'editRole'
           param.id = id.value
         }
-        const {code} = await $api.permissionApi.role[handlerName](param)
+        const {code} = await $api.permissionApi.role[mode.value](param)
         if (code === 200) {
-          detailForm.value.resetFields()
           closeDialog()
         }
       }
     }
-
-    watchEffect(async () => {
-      if (mode.value === 'add') {
-        console.log('重置表单');
-        detailForm.value && detailForm.value.resetFields()
-      }
-      if (id.value) {
-        detail.value = await $api.permissionApi.role.getDetail({
-          id: id.value
-        })
-      }
-    })
 
     return {
       mode,
