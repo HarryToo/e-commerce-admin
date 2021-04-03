@@ -9,15 +9,16 @@
         <el-table-column prop="description" label="部门描述"></el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="scope">
-            <el-button @click="detail(scope.row)" type="text" size="small" v-permission="[$route, 'view']">详情
-            </el-button>
+<!--            <el-button @click="detail(scope.row)" type="text" size="small" v-permission="[$route, 'view']">详情-->
+<!--            </el-button>-->
             <el-button @click="edit(scope.row)" type="text" size="small" v-permission="[$route, 'edit']">编辑</el-button>
             <el-button @click="del(scope.row)" type="text" size="small" v-permission="[$route, 'delete']">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination small :current-page="page" :page-size="10" layout="total, prev, pager, next, jumper"
-                     :total="dataTotal" @current-change="pageChange">
+      <el-pagination small :current-page="page" :page-size="pageSize" :page-sizes="[10, 15, 30, 50]"
+                     layout="total, sizes, prev, pager, next, jumper" :total="dataTotal" @size-change="sizeChange"
+                     @current-change="pageChange">
       </el-pagination>
     </div>
 
@@ -47,6 +48,7 @@ export default defineComponent({
     const dialogMode = ref('add')
 
     const page = ref(1)
+    const pageSize = ref(10)
     const dataList = ref([])
     const dataTotal = ref(0)
 
@@ -62,7 +64,7 @@ export default defineComponent({
     const getRoleList = async () => {
       const {list, total} = await $api.permissionApi.department.getList({
         page: page.value,
-        pageSize: 10
+        pageSize: pageSize.value
       })
       dataList.value = list
       dataTotal.value = total
@@ -75,6 +77,11 @@ export default defineComponent({
 
     const closeDialog = () => {
       dialogVisible.value = false
+    }
+
+    const sizeChange = (size) => {
+      pageSize.value = size
+      getRoleList()
     }
 
     const pageChange = (index) => {
@@ -121,8 +128,10 @@ export default defineComponent({
       dialogMode,
       dialogTitle,
       page,
+      pageSize,
       dataTotal,
       dataList,
+      sizeChange,
       pageChange,
       detail,
       add,

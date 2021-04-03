@@ -1,20 +1,23 @@
 <template>
   <div class="detail-dialog-cont">
-    <el-form ref="detailForm" label-position="top" inline :model="detail" :rules="rules">
+    <el-form ref="detailForm" label-position="top" :model="detail" :rules="rules">
       <h3>部门信息</h3>
-      <el-form-item label="部门名称" prop="name" required style="margin-bottom: 8px;">
-        <el-input v-model="detail.name" placeholder="请输入部门名称" style="width: 180px;"
-                  :disabled="mode === 'view'"></el-input>
-      </el-form-item>
-      <el-form-item label="部门描述" style="margin-bottom: 8px;">
-        <el-input v-model="detail.description" placeholder="请输入部门描述" style="width: 420px;"
-                  :disabled="mode === 'view'"></el-input>
-      </el-form-item>
-      <template v-if="mode !== 'view'">
-        <el-divider></el-divider>
+      <el-row :gutter="30">
+        <el-col :span="8">
+          <el-form-item label="部门名称" prop="name" required>
+            <el-input v-model="detail.name" placeholder="请输入部门名称" :disabled="mode === 'view'"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="16">
+          <el-form-item label="部门描述">
+            <el-input v-model="detail.description" placeholder="请输入部门描述" :disabled="mode === 'view'"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <div style="margin-top: 60px;text-align: right;" v-if="mode !== 'view'">
         <el-button type="info" @click="closeDialog">取消</el-button>
         <el-button class="custom" @click="submit">确定</el-button>
-      </template>
+      </div>
     </el-form>
   </div>
 </template>
@@ -53,10 +56,6 @@ export default defineComponent({
       description: ''
     })
 
-    const checkChange = (node, isChecked, haveCheckedSubNode) => {
-      console.log(node, isChecked, haveCheckedSubNode);
-    }
-
     // 获取详情
     const getDetail = async () => {
       detail.value = await $api.permissionApi.department.getDetail({
@@ -89,7 +88,6 @@ export default defineComponent({
       detailForm,
       rules,
       detail,
-      checkChange,
       closeDialog,
       submit
     }

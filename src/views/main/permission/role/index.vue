@@ -4,7 +4,7 @@
       <el-button class="custom" size="small" @click="add" v-permission="[$route, 'add']">添加角色</el-button>
     </div>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
-      <el-table :data="dataList" stripe style="width: 100%">
+      <el-table :data="dataList" stripe>
         <el-table-column prop="name" label="角色名称" width="250"></el-table-column>
         <el-table-column prop="description" label="角色描述"></el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
@@ -16,8 +16,9 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination small :current-page="page" :page-size="10" layout="total, prev, pager, next, jumper"
-                     :total="dataTotal" @current-change="pageChange">
+      <el-pagination small :current-page="page" :page-size="pageSize" :page-sizes="[10, 15, 30, 50]"
+                     layout="total, sizes, prev, pager, next, jumper" :total="dataTotal" @size-change="sizeChange"
+                     @current-change="pageChange">
       </el-pagination>
     </div>
 
@@ -47,6 +48,7 @@ export default defineComponent({
     const dialogMode = ref('add')
 
     const page = ref(1)
+    const pageSize = ref(10)
     const dataList = ref([])
     const dataTotal = ref(0)
 
@@ -62,7 +64,7 @@ export default defineComponent({
     const getRoleList = async () => {
       const {list, total} = await $api.permissionApi.role.getList({
         page: page.value,
-        pageSize: 10
+        pageSize: pageSize.value
       })
       dataList.value = list
       dataTotal.value = total
@@ -75,6 +77,11 @@ export default defineComponent({
 
     const closeDialog = () => {
       dialogVisible.value = false
+    }
+
+    const sizeChange = (size) => {
+      pageSize.value = size
+      getRoleList()
     }
 
     const pageChange = (index) => {
@@ -121,8 +128,10 @@ export default defineComponent({
       dialogMode,
       dialogTitle,
       page,
+      pageSize,
       dataTotal,
       dataList,
+      sizeChange,
       pageChange,
       detail,
       add,

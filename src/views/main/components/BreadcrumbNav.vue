@@ -41,6 +41,7 @@ export default defineComponent({
   height: 50px;
   margin-bottom: 10px;
   padding: 0 10px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
 

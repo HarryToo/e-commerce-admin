@@ -42,6 +42,7 @@ import {defineComponent, reactive} from 'vue'
 import {ElMessage} from 'element-plus'
 import {useRouter} from 'vue-router'
 import $api from '@/api'
+import md5 from 'md5'
 
 export default defineComponent({
   name: 'Login',
@@ -74,7 +75,10 @@ export default defineComponent({
       if (!form.code) {
         return ElMessage.error('请输入验证码')
       }
-      const {code, token} = await $api.accountApi.login(form)
+      const {code, token} = await $api.accountApi.login({
+        ...form,
+        password: md5(form.password)
+      })
       if (code === 200) {
         ElMessage.success('登陆成功')
         sessionStorage.setItem('token', token)

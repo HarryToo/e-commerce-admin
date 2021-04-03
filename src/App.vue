@@ -101,6 +101,7 @@ h3 {
 
 // 表格分页器居右
 .el-pagination {
+  margin-top: 30px;
   display: flex;
   justify-content: flex-end;
 }

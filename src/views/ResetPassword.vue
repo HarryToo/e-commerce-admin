@@ -11,7 +11,7 @@
             <input type="password" v-focus-style placeholder="原密码" v-model="form.oldPassword">
           </label>
           <label class="input-group">
-            <input type="password" v-focus-style placeholder="设置新密码：6-16位字符，包含字母和数字" v-model="form.newPassword">
+            <input type="password" v-focus-style placeholder="设置新密码：6-12位的字母、数字组合" v-model="form.newPassword">
           </label>
           <label class="input-group">
             <input type="password" v-focus-style placeholder="再次输入新密码" v-model="form.rePassword">
@@ -28,7 +28,9 @@
 import {defineComponent, reactive} from 'vue'
 import {ElMessage} from 'element-plus'
 import {useRouter} from 'vue-router'
-import HeaderBar from "@/views/main/components/HeaderBar";
+import HeaderBar from "@/views/main/components/HeaderBar"
+import md5 from 'md5'
+import $api from "@/api";
 
 export default defineComponent({
   name: "ResetPassword",
@@ -54,12 +56,15 @@ export default defineComponent({
       newPassword: '',
       rePassword: ''
     })
-    const commit = () => {
+    const commit = async () => {
       if (!form.oldPassword) {
         return ElMessage.error('请输入原密码')
       }
-      if (!form.newPassword) {
-        return ElMessage.error('请设置新密码：6-16位字符，包含字母和数字')
+      if (!/^[a-zA-Z0-9]{6,12}$/.test(form.newPassword)) {
+        return ElMessage.error('请设置新密码：6-12位的字母、数字组合')
+      }
+      if (form.newPassword === form.oldPassword) {
+        return ElMessage.error('新密码不能与原密码相同')
       }
       if (!form.rePassword) {
         return ElMessage.error('请再次输入新密码')
@@ -67,8 +72,14 @@ export default defineComponent({
       if (form.newPassword !== form.rePassword) {
         return ElMessage.error('两次密码输入不一致')
       }
-      ElMessage.success('密码修改成功')
-      router.back()
+      const {code} = await $api.accountApi.restPassword({
+        oldPassword: md5(form.oldPassword),
+        newPassword: md5(form.newPassword)
+      })
+      if (code === 200) {
+        ElMessage.success('密码修改成功，下次登录请使用新密码')
+        router.back()
+      }
     }
     return {
       form,

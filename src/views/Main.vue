@@ -49,6 +49,7 @@ export default defineComponent({
     padding: 0 20px;
     background-color: #FFFFFF;
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.08);
+    z-index: 9;
   }
 
   .el-aside {

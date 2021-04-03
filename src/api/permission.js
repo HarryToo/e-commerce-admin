@@ -30,5 +30,20 @@ export default {
         edit: (data) => $http.post('/permission/editDepartment', data),
         // 删除部门
         del: (data) => $http.del('/permission/deleteDepartment', data)
-    }
+    },
+    // 用户
+    user: {
+        // 用户列表
+        getList: (data) => $http.get('/permission/userList', data),
+        // 用户详情
+        getDetail: (data) => $http.get('/permission/userDetail', data),
+        // 添加用户
+        add: (data) => $http.post('/permission/addUser', data),
+        // 编辑用户
+        edit: (data) => $http.post('/permission/editUser', data),
+        // 删除用户
+        del: (data) => $http.del('/permission/deleteUser', data)
+    },
+    // 获取权限相关操作记录
+    getLogs: (data) => $http.get('/permission/logs', data)
 }

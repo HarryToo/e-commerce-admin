@@ -8,6 +8,7 @@ function getUrl(url) {
 }
 
 export default {
+    mock: Mock.mock,
     get(url, responseData) {
         Mock.mock(getUrl(url), 'get', responseData)
     },
@@ -19,5 +20,14 @@ export default {
     },
     del(url, responseData) {
         Mock.mock(getUrl(url), 'delete', responseData)
+    },
+    parseQuery(url) {
+        const queryArr = url.split('?')[1].split('&')
+        const param = {}
+        queryArr.forEach((item) => {
+            const mapArr = item.split('=')
+            param[mapArr[0]] = mapArr[1]
+        })
+        return param
     }
 }
