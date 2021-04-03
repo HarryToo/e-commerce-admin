@@ -4,8 +4,38 @@ import $mock from '@/utils/mock'
 $mock.get('/permission/byAccount', [
     {
         name: '数据概览',
-        path: 'dataCenter',
-        permission: ['view']
+        path: 'dataCenter'
+    },
+    {
+        name: '商品列表',
+        path: 'goodlist',
+        children: [
+            {
+                name: '个人采集库',
+                path: 'goodlist/PersonalCollectionLibrary',
+                permission: ['view', 'edit', 'add', 'delete']
+            },
+            {
+                name: '平台商品库',
+                path: 'goodlist/PlatformGoodLibrary',
+                permission: ['view', 'edit', 'add', 'delete']
+            }
+        ]
+    },
+    {
+        name: '客户管理',
+        path: 'customer',
+        children: [
+            {
+                name: '机构客户',
+                path: 'customer/organization',
+                permission: ['edit', 'delete']
+            },
+            {
+                name: '个人客户',
+                path: 'customer/person'
+            }
+        ]
     },
     {
         name: '权限管理',
@@ -29,22 +59,6 @@ $mock.get('/permission/byAccount', [
             {
                 name: '操作日志',
                 path: 'permission/permissionLog'
-            }
-        ]
-    },
-    {
-        name: '商品列表',
-        path: 'goodlist',
-        children: [
-            {
-                name: '个人采集库',
-                path: 'goodlist/PersonalCollectionLibrary',
-                permission: ['view', 'edit', 'add', 'delete']
-            },
-            {
-                name: '平台商品库',
-                path: 'goodlist/PlatformGoodLibrary',
-                permission: ['view', 'edit', 'add', 'delete']
             }
         ]
     }

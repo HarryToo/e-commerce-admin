@@ -63,7 +63,7 @@ import $api from '@/api'
 const moduleName = '用户'
 
 export default defineComponent({
-  name: "UserList",
+  name: "OrganizationList",
   components: {
     Detail
   },

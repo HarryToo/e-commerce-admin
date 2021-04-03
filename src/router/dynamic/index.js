@@ -1,5 +1,6 @@
-import permissionRoutes from './permission'
 import shoplistRoutes from './shoplist'//商品列表
+import customerRoutes from './customer'
+import permissionRoutes from './permission'
 
 const dynamicRoutes = [
     {
@@ -11,8 +12,9 @@ const dynamicRoutes = [
         },
         component: () => import('@/views/main/data-center')
     },
-    ...permissionRoutes,
-	...shoplistRoutes
+    ...shoplistRoutes,
+    ...customerRoutes,
+    ...permissionRoutes
 ]
 
 export default dynamicRoutes
