@@ -1,217 +1,223 @@
 <template>
   <div style="height: 100%;display: flex;flex-direction: column;">
     <div class="options-area">
-      <el-form :model="searchParam" ref="searchForm" inline>
+      <el-form :model="search.form" ref="searchForm" inline label-position="top">
         <el-space size="medium">
-          <el-form-item label="用户名称" prop="name" size="small" style="margin-bottom: 0;">
-            <el-input v-model="searchParam.name" placeholder="请输入用户名称"></el-input>
+          <el-form-item label="客户来源" prop="source" size="small" style="margin-bottom: 0;width: 180px;">
+            <el-input v-model="search.form.source" placeholder="请输入机构名称"></el-input>
           </el-form-item>
-          <el-form-item label="所属部门" prop="department" size="small" style="margin-bottom: 0;">
-            <el-select v-model="searchParam.department" placeholder="请选择所属部门">
+          <el-form-item label="客户账号" prop="account" size="small" style="margin-bottom: 0;width: 180px;">
+            <el-input v-model="search.form.account" placeholder="请输入客户账号"></el-input>
+          </el-form-item>
+          <el-form-item label="当前套餐" prop="setMealId" size="small" style="margin-bottom: 0;width: 160px;">
+            <el-select v-model="search.form.setMealId" placeholder="请选择当前套餐">
               <el-option label="全部" value=""></el-option>
-              <el-option v-for="item in departmentList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-option v-for="item in setMealData.list" :key="item.id" :label="item.name"
+                         :value="item.id"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="所属角色" prop="role" size="small" style="margin-bottom: 0;">
-            <el-select v-model="searchParam.role" placeholder="请选择所属角色">
+          <el-form-item label="状态" prop="states" size="small" style="margin-bottom: 0;width: 160px;">
+            <el-select v-model="search.form.states" placeholder="请选择当前套餐">
               <el-option label="全部" value=""></el-option>
-              <el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-option label="正常" :value="1"></el-option>
+              <el-option label="已冻结" :value="0"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item size="small" style="margin-bottom: 0;">
-            <el-button class="custom" @click="search">查询</el-button>
-            <el-button @click="resetSearch">清空条件</el-button>
+          <el-form-item label="入驻时间" prop="joinTime" size="small" style="margin-bottom: 0;">
+            <el-date-picker v-model="search.form.joinTime" type="daterange" start-placeholder="开始日期"
+                            end-placeholder="结束日期" style="width: 220px;"></el-date-picker>
+          </el-form-item>
+          <el-form-item size="small" style="margin-bottom: 0;margin-top: 30px;">
+            <el-button class="custom" @click="search.search">查询</el-button>
+            <el-button @click="search.reset">清空条件</el-button>
           </el-form-item>
         </el-space>
       </el-form>
-      <el-button class="custom" size="small" @click="add" v-permission="[$route, 'add']">添加用户</el-button>
     </div>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
-      <el-table :data="dataList" stripe style="width: 100%">
-        <el-table-column prop="name" label="用户名称" width="200"></el-table-column>
-        <el-table-column prop="department" label="所属部门" width="200"></el-table-column>
-        <el-table-column prop="role" label="所属角色" width="200"></el-table-column>
-        <el-table-column prop="description" label="用户描述"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="150">
+      <el-table :data="tableData.list" stripe :height="tableHeight">
+        <el-table-column prop="joinTime" label="入驻时间" width="170"></el-table-column>
+        <el-table-column prop="account" label="客户账号"></el-table-column>
+        <el-table-column prop="setMealId" label="当前套餐" width="110">
           <template #default="scope">
-            <!--            <el-button @click="detail(scope.row)" type="text" size="small" v-permission="[$route, 'view']">详情-->
-            <!--            </el-button>-->
-            <el-button @click="edit(scope.row)" type="text" size="small" v-permission="[$route, 'edit']">编辑</el-button>
-            <el-button @click="del(scope.row)" type="text" size="small" v-permission="[$route, 'delete']">删除</el-button>
+            <span>{{ setMealData.getSetMealName(scope.row.setMealId) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="contact" label="套餐有效时间" width="120">
+          <template #default="scope">
+            <span>{{ scope.row.setMealStartDate + ' ~ ' + scope.row.setMealEndDate }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="source" label="客户来源"></el-table-column>
+        <el-table-column prop="phone" label="授权店铺数量" width="120">
+          <template #default="scope">
+            <div>shoppe：{{ scope.row.storeNum.shoppe }}</div>
+            <div>拼多多：{{ scope.row.storeNum.shoppe }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="account" label="商品铺货数" width="120">
+          <template #default="scope">
+            <div>shoppe：{{ scope.row.goodsNum.shoppe }}</div>
+            <div>拼多多：{{ scope.row.goodsNum.shoppe }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="purchaseTotal" label="累计采购数" width="90"></el-table-column>
+        <el-table-column prop="seatTotal" label="附加服务" width="150">
+          <template #default="scope">
+            <div>图片翻译：{{ scope.row.additionalService.picTranslate }}</div>
+            <div>文字翻译：{{ scope.row.additionalService.textTranslate }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="studentTotal" label="累计收益" width="160">
+          <template #default="scope">
+            <div>订单：￥{{ scope.row.earningTotal.order }}</div>
+            <div>采购：￥{{ scope.row.earningTotal.purchase }}</div>
+            <div>盈利：￥{{ scope.row.earningTotal.profit }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="states" label="状态" width="80">
+          <template #default="scope">
+            <span>{{ ['已冻结', '正常'][scope.row.states] }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column fixed="right" label="操作" width="60">
+          <template #default="scope">
+            <el-button @click="tableData.enable(scope.row)" type="text" size="small" v-if="scope.row.states === 0">启用
+            </el-button>
+            <el-button @click="tableData.disable(scope.row)" type="text" size="small" v-if="scope.row.states === 1">冻结
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination small :current-page="page" :page-size="pageSize" :page-sizes="[10, 15, 30, 50]"
-                     layout="total, sizes, prev, pager, next, jumper" :total="dataTotal" @size-change="sizeChange"
-                     @current-change="pageChange">
+      <el-pagination small :current-page="page.index" :page-size="page.size" :page-sizes="[10, 15, 30, 50]"
+                     layout="total, sizes, prev, pager, next, jumper" :total="tableData.total"
+                     @size-change="page.sizeChange"
+                     @current-change="page.indexChange">
       </el-pagination>
     </div>
-
-    <el-dialog custom-class="custom" :title="dialogTitle" v-model="dialogVisible" :close-on-click-modal="false"
-               destroy-on-close>
-      <detail :id="currDataId" :mode="dialogMode"></detail>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import {defineComponent, ref, provide, computed} from 'vue'
-import Detail from './components/Detail'
+import {defineComponent, ref, reactive, computed} from 'vue'
+import {onBeforeRouteUpdate} from 'vue-router'
 import {ElMessageBox} from 'element-plus'
 import $api from '@/api'
 
-const moduleName = '用户'
+const moduleName = '个人'
 
 export default defineComponent({
   name: "PersonList",
-  components: {
-    Detail
-  },
   setup() {
     const searchForm = ref()
-    const searchParam = ref({
-      name: '',
-      department: '',
-      role: ''
-    })
-    const departmentList = ref([])
-    const roleList = ref([])
+    const tableHeight = window.innerHeight - 350
 
-    const dialogVisible = ref(false)
-    const currDataId = ref(false)
-    const dialogMode = ref('add')
-
-    const page = ref(1)
-    const pageSize = ref(10)
-    const dataList = ref([])
-    const dataTotal = ref(0)
-
-    const dialogTitle = computed(() => {
-      const titles = {
-        add: `添加${moduleName}`,
-        view: `${moduleName}详情`,
-        edit: `编辑${moduleName}`
+    const search = reactive({
+      form: {
+        source: '',
+        account: '',
+        setMealId: '',
+        states: '',
+        joinTime: []
+      },
+      param: computed(() => {
+        return {
+          source: search.form.source,
+          account: search.form.account,
+          setMealId: search.form.setMealId,
+          states: search.form.states,
+          startTime: search.form.joinTime[0] || '',
+          endTime: search.form.joinTime[1] || ''
+        }
+      }),
+      search() {
+        page.index = 1
+        tableData.getList()
+      },
+      reset() {
+        searchForm.value.resetFields()
+        page.index = 1
+        tableData.getList()
       }
-      return titles[dialogMode.value]
     })
 
-    // 获取部门列表
-    const getDepartmentList = async () => {
-      const {list} = await $api.permissionApi.department.getList({
-        page: 1,
-        pageSize: 10
-      })
-      departmentList.value = list
-    }
-    getDepartmentList()
+    const page = reactive({
+      index: 1,
+      size: 10,
+      sizeChange(size) {
+        page.size = size
+        tableData.getList()
+      },
+      indexChange(index) {
+        page.index = index
+        tableData.getList()
+      }
+    })
 
-    // 获取角色列表
-    const getRoleList = async () => {
-      const {list} = await $api.permissionApi.role.getList({
-        page: 1,
-        pageSize: 10
-      })
-      roleList.value = list
-    }
-    getRoleList()
+    const setMealData = reactive({
+      list: [],
+      getList: async () => {
+        const {list} = await $api.setMealApi.personal.getList()
+        setMealData.list = list
+      },
+      getSetMealName(setMealId) {
+        if (!setMealData.list || !setMealData.list.length) {
+          return '--'
+        }
+        const setMeal = setMealData.list.find((item) => item.id === setMealId)
+        return setMeal.name
+      }
+    })
 
-    provide('departmentList', departmentList)
-    provide('roleList', roleList)
-
-    const getUserList = async () => {
-      const {list, total} = await $api.permissionApi.user.getList({
-        page: page.value,
-        pageSize: pageSize.value,
-        ...searchParam.value
-      })
-      dataList.value = list
-      dataTotal.value = total
-    }
-    getUserList()
-
-    const search = () => {
-      page.value = 1
-      getUserList()
-    }
-
-    const resetSearch = () => {
-      searchForm.value.resetFields()
-      page.value = 1
-      getUserList()
-    }
-
-    const openDialog = () => {
-      dialogVisible.value = true
-    }
-
-    const closeDialog = () => {
-      dialogVisible.value = false
-    }
-
-    const sizeChange = (size) => {
-      pageSize.value = size
-      getUserList()
-    }
-
-    const pageChange = (index) => {
-      page.value = index
-      getUserList()
-    }
-
-    const add = () => {
-      currDataId.value = ''
-      dialogMode.value = 'add'
-      openDialog()
-    }
-
-    const detail = (data) => {
-      currDataId.value = data.id
-      dialogMode.value = 'view'
-      openDialog()
-    }
-
-    const edit = (data) => {
-      currDataId.value = data.id
-      dialogMode.value = 'edit'
-      openDialog()
-    }
-
-    const del = (data) => {
-      ElMessageBox.confirm(`确认删除${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
-        const {code} = await $api.permissionApi.user.del({
+    const tableData = reactive({
+      list: [],
+      total: 0,
+      getList: async () => {
+        const {list, total} = await $api.customerApi.person.getList({
+          page: page.index,
+          pageSize: page.size,
+          ...search.param
+        })
+        tableData.list = list
+        tableData.total = total
+      },
+      enable: async (data) => {
+        const {code} = await $api.customerApi.person.enable({
           id: data.id
         })
         if (code === 200) {
-          await getUserList()
+          await tableData.getList()
         }
-      }).catch((err) => {
-        console.log(err);
-      })
-    }
+      },
+      disable(data) {
+        ElMessageBox.confirm(`冻结后，${moduleName}不可再登录，请谨慎操作！`, `确认禁用${moduleName}“${data.account}”？`, {type: 'warning'}).then(async () => {
+          const {code} = await $api.customerApi.person.disable({
+            id: data.id
+          })
+          if (code === 200) {
+            await tableData.getList()
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      }
+    })
 
-    provide('closeDialog', closeDialog)
+    setMealData.getList()
+    tableData.getList()
+
+    onBeforeRouteUpdate((to, from) => {
+      console.log('**********************');
+      console.log(to, from);
+    })
 
     return {
       searchForm,
-      searchParam,
-      departmentList,
-      roleList,
-      dialogVisible,
-      currDataId,
-      dialogMode,
-      dialogTitle,
-      page,
-      pageSize,
-      dataTotal,
-      dataList,
+      tableHeight,
       search,
-      resetSearch,
-      sizeChange,
-      pageChange,
-      detail,
-      add,
-      edit,
-      del
+      page,
+      setMealData,
+      tableData
     }
   }
 })
@@ -220,7 +226,10 @@ export default defineComponent({
 <style scoped lang="scss">
 .options-area {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+
+  ::v-deep .el-form--label-top .el-form-item__label {
+    padding-bottom: 0;
+  }
 }
 </style>

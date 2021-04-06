@@ -1,66 +1,98 @@
 <template>
   <div style="height: 100%;display: flex;flex-direction: column;">
     <div class="options-area">
-      <el-form :model="searchParam" ref="searchForm" inline>
+      <el-form :model="search.form" ref="searchForm" inline>
         <el-space size="medium">
-          <el-form-item label="用户名称" prop="name" size="small" style="margin-bottom: 0;">
-            <el-input v-model="searchParam.name" placeholder="请输入用户名称"></el-input>
+          <el-form-item label="机构名称" prop="name" size="small" style="margin-bottom: 0;">
+            <el-input v-model="search.form.name" placeholder="请输入供应商名字"></el-input>
           </el-form-item>
-          <el-form-item label="所属部门" prop="department" size="small" style="margin-bottom: 0;">
-            <el-select v-model="searchParam.department" placeholder="请选择所属部门">
-              <el-option label="全部" value=""></el-option>
-              <el-option v-for="item in departmentList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="所属角色" prop="role" size="small" style="margin-bottom: 0;">
-            <el-select v-model="searchParam.role" placeholder="请选择所属角色">
-              <el-option label="全部" value=""></el-option>
-              <el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-            </el-select>
+          <el-form-item label="开通时间" prop="openTime" size="small" style="margin-bottom: 0;">
+            <el-date-picker v-model="search.form.openTime" type="daterange" start-placeholder="开始日期"
+                            end-placeholder="结束日期" style="width: 240px;"></el-date-picker>
           </el-form-item>
           <el-form-item size="small" style="margin-bottom: 0;">
-            <el-button class="custom" @click="search">查询</el-button>
-            <el-button @click="resetSearch">清空条件</el-button>
+            <el-button class="custom" @click="search.search">查询</el-button>
+            <el-button @click="search.reset">清空条件</el-button>
           </el-form-item>
         </el-space>
       </el-form>
-      <el-button class="custom" size="small" @click="add" v-permission="[$route, 'add']">添加用户</el-button>
+      <el-button class="custom" size="small" @click="tableData.add" v-permission="[$route, 'add']">开通机构账号</el-button>
     </div>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
-      <el-table :data="dataList" stripe style="width: 100%">
-        <el-table-column prop="name" label="用户名称" width="200"></el-table-column>
-        <el-table-column prop="department" label="所属部门" width="200"></el-table-column>
-        <el-table-column prop="role" label="所属角色" width="200"></el-table-column>
-        <el-table-column prop="description" label="用户描述"></el-table-column>
+      <el-table :data="tableData.list" stripe :height="tableHeight">
+        <el-table-column prop="openTime" label="开通时间" width="170"></el-table-column>
+        <el-table-column prop="name" label="机构名称" width="180"></el-table-column>
+        <el-table-column prop="contact" label="联系人"></el-table-column>
+        <el-table-column prop="phone" label="联系电话" width="120"></el-table-column>
+        <el-table-column prop="setMealId" label="所选套餐" width="100">
+          <template #default="scope">
+            <span>{{ setMealData.getSetMealName(scope.row.setMealId) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="account" label="登录账号" width="140"></el-table-column>
+        <el-table-column prop="earningTotal" label="累计收益" width="100">
+          <template #default="scope">
+            <span>{{ scope.row.states === 0 || !scope.row.earningTotal ? '--' : '￥' + scope.row.earningTotal }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="seatTotal" label="总席位数">
+          <template #default="scope">
+            <span>{{ scope.row.states === 0 || !scope.row.seatTotal ? '--' : scope.row.seatTotal }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="studentTotal" label="学员数">
+          <template #default="scope">
+            <span>{{ scope.row.states === 0 || !scope.row.studentTotal ? '--' : scope.row.studentTotal }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="states" label="状态" width="80">
+          <template #default="scope">
+            <span>{{ ['待激活', '已禁用', '正常'][scope.row.states] }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="openPeople" label="开通人"></el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="scope">
-            <!--            <el-button @click="detail(scope.row)" type="text" size="small" v-permission="[$route, 'view']">详情-->
+            <!--            <el-button @click="tableData.detail(scope.row)" type="text" size="small" v-permission="[$route, 'view']"-->
+            <!--                       v-if="scope.row.states !== 0">详情-->
             <!--            </el-button>-->
-            <el-button @click="edit(scope.row)" type="text" size="small" v-permission="[$route, 'edit']">编辑</el-button>
-            <el-button @click="del(scope.row)" type="text" size="small" v-permission="[$route, 'delete']">删除</el-button>
+            <el-button
+                @click="$router.push({path: '/main/customer/person', query: {organizationId: scope.row.id, organizationName: scope.row.name}})"
+                type="text" size="small" v-permission="[$route, 'view']" v-if="scope.row.states !== 0">查看学员
+            </el-button>
+            <el-button @click="tableData.edit(scope.row)" type="text" size="small" v-permission="[$route, 'edit']">编辑
+            </el-button>
+            <el-button @click="tableData.del(scope.row)" type="text" size="small" v-permission="[$route, 'delete']"
+                       v-if="scope.row.states === 0">删除
+            </el-button>
+            <el-button @click="tableData.enable(scope.row)" type="text" size="small" v-if="scope.row.states === 1">启用
+            </el-button>
+            <el-button @click="tableData.disable(scope.row)" type="text" size="small" v-if="scope.row.states === 2">禁用
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination small :current-page="page" :page-size="pageSize" :page-sizes="[10, 15, 30, 50]"
-                     layout="total, sizes, prev, pager, next, jumper" :total="dataTotal" @size-change="sizeChange"
-                     @current-change="pageChange">
+      <el-pagination small :current-page="page.index" :page-size="page.size" :page-sizes="[10, 15, 30, 50]"
+                     layout="total, sizes, prev, pager, next, jumper" :total="tableData.total"
+                     @size-change="page.sizeChange"
+                     @current-change="page.indexChange">
       </el-pagination>
     </div>
 
-    <el-dialog custom-class="custom" :title="dialogTitle" v-model="dialogVisible" :close-on-click-modal="false"
+    <el-dialog custom-class="custom" :title="dialog.title" v-model="dialog.visible" :close-on-click-modal="false"
                destroy-on-close>
-      <detail :id="currDataId" :mode="dialogMode"></detail>
+      <detail :id="dialog.currDataId" :mode="dialog.mode"></detail>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import {defineComponent, ref, provide, computed} from 'vue'
+import {defineComponent, ref, reactive, computed, provide, toRef} from 'vue'
 import Detail from './components/Detail'
 import {ElMessageBox} from 'element-plus'
 import $api from '@/api'
 
-const moduleName = '用户'
+const moduleName = '机构'
 
 export default defineComponent({
   name: "OrganizationList",
@@ -69,149 +101,154 @@ export default defineComponent({
   },
   setup() {
     const searchForm = ref()
-    const searchParam = ref({
-      name: '',
-      department: '',
-      role: ''
-    })
-    const departmentList = ref([])
-    const roleList = ref([])
+    const tableHeight = window.innerHeight - 353
 
-    const dialogVisible = ref(false)
-    const currDataId = ref(false)
-    const dialogMode = ref('add')
-
-    const page = ref(1)
-    const pageSize = ref(10)
-    const dataList = ref([])
-    const dataTotal = ref(0)
-
-    const dialogTitle = computed(() => {
-      const titles = {
-        add: `添加${moduleName}`,
-        view: `${moduleName}详情`,
-        edit: `编辑${moduleName}`
+    const search = reactive({
+      form: {
+        name: '',
+        openTime: []
+      },
+      param: computed(() => {
+        return {
+          name: search.form.name,
+          startTime: search.form.openTime[0] || '',
+          endTime: search.form.openTime[1] || ''
+        }
+      }),
+      search() {
+        page.index = 1
+        tableData.getList()
+      },
+      reset() {
+        searchForm.value.resetFields()
+        page.index = 1
+        tableData.getList()
       }
-      return titles[dialogMode.value]
     })
 
-    // 获取部门列表
-    const getDepartmentList = async () => {
-      const {list} = await $api.permissionApi.department.getList({
-        page: 1,
-        pageSize: 10
-      })
-      departmentList.value = list
-    }
-    getDepartmentList()
+    const page = reactive({
+      index: 1,
+      size: 10,
+      sizeChange(size) {
+        page.size = size
+        tableData.getList()
+      },
+      indexChange(index) {
+        page.index = index
+        tableData.getList()
+      }
+    })
 
-    // 获取角色列表
-    const getRoleList = async () => {
-      const {list} = await $api.permissionApi.role.getList({
-        page: 1,
-        pageSize: 10
-      })
-      roleList.value = list
-    }
-    getRoleList()
+    const dialog = reactive({
+      visible: false,
+      currDataId: '',
+      mode: 'add',
+      title: computed(() => {
+        const titles = {
+          add: `开通${moduleName}账号`,
+          view: `${moduleName}详情`,
+          edit: `编辑${moduleName}`
+        }
+        return titles[dialog.mode]
+      }),
+      open() {
+        dialog.visible = true
+      },
+      close() {
+        dialog.visible = false
+      }
+    })
 
-    provide('departmentList', departmentList)
-    provide('roleList', roleList)
+    const setMealData = reactive({
+      list: [],
+      getList: async () => {
+        const {list} = await $api.setMealApi.organization.getList()
+        setMealData.list = list
+      },
+      getSetMealName(setMealId) {
+        if (!setMealData.list || !setMealData.list.length) {
+          return '--'
+        }
+        const setMeal = setMealData.list.find((item) => item.id === setMealId)
+        return setMeal.name
+      }
+    })
 
-    const getUserList = async () => {
-      const {list, total} = await $api.permissionApi.user.getList({
-        page: page.value,
-        pageSize: pageSize.value,
-        ...searchParam.value
-      })
-      dataList.value = list
-      dataTotal.value = total
-    }
-    getUserList()
-
-    const search = () => {
-      page.value = 1
-      getUserList()
-    }
-
-    const resetSearch = () => {
-      searchForm.value.resetFields()
-      page.value = 1
-      getUserList()
-    }
-
-    const openDialog = () => {
-      dialogVisible.value = true
-    }
-
-    const closeDialog = () => {
-      dialogVisible.value = false
-    }
-
-    const sizeChange = (size) => {
-      pageSize.value = size
-      getUserList()
-    }
-
-    const pageChange = (index) => {
-      page.value = index
-      getUserList()
-    }
-
-    const add = () => {
-      currDataId.value = ''
-      dialogMode.value = 'add'
-      openDialog()
-    }
-
-    const detail = (data) => {
-      currDataId.value = data.id
-      dialogMode.value = 'view'
-      openDialog()
-    }
-
-    const edit = (data) => {
-      currDataId.value = data.id
-      dialogMode.value = 'edit'
-      openDialog()
-    }
-
-    const del = (data) => {
-      ElMessageBox.confirm(`确认删除${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
-        const {code} = await $api.permissionApi.user.del({
+    const tableData = reactive({
+      list: [],
+      total: 0,
+      getList: async () => {
+        const {list, total} = await $api.customerApi.organization.getList({
+          page: page.index,
+          pageSize: page.size,
+          ...search.param
+        })
+        tableData.list = list
+        tableData.total = total
+      },
+      add() {
+        dialog.currDataId = ''
+        dialog.mode = 'add'
+        dialog.open()
+      },
+      detail(data) {
+        dialog.currDataId = data.id
+        dialog.mode = 'view'
+        dialog.open()
+      },
+      edit(data) {
+        dialog.currDataId = data.id
+        dialog.mode = 'edit'
+        dialog.open()
+      },
+      del(data) {
+        ElMessageBox.confirm(`删除后，${moduleName}不可再执行激活，请谨慎操作！`, `确认删除${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
+          const {code} = await $api.customerApi.organization.del({
+            id: data.id
+          })
+          if (code === 200) {
+            await tableData.getList()
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
+      enable: async (data) => {
+        const {code} = await $api.customerApi.organization.enable({
           id: data.id
         })
         if (code === 200) {
-          await getUserList()
+          await tableData.getList()
         }
-      }).catch((err) => {
-        console.log(err);
-      })
-    }
+      },
+      disable(data) {
+        ElMessageBox.confirm(`禁用后，${moduleName}不可再登录，请谨慎操作！`, `确认禁用${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
+          const {code} = await $api.customerApi.organization.disable({
+            id: data.id
+          })
+          if (code === 200) {
+            await tableData.getList()
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      }
+    })
 
-    provide('closeDialog', closeDialog)
+    setMealData.getList()
+    tableData.getList()
+
+    provide('setMealList', toRef(setMealData, 'list'))
+    provide('closeDialog', dialog.close)
 
     return {
       searchForm,
-      searchParam,
-      departmentList,
-      roleList,
-      dialogVisible,
-      currDataId,
-      dialogMode,
-      dialogTitle,
-      page,
-      pageSize,
-      dataTotal,
-      dataList,
+      tableHeight,
       search,
-      resetSearch,
-      sizeChange,
-      pageChange,
-      detail,
-      add,
-      edit,
-      del
+      page,
+      dialog,
+      setMealData,
+      tableData
     }
   }
 })

@@ -29,7 +29,7 @@ $mock.get('/permission/byAccount', [
             {
                 name: '机构客户',
                 path: 'customer/organization',
-                permission: ['edit', 'delete']
+                permission: ['edit', 'delete', 'add', 'view']
             },
             {
                 name: '个人客户',

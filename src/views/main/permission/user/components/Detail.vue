@@ -37,10 +37,10 @@
                       :disabled="mode === 'view'"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="16" v-if="mode === 'add'">
+        <el-col :span="16" v-if="mode !== 'view'">
           <el-form-item label="登录密码" prop="password" required>
-            <el-input type="password" :maxlength="12" v-model="detail.password" placeholder="请设置登录密码"
-                      :disabled="mode === 'view'"></el-input>
+            <el-input type="password" :maxlength="12" v-model="detail.password"
+                      :placeholder="`请${mode === 'add' ? '设置' : '重设'}登录密码`" :disabled="mode === 'view'"></el-input>
           </el-form-item>
         </el-col>
       </el-row>

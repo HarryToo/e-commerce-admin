@@ -3,43 +3,49 @@
     <el-form ref="detailForm" label-position="top" :model="detail" :rules="rules">
       <h3>用户信息</h3>
       <el-row :gutter="30">
-        <el-col :span="8">
-          <el-form-item label="用户名称" prop="name" required>
-            <el-input v-model="detail.name" placeholder="请输入用户名称" :disabled="mode === 'view'"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="16">
-          <el-form-item label="所属部门" prop="department" required>
-            <el-select v-model="detail.department" placeholder="请选择所属部门" :disabled="mode === 'view'">
-              <el-option v-for="item in departmentList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-            </el-select>
+        <el-col :span="24">
+          <el-form-item label="机构名称" prop="name" required>
+            <el-input v-model="detail.name" placeholder="请输入机构名称" :disabled="mode === 'view'"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="30">
-        <el-col :span="8">
-          <el-form-item label="所属角色" prop="role" required>
-            <el-select v-model="detail.role" placeholder="请选择所属角色" :disabled="mode === 'view'">
-              <el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-            </el-select>
+        <el-col :span="10">
+          <el-form-item label="联系人" prop="contact" required>
+            <el-input v-model="detail.contact" placeholder="请输入联系人" :disabled="mode === 'view'"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="16">
-          <el-form-item label="用户描述">
-            <el-input v-model="detail.description" placeholder="请输入用户描述" :disabled="mode === 'view'"></el-input>
+        <el-col :span="14">
+          <el-form-item label="联系电话" prop="phone" required>
+            <el-input v-model="detail.phone" placeholder="请输入联系电话" :disabled="mode === 'view'"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="30">
-        <el-col :span="8">
+        <el-col :span="10">
           <el-form-item label="登录账号" prop="account" required>
             <el-input v-model="detail.account" :maxlength="15" placeholder="请设置登录账号"
                       :disabled="mode === 'view'"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="16" v-if="mode === 'add'">
+        <el-col :span="14" v-if="mode !== 'view'">
           <el-form-item label="登录密码" prop="password" required>
-            <el-input type="password" :maxlength="12" v-model="detail.password" placeholder="请设置登录密码"
+            <el-input type="password" :maxlength="12" v-model="detail.password"
+                      :placeholder="`请${mode === 'add' ? '设置' : '重设'}登录密码`" :disabled="mode === 'view'"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="30">
+        <el-col :span="10">
+          <el-form-item label="所选套餐" prop="setMealId" required>
+            <el-select v-model="detail.setMealId" placeholder="请选择套餐" :disabled="mode === 'view'">
+              <el-option v-for="item in setMealList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="14">
+          <el-form-item label="开通人" prop="openPeople" required>
+            <el-input v-model="detail.openPeople" :maxlength="15" placeholder="请输入开通人"
                       :disabled="mode === 'view'"></el-input>
           </el-form-item>
         </el-col>
@@ -76,28 +82,30 @@ export default defineComponent({
     const closeDialog = inject('closeDialog')
     const detailForm = ref()
     const rules = {
-      name: [{required: true, message: '请输入用户名称'}],
-      department: [{required: true, message: '请选择所属部门'}],
-      role: [{required: true, message: '请选择所属角色'}],
+      name: [{required: true, message: '请输入机构名称'}],
+      contact: [{required: true, message: '请输入联系人'}],
+      phone: [{required: true, message: '请输入联系电话'}, {pattern: /^1\d{10}$/, message: '请输入正确的联系电话'}],
       account: [{required: true, message: '请设置登录账号'}, {pattern: /^[a-zA-Z0-9]{1,15}$/, message: '只能为15位以内的字母、数字组合'}],
-      password: [{required: true, message: '请设置登录密码'}, {pattern: /^[a-zA-Z0-9]{6,12}$/, message: '只能为6-12位的字母、数字组合'}]
+      password: [{required: true, message: '请设置登录密码'}, {pattern: /^[a-zA-Z0-9]{6,12}$/, message: '只能为6-12位的字母、数字组合'}],
+      setMealId: [{required: true, message: '请选择套餐'}],
+      openPeople: [{required: true, message: '请输入开通人'}]
     }
 
     const detail = ref({
       name: '',
-      department: '',
-      role: '',
-      description: '',
+      contact: '',
+      phone: '',
       account: '',
-      password: ''
+      password: '',
+      setMealId: '',
+      openPeople: ''
     })
 
-    const departmentList = inject('departmentList')
-    const roleList = inject('roleList')
+    const setMealList = inject('setMealList')
 
     // 获取详情（注意原则上后台不返回md5后的password）
     const getDetail = async () => {
-      detail.value = await $api.permissionApi.user.getDetail({
+      detail.value = await $api.customerApi.organization.getDetail({
         id: id.value
       })
     }
@@ -119,7 +127,7 @@ export default defineComponent({
         if (mode.value === 'edit') {
           param.id = id.value
         }
-        const {code} = await $api.permissionApi.user[mode.value](param)
+        const {code} = await $api.customerApi.organization[mode.value](param)
         if (code === 200) {
           closeDialog()
         }
@@ -131,8 +139,7 @@ export default defineComponent({
       detailForm,
       rules,
       detail,
-      departmentList,
-      roleList,
+      setMealList,
       closeDialog,
       submit
     }
