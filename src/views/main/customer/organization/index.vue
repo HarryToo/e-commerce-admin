@@ -57,7 +57,7 @@
             <!--                       v-if="scope.row.states !== 0">详情-->
             <!--            </el-button>-->
             <el-button
-                @click="$router.push({path: '/main/customer/person', query: {organizationId: scope.row.id, organizationName: scope.row.name}})"
+                @click="$router.push({path: '/main/customer/person', query: {organizationName: scope.row.name}})"
                 type="text" size="small" v-permission="[$route, 'view']" v-if="scope.row.states !== 0">查看学员
             </el-button>
             <el-button @click="tableData.edit(scope.row)" type="text" size="small" v-permission="[$route, 'edit']">编辑

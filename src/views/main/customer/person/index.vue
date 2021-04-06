@@ -99,8 +99,8 @@
 </template>
 
 <script>
-import {defineComponent, ref, reactive, computed} from 'vue'
-import {onBeforeRouteUpdate} from 'vue-router'
+import {defineComponent, ref, reactive, computed, onMounted, onActivated} from 'vue'
+import {useRoute} from 'vue-router'
 import {ElMessageBox} from 'element-plus'
 import $api from '@/api'
 
@@ -109,6 +109,8 @@ const moduleName = '个人'
 export default defineComponent({
   name: "PersonList",
   setup() {
+    const route = useRoute()
+
     const searchForm = ref()
     const tableHeight = window.innerHeight - 350
 
@@ -204,11 +206,21 @@ export default defineComponent({
     })
 
     setMealData.getList()
-    tableData.getList()
 
-    onBeforeRouteUpdate((to, from) => {
-      console.log('**********************');
-      console.log(to, from);
+    onMounted(() => {
+      if (route.query.organizationName && search.form.source !== route.query.organizationName) {
+        search.form.source = route.query.organizationName
+        search.search()
+      } else {
+        tableData.getList()
+      }
+    })
+
+    onActivated(() => {
+      if (route.query.organizationName && search.form.source !== route.query.organizationName) {
+        search.form.source = route.query.organizationName
+        search.search()
+      }
     })
 
     return {
