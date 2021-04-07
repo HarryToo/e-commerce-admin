@@ -16,7 +16,7 @@
           </el-form-item>
         </el-space>
       </el-form>
-      <el-button class="custom" size="small" @click="tableData.add">导出表格</el-button>
+      <el-button class="custom" size="small" :loading="exportLoading" @click="exportTable">导出表格</el-button>
     </div>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
       <el-table :data="tableData.list" stripe :height="tableHeight">
@@ -49,7 +49,6 @@
                 </el-button>
               </div>
             </el-popover>
-            <!--            <el-button @click="tableData.remark(scope.row)" type="text" size="small" v-else>备注</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -64,14 +63,17 @@
 
 <script>
 import {defineComponent, ref, reactive, computed, provide, toRef} from 'vue'
-import {ElMessageBox} from 'element-plus'
+import {ElMessage, ElMessageBox} from 'element-plus'
 import $api from '@/api'
+import {exportExcel} from '@/utils/tool'
 
 export default defineComponent({
   name: "SupplierList",
   setup() {
     const searchForm = ref()
     const tableHeight = window.innerHeight - 353
+
+    const exportLoading = ref(false)
 
     const search = reactive({
       form: {
@@ -135,14 +137,56 @@ export default defineComponent({
         }
       }
     })
+
     tableData.getList()
+
+    const exportTable = () => {
+      try {
+        let msg = '此操作会导出当前表所有数据，为避免数据量过大时导出异常，请尽量先筛选出必要的数据，确认继续导出？'
+        if (search.param.name || (search.param.startTime && search.param.endTime)) {
+          msg = '当前有查找条件，此操作会导出符合条件的所有数据，确认继续导出？'
+        }
+        ElMessageBox.confirm(msg, '友情提示', {type: 'info'}).then(async () => {
+          exportLoading.value = true
+          const {list} = await $api.supplierApi.getList({
+            page: 1,
+            pageSize: 100,
+            ...search.param
+          })
+          let aoa = [['提交时间', '供应商名称', '所属行业', '网店/工厂', '联系人', '联系电话', '备注']]
+          const dataList = list.map((item) => {
+            const storeType = ['网店', '工厂'][item.storeType]
+            return [new Date(item.time), item.name, item.industry, storeType, item.contact, item.phone, item.remark]
+          })
+          aoa = aoa.concat(dataList)
+          let fileName = '供应商'
+          if (search.param.name) {
+            fileName += `【${search.param.name}】`
+          }
+          if (search.param.startTime && search.param.endTime) {
+            fileName += `(${search.param.startTime.toLocaleDateString()}至${search.param.endTime.toLocaleDateString()})`
+          } else {
+            fileName += '_' + new Date().toLocaleDateString()
+          }
+          exportExcel(aoa, fileName)
+          ElMessage.success('导出成功')
+          exportLoading.value = false
+        }).catch(err => {
+          exportLoading.value = false
+        })
+      } catch (err) {
+        ElMessage.error(`导出失败：${err.message}`)
+      }
+    }
 
     return {
       searchForm,
       tableHeight,
+      exportLoading,
       search,
       page,
-      tableData
+      tableData,
+      exportTable
     }
   }
 })

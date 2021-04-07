@@ -4,7 +4,8 @@ module.exports = {
     configureWebpack: {
         externals: isProd ? {
             echarts: 'echarts',
-            moment: 'moment'
+            moment: 'moment',
+            xlsx: 'XLSX'
         } : {}
     }
 }
