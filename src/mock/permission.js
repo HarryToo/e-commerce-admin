@@ -23,6 +23,24 @@ $mock.get('/permission/byAccount', [
         ]
     },
     {
+        name: '供应商管理',
+        path: 'supplier'
+    },
+    {
+        name: '套餐管理',
+        path: 'setMeal',
+        children: [
+            {
+                name: '个人套餐',
+                path: 'setMeal/person'
+            },
+            {
+                name: '机构套餐',
+                path: 'setMeal/organization'
+            }
+        ]
+    },
+    {
         name: '客户管理',
         path: 'customer',
         children: [

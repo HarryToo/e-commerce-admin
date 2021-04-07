@@ -18,13 +18,13 @@ export default defineComponent({
     const route = useRoute()
     const allRoutes = useRouter().getRoutes()
     const historyList = computed(() => {
-      let list = []
-      route.matched.forEach((matchedItem) => {
-        if (/^\/main\/.+\/.+$/.test(matchedItem.path)) {
-          const parent = allRoutes.filter((item) => item.path === matchedItem.path.replace(/^(\/main\/.+)\/.+$/, '$1'))
-          list = list.concat(parent)
-          list.push(matchedItem)
-        }
+      let basePath = '/main'
+      const pathSplitArr = route.path.replace(basePath + '/', '').split('/')
+      const list = []
+      pathSplitArr.forEach((levelPath) => {
+        basePath += '/' + levelPath
+        const matchedItem = allRoutes.find((item) => item.path === basePath)
+        list.push(matchedItem)
       })
       return list
     })
