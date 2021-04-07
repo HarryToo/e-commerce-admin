@@ -1,7 +1,9 @@
 <template>
   <router-view v-slot="{ Component }">
     <transition name="el-fade-in-linear" mode="out-in">
-      <component :is="Component"/>
+      <keep-alive>
+        <component :is="Component"/>
+      </keep-alive>
     </transition>
   </router-view>
 </template>
@@ -101,6 +103,7 @@ h3 {
 
 // 表格分页器居右
 .el-pagination {
+  margin-top: 30px;
   display: flex;
   justify-content: flex-end;
 }

@@ -4,29 +4,7 @@ import $mock from '@/utils/mock'
 $mock.get('/permission/byAccount', [
     {
         name: '数据概览',
-        path: 'dataCenter',
-        permission: ['view']
-    },
-    {
-        name: '权限管理',
-        path: 'permission',
-        children: [
-            {
-                name: '角色管理',
-                path: 'permission/role',
-                permission: ['view', 'edit', 'add', 'delete']
-            },
-            {
-                name: '用户管理',
-                path: 'permission/user',
-                permission: ['view', 'edit', 'add', 'delete']
-            },
-            {
-                name: '操作日志',
-                path: 'permission/permissionLog',
-                permission: ['view', 'edit', 'add', 'delete']
-            }
-        ]
+        path: 'dataCenter'
     },
     {
         name: '商品列表',
@@ -43,19 +21,48 @@ $mock.get('/permission/byAccount', [
                 permission: ['view', 'edit', 'add', 'delete']
             }
         ]
+    },
+    {
+        name: '客户管理',
+        path: 'customer',
+        children: [
+            {
+                name: '机构客户',
+                path: 'customer/organization',
+                permission: ['edit', 'delete', 'add', 'view']
+            },
+            {
+                name: '个人客户',
+                path: 'customer/person'
+            }
+        ]
+    },
+    {
+        name: '权限管理',
+        path: 'permission',
+        children: [
+            {
+                name: '角色管理',
+                path: 'permission/role',
+                permission: ['view', 'edit', 'add', 'delete']
+            },
+            {
+                name: '部门管理',
+                path: 'permission/department',
+                permission: ['edit', 'add', 'delete']
+            },
+            {
+                name: '用户管理',
+                path: 'permission/user',
+                permission: ['edit', 'add', 'delete']
+            },
+            {
+                name: '操作日志',
+                path: 'permission/permissionLog'
+            }
+        ]
     }
 ])
-// 角色列表
-$mock.get('/permission/roleList', {
-    'list|10': [
-        {
-            'id|+1': 1,
-            name: '@cword(4, 6)',
-            description: '@cword(10, 30)'
-        }
-    ],
-    total: 30
-})
 // 添加角色时可以分配的权限
 $mock.get('/permission/controllable', [
     {
@@ -86,31 +93,43 @@ $mock.get('/permission/controllable', [
             },
             {
                 id: '2-2',
-                label: '用户管理',
+                label: '部门管理',
                 children: [
                     {
                         id: '2-2-1',
-                        label: '添加用户'
+                        label: '添加部门'
                     },
                     {
                         id: '2-2-2',
-                        label: '编辑用户'
+                        label: '编辑部门'
                     },
                     {
                         id: '2-2-3',
-                        label: '删除用户'
+                        label: '删除部门'
                     }
                 ]
             },
             {
                 id: '2-3',
-                label: '操作日志',
+                label: '用户管理',
                 children: [
                     {
                         id: '2-3-1',
-                        label: '添加角色'
+                        label: '添加用户'
+                    },
+                    {
+                        id: '2-3-2',
+                        label: '编辑用户'
+                    },
+                    {
+                        id: '2-3-3',
+                        label: '删除用户'
                     }
                 ]
+            },
+            {
+                id: '2-4',
+                label: '操作日志'
             }
         ]
     },
@@ -149,6 +168,21 @@ $mock.get('/permission/controllable', [
         ]
     }
 ])
+// 角色列表
+$mock.get('/permission/roleList', ({url}) => {
+    const {pageSize} = $mock.parseQuery(url)
+    const data = {
+        total: 30
+    }
+    data[`list|${pageSize}`] = [
+        {
+            'id|+1': 1,
+            name: '@cword(4, 6)',
+            description: '@cword(10, 30)'
+        }
+    ]
+    return $mock.mock(data)
+})
 // 角色详情
 $mock.get('/permission/roleDetail', {
     id: '@integer(1, 10)',
@@ -168,4 +202,90 @@ $mock.post('/permission/editRole', {
 // 删除角色
 $mock.del('/permission/deleteRole', {
     code: 200
+})
+// 部门列表
+$mock.get('/permission/departmentList', ({url}) => {
+    const {pageSize} = $mock.parseQuery(url)
+    const data = {
+        total: 30
+    }
+    data[`list|${pageSize}`] = [
+        {
+            'id|+1': 1,
+            name: '@cword(4, 6)部',
+            description: '@cword(10, 30)'
+        }
+    ]
+    return $mock.mock(data)
+})
+// 部门详情
+$mock.get('/permission/departmentDetail', {
+    id: '@integer(1, 10)',
+    name: '@cword(4, 6)部',
+    description: '@cword(10, 30)'
+})
+// 添加部门
+$mock.post('/permission/addDepartment', {
+    code: 200
+})
+// 编辑部门
+$mock.post('/permission/editDepartment', {
+    code: 200
+})
+// 删除部门
+$mock.del('/permission/deleteDepartment', {
+    code: 200
+})
+// 用户列表
+$mock.get('/permission/userList', ({url}) => {
+    const {pageSize} = $mock.parseQuery(url)
+    const data = {
+        total: 30
+    }
+    data[`list|${pageSize}`] = [
+        {
+            'id|+1': 1,
+            name: '@cword(2, 3)',
+            department: '@cword(4, 6)部',
+            role: '@cword(4, 6)',
+            description: '@cword(10, 30)'
+        }
+    ]
+    return $mock.mock(data)
+})
+// 用户详情
+$mock.get('/permission/userDetail', {
+    id: '@integer(1, 10)',
+    name: '@cword(2, 3)',
+    department: '@cword(4, 6)',
+    role: '@cword(4, 6)',
+    description: '@cword(10, 30)',
+    account: '@string("lower", 1, 15)'
+})
+// 添加用户
+$mock.post('/permission/addUser', {
+    code: 200
+})
+// 编辑用户
+$mock.post('/permission/editUser', {
+    code: 200
+})
+// 删除用户
+$mock.del('/permission/deleteUser', {
+    code: 200
+})
+// 获取权限相关操作记录
+$mock.get('/permission/logs', ({url}) => {
+    const {pageSize} = $mock.parseQuery(url)
+    const data = {
+        total: 30
+    }
+    data[`list|${pageSize}`] = [
+        {
+            'id|+1': 1,
+            time: '@datetime()',
+            description: '@cword(10, 30)'
+        }
+    ]
+    return $mock.mock(data)
 })

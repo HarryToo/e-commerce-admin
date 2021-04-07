@@ -19,9 +19,15 @@ function permissionRoutesGenerator(dynamicRoutes, permissionTree) {
             tiledPermission.push(item)
         }
     })
-    dynamicRoutes.forEach((route, index) => {
-        tiledPermission.forEach((item, index) => {
-            if (route.path === item.path) {
+    dynamicRoutes.forEach((route) => {
+        tiledPermission.forEach((item) => {
+            let absPath
+            if (route.path.includes('/:')) {
+                // 带参数的动态路由匹配
+                absPath = route.path.substr(0, route.path.indexOf('/:'))
+                console.log(absPath);
+            }
+            if (route.path === item.path || absPath === item.path) {
                 if (item.permission) {
                     route.meta.permission = item.permission
                 }

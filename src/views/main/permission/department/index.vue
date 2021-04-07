@@ -1,16 +1,16 @@
 <template>
   <div style="height: 100%;display: flex;flex-direction: column;">
     <div class="options-area">
-      <el-button class="custom" size="small" @click="tableData.add" v-permission="[$route, 'add']">添加角色</el-button>
+      <el-button class="custom" size="small" @click="tableData.add" v-permission="[$route, 'add']">添加部门</el-button>
     </div>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
       <el-table :data="tableData.list" stripe :height="tableHeight">
-        <el-table-column prop="name" label="角色名称" width="250"></el-table-column>
-        <el-table-column prop="description" label="角色描述"></el-table-column>
+        <el-table-column prop="name" label="部门名称" width="250"></el-table-column>
+        <el-table-column prop="description" label="部门描述"></el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="scope">
-            <el-button @click="tableData.detail(scope.row)" type="text" size="small" v-permission="[$route, 'view']">详情
-            </el-button>
+            <!--            <el-button @click="detail(scope.row)" type="text" size="small" v-permission="[$route, 'view']">详情-->
+            <!--            </el-button>-->
             <el-button @click="tableData.edit(scope.row)" type="text" size="small" v-permission="[$route, 'edit']">编辑
             </el-button>
             <el-button @click="tableData.del(scope.row)" type="text" size="small" v-permission="[$route, 'delete']">删除
@@ -32,15 +32,15 @@
 </template>
 
 <script>
-import {defineComponent, reactive, provide, computed} from 'vue'
+import {defineComponent, ref, provide, computed, reactive} from 'vue'
 import Detail from './components/Detail'
 import {ElMessageBox} from 'element-plus'
 import $api from '@/api'
 
-const moduleName = '角色'
+const moduleName = '部门'
 
 export default defineComponent({
-  name: "RoleList",
+  name: "DepartmentList",
   components: {
     Detail
   },
@@ -84,7 +84,7 @@ export default defineComponent({
       list: [],
       total: 0,
       getList: async () => {
-        const {list, total} = await $api.permissionApi.role.getList({
+        const {list, total} = await $api.permissionApi.department.getList({
           page: page.index,
           pageSize: page.size
         })
@@ -108,7 +108,7 @@ export default defineComponent({
       },
       del(data) {
         ElMessageBox.confirm(`确认删除${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
-          const {code} = await $api.permissionApi.role.del({
+          const {code} = await $api.permissionApi.department.del({
             id: data.id
           })
           if (code === 200) {
