@@ -64,7 +64,7 @@ export default defineComponent({
 
     .name {
       width: 100%;
-      height: 39px;
+      height: 34px;
       line-height: 18px;
       font-size: 14px;
       color: #555555;
@@ -79,17 +79,16 @@ export default defineComponent({
     }
 
     .origins {
+      display: flex;
+
       .origin {
-        display: inline-block;
-        vertical-align: text-bottom;
-        width: 150px;
-        line-height: 1;
+        width: 50%;
+        line-height: 13px;
         font-size: 12px;
         color: #999999;
 
         a {
           color: #F9612E;
-          text-decoration: underline;
         }
       }
     }

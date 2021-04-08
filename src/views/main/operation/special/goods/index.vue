@@ -12,28 +12,34 @@
           </el-form-item>
         </el-space>
       </el-form>
-      <el-button class="custom" size="small" v-permission="[$route, 'add']">添加商品</el-button>
+      <div>
+        <el-button type="danger" size="small" :disabled="!tableData.selectionIds.length"
+                   v-permission="[$route, 'delete']" @click="tableData.batchRemove">批量移除
+        </el-button>
+        <el-button class="custom" size="small" v-permission="[$route, 'add']">添加商品</el-button>
+      </div>
     </div>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
-      <el-table :data="tableData.list" stripe :height="tableHeight">
-        <el-table-column prop="num" label="商品编号"></el-table-column>
-        <el-table-column prop="info" label="商品信息" width="450">
+      <el-table :data="tableData.list" stripe :height="tableHeight" @selection-change="tableData.selectionChange">
+        <el-table-column type="selection" width="50"></el-table-column>
+        <el-table-column prop="number" label="商品编号" width="150"></el-table-column>
+        <el-table-column prop="info" label="商品信息" width="480">
           <template #default="scope">
             <wide-goods-item :goods="scope.row.info"></wide-goods-item>
           </template>
         </el-table-column>
-        <el-table-column prop="minPrice" label="销售价格" width="180">
+        <el-table-column prop="minPrice" label="销售价格" width="250">
           <template #default="scope">
-            <span>{{ scope.row.minPrice }}~{{ scope.row.maxPrice }}</span>
+            <span>￥{{ scope.row.minPrice }}~{{ scope.row.maxPrice }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="stockNum" label="总库存"></el-table-column>
-        <el-table-column prop="shopNum" label="被铺货数/被采购数" width="150">
+        <el-table-column prop="shopNum" label="被铺货数/被采购数">
           <template #default="scope">
             <span>{{ scope.row.shopNum }}/{{ scope.row.purchaseNum }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态">
+        <el-table-column prop="status" label="状态" width="100">
           <template #default="scope">
             <span style="color: #1CB903;" v-if="scope.row.status">上架中</span>
             <span style="color: #FF3A30;" v-else>已下架</span>
@@ -41,17 +47,16 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="100">
           <template #default="scope">
-            <el-button @click="tableData.enable(scope.row)" type="text" size="small">查看</el-button>
-            <el-button @click="tableData.del(scope.row)" type="text" size="small" v-permission="[$route, 'delete']">
+            <el-button @click="" type="text" size="small">查看</el-button>
+            <el-button @click="tableData.remove(scope.row)" type="text" size="small" v-permission="[$route, 'delete']">
               移除
             </el-button>
           </template>
         </el-table-column>
       </el-table>
       <el-pagination small :current-page="page.index" :page-size="page.size" :page-sizes="[10, 15, 30, 50]"
-                     layout="total, sizes, prev, pager, next, jumper" :total="tableData.total"
-                     @size-change="page.sizeChange"
-                     @current-change="page.indexChange">
+                     layout="total, sizes, prev, pager, next, jumper" :total="tableData.total" class="custom"
+                     @size-change="page.sizeChange" @current-change="page.indexChange">
       </el-pagination>
     </div>
   </div>
@@ -63,7 +68,7 @@ import {ElMessage, ElMessageBox} from 'element-plus'
 import WideGoodsItem from '@/components/goods/WideGoodsItem'
 import $api from '@/api'
 
-const moduleName = '专题'
+const moduleName = '商品'
 
 export default defineComponent({
   name: "SpecialList",
@@ -72,7 +77,7 @@ export default defineComponent({
   },
   setup() {
     const searchForm = ref()
-    const tableHeight = window.innerHeight - 351
+    const tableHeight = window.innerHeight - 350
 
     const exportLoading = ref(false)
 
@@ -107,8 +112,9 @@ export default defineComponent({
     const tableData = reactive({
       list: [],
       total: 0,
-      form: {
-        name: ''
+      selectionIds: [],
+      selectionChange(selection) {
+        tableData.selectionIds = selection.map((item) => item.id)
       },
       getList: async () => {
         const {list, total} = await $api.operationApi.special.getGoodsList({
@@ -135,52 +141,25 @@ export default defineComponent({
           tableData.getList()
         }
       },
-      del: (data) => {
-        let msg = '删除后，不可恢复，请谨慎操作！'
-        if (data.children) {
-          msg = `此操作将一并删除其下所有子${moduleName}数据，` + msg
+      removeHandler: async (ids) => {
+        const {code} = await $api.operationApi.special.removeGoods({
+          id: ids
+        })
+        if (code === 200) {
+          tableData.getList()
         }
-        ElMessageBox.confirm(msg, `确认删除${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
-          const {code} = await $api.operationApi.special.del({
-            id: data.id
-          })
-          if (code === 200) {
-            tableData.getList()
-          }
+      },
+      remove: (data) => {
+        ElMessageBox.confirm(`移除后，当前专题库将不再显示该${moduleName}，请谨慎操作！`, `确认移除${moduleName}编号“${data.number}”？`, {type: 'warning'}).then(() => {
+          tableData.removeHandler([data.id])
         }).catch(err => {
         })
       },
-      disable: (data) => {
-        ElMessageBox.confirm(`确认禁用${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
-          const {code} = await $api.operationApi.special.disable({
-            id: data.id
-          })
-          if (code === 200) {
-            data.states = 0
-          }
+      batchRemove() {
+        ElMessageBox.confirm(`移除后，当前专题库将不再显示所选${moduleName}，请谨慎操作！`, `确认移除所选${moduleName}？`, {type: 'warning'}).then(() => {
+          tableData.removeHandler(tableData.selectionIds)
         }).catch(err => {
         })
-      },
-      enable: async (data) => {
-        const {code} = await $api.operationApi.special.enable({
-          id: data.id
-        })
-        if (code === 200) {
-          data.states = 1
-        }
-      },
-      edit: async (data) => {
-        if (!tableData.form.name) {
-          return ElMessage.error('请输入专题名称')
-        }
-        const {code} = await $api.operationApi.special.edit({
-          id: data.id,
-          name: tableData.form.name
-        })
-        if (code === 200) {
-          data.name = tableData.form.name
-          tableData.form.name = ''
-        }
       }
     })
 
