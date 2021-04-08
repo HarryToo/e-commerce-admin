@@ -10,7 +10,7 @@ export default [
     },
     {
         path: 'setMeal/person',
-        name: 'personSetMeal',
+        name: 'PersonSetMeal',
         meta: {
             title: '个人套餐'
         },
@@ -18,7 +18,7 @@ export default [
     },
     {
         path: 'setMeal/organization',
-        name: 'organizationSetMeal',
+        name: 'OrganizationSetMeal',
         meta: {
             title: '机构套餐'
         },

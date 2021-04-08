@@ -17,17 +17,23 @@ export default defineComponent({
   setup() {
     const route = useRoute()
     const allRoutes = useRouter().getRoutes()
+
     const historyList = computed(() => {
       let basePath = '/main'
-      const pathSplitArr = route.path.replace(basePath + '/', '').split('/')
+      const pathSplitArr = route.fullPath.replace(basePath + '/', '').split('/')
       const list = []
+      const queryReg = /\?.*$/
       pathSplitArr.forEach((levelPath) => {
         basePath += '/' + levelPath
-        const matchedItem = allRoutes.find((item) => item.path === basePath)
-        list.push(matchedItem)
+        allRoutes.forEach((item) => {
+          if (item.path === basePath.replace(queryReg, '')) {
+            list.push(item)
+          }
+        })
       })
       return list
     })
+
     return {
       historyList
     }

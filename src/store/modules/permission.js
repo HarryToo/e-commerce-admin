@@ -40,20 +40,24 @@ function permissionRoutesGenerator(dynamicRoutes, permissionTree) {
 
 /**
  * 左侧菜单树生成
- * @param pathPrefix 相对路径前缀
+ * @param mainPath 相对路径前缀
  * @param permissionTree 树形的权限数据
  */
-function sideMenusGenerator(pathPrefix, permissionTree) {
+function sideMenusGenerator(mainPath, permissionTree) {
     return permissionTree.map((item) => {
         const menu = {
             title: item.name,
-            href: pathPrefix + item.path
+            href: mainPath + item.path
         };
         if (Array.isArray(item.children) && item.children.length) {
-            menu.children = item.children.map((subItem) => {
-                return {
-                    title: subItem.name,
-                    href: pathPrefix + subItem.path
+            menu.children = []
+            item.children.forEach((subItem) => {
+                if (subItem.path.match(/\//g).length === 1) {
+                    // 只保留第二级子路由
+                    menu.children.push({
+                        title: subItem.name,
+                        href: mainPath + subItem.path
+                    })
                 }
             })
         }

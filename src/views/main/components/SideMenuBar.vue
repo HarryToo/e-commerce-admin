@@ -1,5 +1,5 @@
 <template>
-  <el-menu :uniqueOpened="true" :default-active="$route.path" background-color="#0D0D0D" text-color="#EEEEEE"
+  <el-menu :uniqueOpened="true" :default-active="activePath" background-color="#0D0D0D" text-color="#EEEEEE"
            active-text-color="#EEEEEE" router>
     <template v-for="menu in sideMenus" :key="menu.href">
       <el-submenu v-if="menu.children" :index="menu.href">
@@ -23,14 +23,18 @@
 
 <script>
 import {defineComponent, computed} from 'vue'
+import {useRoute} from 'vue-router'
 import {useStore} from 'vuex'
 
 export default defineComponent({
   name: "SideMenuBar",
   setup() {
+    const route = useRoute()
     const store = useStore()
+
     return {
-      sideMenus: computed(() => store.getters['permission/sideMenus'])
+      sideMenus: computed(() => store.getters['permission/sideMenus']),
+      activePath: computed(() => route.path.replace(/^(\/main\/.*\/.*)\/.*$/, '$1'))
     }
   }
 })

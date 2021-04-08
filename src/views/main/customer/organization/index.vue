@@ -4,7 +4,7 @@
       <el-form :model="search.form" ref="searchForm" inline>
         <el-space size="medium">
           <el-form-item label="机构名称" prop="name" size="small" style="margin-bottom: 0;">
-            <el-input v-model="search.form.name" placeholder="请输入供应商名字"></el-input>
+            <el-input v-model="search.form.name" placeholder="请输入机构名称"></el-input>
           </el-form-item>
           <el-form-item label="开通时间" prop="openTime" size="small" style="margin-bottom: 0;">
             <el-date-picker v-model="search.form.openTime" type="daterange" start-placeholder="开始日期"
