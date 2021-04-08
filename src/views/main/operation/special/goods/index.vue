@@ -21,7 +21,7 @@
     </div>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
       <el-table :data="tableData.list" stripe :height="tableHeight" @selection-change="tableData.selectionChange">
-        <el-table-column type="selection" width="50"></el-table-column>
+        <el-table-column type="selection" width="50" v-permission="[$route, 'delete']"></el-table-column>
         <el-table-column prop="number" label="商品编号" width="150"></el-table-column>
         <el-table-column prop="info" label="商品信息" width="480">
           <template #default="scope">
