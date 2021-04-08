@@ -253,7 +253,7 @@ export default defineComponent({
 }
 
 .el-table__row--level-1 {
-  .el-table_1_column_1 {
+  td:first-child {
     position: relative;
 
     &:before, &:after {
