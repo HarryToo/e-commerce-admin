@@ -25,7 +25,7 @@
       </el-popover>
     </div>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
-      <el-table :data="tableData.list" stripe :tree-props="{children: 'children'}" row-key="id" :height="tableHeight">
+      <el-table :data="tableData.list" stripe :tree-props="{children: 'children'}" row-key="id" default-expand-all :height="tableHeight">
         <el-table-column prop="name" label="专题名称" width="400">
           <template #default="scope">
             <span>{{ scope.row.name }}</span>
