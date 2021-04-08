@@ -34,13 +34,13 @@ export default defineComponent({
 .Edit{
 	width: 100%;
 	display: flex;
-	justify-content: center;
+	justify-content: space-evenly;
 	flex-wrap: wrap;
 	.Edit-cld0{
-		width: 430px;
+		width: 24.39%;
 	}
 	.Edit-cld1{
-		width: 1190px;
+		width: 70%;
 	}
 	.Edit-cld2{
 		width: 100%;

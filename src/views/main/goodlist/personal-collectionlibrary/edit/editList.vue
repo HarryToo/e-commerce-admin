@@ -9,16 +9,27 @@
 					<div class="ListDetal">
 						<div class="ListD0">这个是神什么名字</div>
 						<div class="ListD1">来源分类：电动车/配件/交通工具>电动车整车>电动...</div>
-						<div class="ListD2">来源平台</div>
+						<div class="ListD2">来源平台：<span style='color: #F9612E;'>京东</span></div>
 						<div class='ListD3'>
-							<div class="ListD-s0">来源id</div>
+							<div class="ListD-s0">来源id:<span style='color: #F9612E;'>174654354354</span></div>
 							<img class="ListD-s1" src="../../../../../assets/logo.png" alt="">
 						</div>
 					</div>
 				</div>
 			  </el-menu-item>
 			  <el-menu-item index="2">
-			    <span slot="title">导航二</span>
+			    <div class="ListBox">
+			    	<img src="../../../../../assets/logo.png" alt="" class="ListImg">
+			    	<div class="ListDetal">
+			    		<div class="ListD0">这个是神什么名字</div>
+			    		<div class="ListD1">来源分类：电动车/配件/交通工具>电动车整车>电动...</div>
+			    		<div class="ListD2">来源平台：<span style='color: #F9612E;'>京东</span></div>
+			    		<div class='ListD3'>
+			    			<div class="ListD-s0">来源id:<span style='color: #F9612E;'>174654354354</span></div>
+			    			<img class="ListD-s1" src="../../../../../assets/logo.png" alt="">
+			    		</div>
+			    	</div>
+			    </div>
 			  </el-menu-item>
 			</el-menu>  
 		</div>
@@ -34,10 +45,18 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+.el-menu-item *{
+	vertical-align:baseline;
+}
+.el-menu-item{
+	white-space:normal!important;
+}
+.is-active {
+	background-color: rgba(249, 97, 46, 0.1);
+}
 .editList{
-	padding-top:30px;
-	padding-left: 30px;
 	padding-bottom: 10px;
+	
 	.EditTitle{
 		color: #101010;
 		font-size: 16px;
@@ -45,40 +64,61 @@ export default defineComponent({
 		padding-bottom: 10px;
 	}
 	.EditBox{
-		width: 380px;
+		width: 100%;
 		height: 655px;
 		overflow-y: scroll;
 		border: 1px solid #eeeeee;
+		
 	}
+	.EditBox::-webkit-scrollbar { display: none; }
 	.el-menu-item{
 		height: 100px;
 			.ListBox{
 				display: flex;
 				align-items: center;
-				line-height: normal;
+				line-height: 1rem;
+				border-bottom: 1px solid #eeeeee;
+				height: 100%;
 				.ListImg{
 					width: 80px;
 					height: 80px;
+					background-color: #A4DA89;
 				}
 				.ListDetal{
-					width: 285px!important;
+					width: 250px!important;
 					padding-left: 10px;
 					.ListD0{
 						color: #101010;
 						font-size: 14px;
+						display: -webkit-box;
+						-webkit-box-orient: vertical;
+						-webkit-line-clamp: 1;
+						overflow: hidden;
 					}
 					.ListD1{
 						color: #9d9c9c;
 						font-size: 12px;
+						display: -webkit-box;
+						-webkit-box-orient: vertical;
+						-webkit-line-clamp: 1;
+						overflow: hidden;
+						margin-top: 5px;
 					}
 					.ListD2{
+						line-height: 18px;
 						color: #9d9c9c;
 						font-size: 12px;
+						display: -webkit-box;
+						-webkit-box-orient: vertical;
+						-webkit-line-clamp: 1;
+						overflow: hidden;
+						margin-top: 5px;
 					}
 					.ListD3{
 						display: flex;
 						align-items: center;
 						justify-content: space-between;
+						margin-top: 5px;
 						.ListD-s0{
 							color: #9d9c9c;
 							font-size: 12px;

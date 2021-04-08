@@ -1,7 +1,8 @@
 <template>
 
 	<div class="personallistBox">
-		<edit></edit>	
+		<dataList></dataList>
+		<!-- <edit></edit>	 -->
 	</div>
 
 

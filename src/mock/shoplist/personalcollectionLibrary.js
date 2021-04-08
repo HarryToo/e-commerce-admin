@@ -19,6 +19,61 @@ $mock.get('/order/PersonLbSourcePlatformData',  [
           label: '1688'
         },
 ])
+
+//个人采集库-编辑-选择分类
+$mock.get('/order/PersonEditClassData',  {
+	first:[
+		{
+		  value: '0',
+		  label: '这里是一级分类名称'
+		},
+		{
+		  value: '1',
+		  label: '这里是一级分类名称'
+		}, {
+		  value: '2',
+		  label: '这里是一级分类名称',
+		  // disabled: true
+		}, {
+		  value: '3',
+		  label: '这里是一级分类名称'
+		},
+	],
+	second:[
+		{
+		  value: '0',
+		  label: '这里是二级分类名称'
+		},
+		{
+		  value: '1',
+		  label: '这里是二级分类名称'
+		}, {
+		  value: '2',
+		  label: '这里是二级分类名称',
+		  // disabled: true
+		}, {
+		  value: '3',
+		  label: '这里是二级分类名称'
+		},
+	],
+	third:[
+		{
+		  value: '0',
+		  label: '这里是三级分类名称'
+		},
+		{
+		  value: '1',
+		  label: '这里是三级分类名称'
+		}, {
+		  value: '2',
+		  label: '这里是三级分类名称',
+		  // disabled: true
+		}, {
+		  value: '3',
+		  label: '这里是三级分类名称'
+		},
+	]
+})
 /* 
 说明
  收藏状态
