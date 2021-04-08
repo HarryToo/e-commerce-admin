@@ -9,9 +9,9 @@
       </el-aside>
       <el-main>
         <transition name="el-fade-in-linear" mode="out-in">
-          <breadcrumb-nav v-if="/^\/main\/.+\/.+$/.test($route.path)"></breadcrumb-nav>
+          <breadcrumb-nav v-if="!$route.meta.noNav"></breadcrumb-nav>
         </transition>
-        <div class="main-area" :class="{'block-view': !$route.meta.noBackground}">
+        <div class="main-area" :class="{'block-view': !$route.meta.noBg}">
           <router-view v-slot="{ Component }">
             <transition name="el-fade-in-linear" mode="out-in">
               <keep-alive>
@@ -68,6 +68,7 @@ export default defineComponent({
 
     .main-area {
       flex-grow: 1;
+      overflow-y: hidden;
 
       ::v-deep .options-area {
         height: 84px;

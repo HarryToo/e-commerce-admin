@@ -1,10 +1,10 @@
 import $mock from '@/utils/mock'
 
-// 机构套餐列表
-$mock.get('/setMeal/organizationSetMealList', {
+// 个人套餐列表
+$mock.get('/setMeal/personalSetMealList', {
     'list|6': [
         {
-            'id|+1': 1,
+            'id|+1': [1, 2, 3, 4, 5, 6],
             name: '@cword(2)版套餐',
             price: '@integer(100, 1000)',
             funcIds: [3, 4, 5, 6],
@@ -12,11 +12,11 @@ $mock.get('/setMeal/organizationSetMealList', {
         }
     ]
 })
-// 个人套餐列表
-$mock.get('/setMeal/personalSetMealList', {
+// 机构套餐列表
+$mock.get('/setMeal/organizationSetMealList', {
     'list|6': [
         {
-            'id|+1': 1,
+            'id|+1': [1, 2, 3, 4, 5, 6],
             name: '@cword(2)版套餐',
             price: '@integer(100, 1000)',
             funcIds: [3, 4, 5, 6],

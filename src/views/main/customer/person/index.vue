@@ -101,7 +101,7 @@
 <script>
 import {defineComponent, ref, reactive, computed, onMounted, onActivated} from 'vue'
 import {useRoute} from 'vue-router'
-import {ElMessageBox} from 'element-plus'
+import {ElMessageBox, ElMessage} from 'element-plus'
 import $api from '@/api'
 
 const moduleName = '个人'
@@ -192,7 +192,7 @@ export default defineComponent({
         }
       },
       disable(data) {
-        ElMessageBox.confirm(`冻结后，${moduleName}不可再登录，请谨慎操作！`, `确认禁用${moduleName}“${data.account}”？`, {type: 'warning'}).then(async () => {
+        ElMessageBox.confirm(`冻结后，${moduleName}不可再登录，请谨慎操作！`, `确认冻结${moduleName}“${data.account}”？`, {type: 'warning'}).then(async () => {
           const {code} = await $api.customerApi.person.disable({
             id: data.id
           })
@@ -208,10 +208,7 @@ export default defineComponent({
     setMealData.getList()
 
     onMounted(() => {
-      if (route.query.organizationName && search.form.source !== route.query.organizationName) {
-        search.form.source = route.query.organizationName
-        search.search()
-      } else {
+      if (!route.query.organizationName) {
         tableData.getList()
       }
     })
@@ -220,6 +217,9 @@ export default defineComponent({
       if (route.query.organizationName && search.form.source !== route.query.organizationName) {
         search.form.source = route.query.organizationName
         search.search()
+      }
+      if (!route.query.organizationName && search.form.source) {
+        ElMessage.info(`当前查找客户来源为“${search.form.source}”数据`)
       }
     })
 
