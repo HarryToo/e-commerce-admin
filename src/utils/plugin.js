@@ -1,4 +1,3 @@
-import {ref} from 'vue'
 import TableOptionsHeader from '@/components/common/TableOptionsHeader'
 
 export default {

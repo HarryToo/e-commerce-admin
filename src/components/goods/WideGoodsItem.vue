@@ -67,7 +67,6 @@ export default defineComponent({
 
     .name {
       width: 100%;
-      height: 34px;
       line-height: 18px;
       font-size: 14px;
       color: #555555;

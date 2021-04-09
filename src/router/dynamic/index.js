@@ -6,14 +6,14 @@ import permissionRoutes from './permission'
 
 const dynamicRoutes = [
     {
-        path: 'dataCenter',
-        name: 'DataCenter',
+        path: 'dashBoard',
+        name: 'DashBoard',
         meta: {
             title: '数据概览',
             noBg: true,  // 无背景
             noNav: true  // 无面包屑导航
         },
-        component: () => import('@/views/main/data-center')
+        component: () => import('@/views/main/dash-board')
     },
     ...shoplistRoutes,
     {

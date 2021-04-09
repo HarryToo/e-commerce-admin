@@ -4,7 +4,7 @@ import $mock from '@/utils/mock'
 $mock.get('/permission/byAccount', [
     {
         name: '数据概览',
-        path: 'dataCenter'
+        path: 'dashBoard'
     },
     {
         name: '商品列表',
@@ -45,6 +45,10 @@ $mock.get('/permission/byAccount', [
                 name: '商品管理',
                 path: 'operation/special/goods',
                 permission: ['view', 'add', 'delete']
+            },
+            {
+                name: '添加商品',
+                path: 'operation/special/goods/add'
             }
         ]
     },

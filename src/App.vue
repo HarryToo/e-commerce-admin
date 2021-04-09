@@ -70,7 +70,7 @@ h3 {
 }
 
 // 自定义按钮颜色
-.el-button.custom, .el-button.custom:focus {
+.el-button.custom, .el-button.custom.is-disabled, .el-button.custom:focus {
   color: #FFFFFF;
   background-color: $orange;
   border: none;
@@ -84,6 +84,14 @@ h3 {
   &:active {
     color: #FFFFFF;
     background-color: $activeOrange;
+  }
+
+  &.is-disabled {
+    opacity: 0.4;
+
+    &:active {
+      background-color: $orange;
+    }
   }
 }
 

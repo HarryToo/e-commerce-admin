@@ -18,6 +18,7 @@
         <template #title>{{ menu.title }}</template>
       </el-menu-item>
     </template>
+    {{ activePath }}
   </el-menu>
 </template>
 
@@ -34,7 +35,7 @@ export default defineComponent({
 
     return {
       sideMenus: computed(() => store.getters['permission/sideMenus']),
-      activePath: computed(() => route.path.replace(/^(\/main\/.*\/.*)\/.*$/, '$1'))
+      activePath: computed(() => route.path.match(/^\/main(\/[a-zA-Z]+){1,2}/)[0])
     }
   }
 })

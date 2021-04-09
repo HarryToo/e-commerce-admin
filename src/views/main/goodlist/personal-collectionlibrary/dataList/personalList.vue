@@ -214,7 +214,7 @@
 			},
 			getPersonLbShopListData() {
 				var that = this
-				$api.shopListApi.getPersonLbShopListData().then((data) => {
+				$api.goodsApi.personLibrary.getPersonLbShopListData().then((data) => {
 					that.TabData = data;
 				})
 			},

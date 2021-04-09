@@ -4,12 +4,12 @@ import store from '@/store'
 const staticRoutes = [
     {
         path: '/',
-        redirect: '/main/dataCenter'
+        redirect: '/main/dashBoard'
     },
     {
         path: '/main',
         name: 'Main',
-        redirect: '/main/dataCenter',
+        redirect: '/main/dashBoard',
         meta: {
             title: '主界面'
         },

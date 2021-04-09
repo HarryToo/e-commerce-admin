@@ -16,7 +16,10 @@
         <el-button type="danger" size="small" :disabled="!tableData.selectionIds.length"
                    v-permission="[$route, 'delete']" @click="tableData.batchRemove">批量移除
         </el-button>
-        <el-button class="custom" size="small" v-permission="[$route, 'add']">添加商品</el-button>
+        <el-button class="custom" size="small" v-permission="[$route, 'add']"
+                   @click="$router.push({path: '/main/operation/special/goods/add', query: {specialId: $route.query.specialId}})">
+          添加商品
+        </el-button>
       </template>
     </table-options-header>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
@@ -68,14 +71,12 @@ import {useRoute} from 'vue-router'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import WideGoodsItem from '@/components/goods/WideGoodsItem'
 import $api from '@/api'
-import TableOptionsHeader from "@/components/common/TableOptionsHeader";
 
 const moduleName = '商品'
 
 export default defineComponent({
   name: "SpecialGoodsList",
   components: {
-    TableOptionsHeader,
     WideGoodsItem
   },
   setup() {

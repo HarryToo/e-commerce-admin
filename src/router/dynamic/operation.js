@@ -1,4 +1,5 @@
 import SpecialGoodsList from '@/views/main/operation/special/goods'
+import AddGoods from '@/views/main/operation/special/goods/AddGoods'
 
 export default [
     {
@@ -25,5 +26,13 @@ export default [
             title: '商品管理'
         },
         component: SpecialGoodsList
+    },
+    {
+        path: 'operation/special/goods/add',
+        name: 'AddSpecialGoods',
+        meta: {
+            title: '添加商品'
+        },
+        component: AddGoods
     }
 ]

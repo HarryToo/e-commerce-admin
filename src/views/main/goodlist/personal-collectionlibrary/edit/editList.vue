@@ -39,7 +39,7 @@ export default defineComponent({
   methods:{
 	 getEditData(){
 		var that = this
-		$api.shopListApi.getPersonLbShopListData().then((data) => {
+		$api.goodsApi.personLibrary.getPersonLbShopListData().then((data) => {
 			data.forEach(function(item){
 				that.EditId.forEach(function(itemId){
 					if(itemId == item.id){
