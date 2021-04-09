@@ -29,7 +29,7 @@
     </table-options-header>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
       <div class="goods-list" :style="{height: $getTableHeight() + 'px'}">
-        <square-goods-item choosable v-for="i in 15" :key="i" @change="tableData.chooseChange"></square-goods-item>
+        <square-goods-item choosable v-for="item in tableData.list" :key="item.id" :goods="item" @change="tableData.chooseChange"></square-goods-item>
       </div>
       <el-pagination small :current-page="page.index" :page-size="page.size" :page-sizes="[10, 15, 30, 50]"
                      layout="total, sizes, prev, pager, next, jumper" :total="tableData.total" class="custom"
@@ -68,96 +68,6 @@ export default defineComponent({
           {
             value: '',
             label: '全部'
-          },
-          {
-            value: 'zhinan',
-            label: '指南',
-            children: [
-              {
-                value: 'shejiyuanze',
-                label: '设计原则',
-                children: [{
-                  value: 'yizhi',
-                  label: '一致',
-                }, {
-                  value: 'fankui',
-                  label: '反馈'
-                }, {
-                  value: 'xiaolv',
-                  label: '效率'
-                }, {
-                  value: 'kekong',
-                  label: '可控'
-                }]
-              },
-              {
-                value: 'daohang',
-                label: '导航',
-                children: [{
-                  value: 'cexiangdaohang',
-                  label: '侧向导航'
-                }, {
-                  value: 'dingbudaohang',
-                  label: '顶部导航'
-                }]
-              }]
-          },
-          {
-            value: 'zujian',
-            label: '组件',
-            children: [{
-              value: 'basic',
-              label: 'Basic',
-              children: [{
-                value: 'layout',
-                label: 'Layout 布局'
-              }, {
-                value: 'color',
-                label: 'Color 色彩'
-              }, {
-                value: 'typography',
-                label: 'Typography 字体'
-              }, {
-                value: 'icon',
-                label: 'Icon 图标'
-              }, {
-                value: 'button',
-                label: 'Button 按钮'
-              }]
-            }, {
-              value: 'form',
-              label: 'Form',
-              children: [{
-                value: 'radio',
-                label: 'Radio 单选框'
-              }, {
-                value: 'checkbox',
-                label: 'Checkbox 多选框'
-              }, {
-                value: 'input',
-                label: 'Input 输入框'
-              }, {
-                value: 'input-number',
-                label: 'InputNumber 计数器'
-              }, {
-                value: 'select',
-                label: 'Select 选择器'
-              }]
-            }]
-          },
-          {
-            value: 'ziyuan',
-            label: '资源',
-            children: [{
-              value: 'axure',
-              label: 'Axure Components'
-            }, {
-              value: 'sketch',
-              label: 'Sketch Templates'
-            }, {
-              value: 'jiaohu',
-              label: '组件交互文档'
-            }]
           }
         ],
         sort: [
@@ -196,8 +106,14 @@ export default defineComponent({
         searchForm.value.resetFields()
         page.index = 1
         tableData.getList()
+      },
+      getClassifyOptions: async () => {
+        const {list} = await $api.goodsApi.classify.getList()
+        search.options.classify = search.options.classify.concat(list)
       }
     })
+
+    search.getClassifyOptions()
 
     const page = reactive({
       index: 1,
@@ -225,7 +141,7 @@ export default defineComponent({
         }
       },
       getList: async () => {
-        const {list, total} = await $api.operationApi.special.getGoodsList({
+        const {list, total} = await $api.goodsApi.platformLibrary.getList({
           specialId: route.query.specialId,
           page: page.index,
           pageSize: page.size,
