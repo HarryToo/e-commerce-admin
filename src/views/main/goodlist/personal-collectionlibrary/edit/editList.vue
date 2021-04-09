@@ -68,9 +68,24 @@ export default defineComponent({
 		height: 655px;
 		overflow-y: scroll;
 		border: 1px solid #eeeeee;
-		
 	}
-	.EditBox::-webkit-scrollbar { display: none; }
+	.EditBox::-webkit-scrollbar{
+	  width:10px;
+	}
+	.EditBox::-webkit-scrollbar-track{
+	  background: #efefef;
+	  border-radius:2px;
+	}
+	.EditBox::-webkit-scrollbar-thumb{
+	  background: #cecece;
+	  border-radius:10px;
+	}
+	.EditBox::-webkit-scrollbar-thumb:hover{
+	  background: #ff632f;
+	}
+	.EditBox::-webkit-scrollbar-corner{
+	  background: #9a8a37;
+	}
 	.el-menu-item{
 		height: 100px;
 			.ListBox{

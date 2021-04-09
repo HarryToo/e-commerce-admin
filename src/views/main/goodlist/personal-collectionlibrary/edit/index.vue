@@ -36,6 +36,7 @@ export default defineComponent({
 	display: flex;
 	justify-content: space-evenly;
 	flex-wrap: wrap;
+	padding-top: 30px;
 	.Edit-cld0{
 		width: 24.39%;
 	}

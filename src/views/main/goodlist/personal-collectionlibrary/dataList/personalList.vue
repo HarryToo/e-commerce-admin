@@ -1,6 +1,6 @@
 <template>
 	<div class="Library-List">
-		<el-table :data="TabData" style="width: 100%" @selection-change="selectAll" border ref="multipleTable">
+		<el-table :data="TabData" style="width: 100%" @selection-change="selectAll" border ref="multipleTable"  height="630">
 
 			<el-table-column type="selection" width="110" align="center">
 
@@ -69,7 +69,7 @@
 				<template #default="scope" align="center">
 					<div v-if="scope.row.collectionState != 1" class="GoodOperation">
 						<div v-if="scope.row.collectionState == 2" @click='RetryShop(scope.$index)'>重试</div>
-						<div v-else @click='EditShow = true'>编辑</div>|
+						<div v-else><router-link to='PersonalCollectionLibrary/edit'>编辑</router-link></div>|
 						<div @click='DeleteShop(scope.$index)'>删除</div>
 					</div>
 				</template>
@@ -83,11 +83,6 @@
 			:page-sizes="[2, 4, 6, 8]" :page-size="2" layout="total, sizes, prev, pager, next, jumper"
 			:total="TabData.length">
 		</el-pagination>
-		
-		
-		<el-dialog  v-model="EditShow" width='85.5%' top="5rem" :modal='true'>
-		  <edit></edit>
-		</el-dialog>
 	</div>
 
 </template>
@@ -106,9 +101,9 @@
 		},
 		data() {
 			return {
-				EditShow:false,//编辑列表
 				TabData: [],
 				multipleSelection: [],
+				currentPage:1,
 			}
 		},
 		mounted() {
@@ -300,10 +295,11 @@
 			div {
 				padding: 0 10px;
 				font-size: 14px;
-			}
-
-			div {
 				cursor: pointer;
+				a{
+					text-decoration: none;
+					color: #F9612E;
+				}
 			}
 		}
 

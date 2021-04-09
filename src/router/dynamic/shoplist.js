@@ -18,9 +18,9 @@
     },
 	{
 	    path: 'goodlist/PersonalCollectionLibrary/edit',
-	    name: 'PersonalCollectionLibrary',
+	    name: 'edit',
 	    meta: {
-	        title: '个人采集库'
+	        title: '编辑'
 	    },
 	    component: () => import('@/views/main/goodlist/personal-collectionlibrary/edit/index')
 	},

@@ -74,7 +74,6 @@
 				 $api.shoplistApi.getPersonLbSourcePlatformData().then((data) => {that.platformSourceSelect = data})
 			},
 			SelectData() {
-				alert(12)
 				console.log("商品来源"+this.platformSourceSelectVal)
 				console.log("商品状态"+this.platformCollectionStatuSelectVal)
 				console.log("商品标题"+this.platformShopNameScreen)
