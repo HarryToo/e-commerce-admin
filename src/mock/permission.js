@@ -29,7 +29,24 @@ $mock.get('/permission/byAccount', [
     },
     {
         name: '供应商管理',
-        path: 'supplier'
+        path: 'supplier',
+        permission: ['edit']
+    },
+    {
+        name: '运营管理',
+        path: 'operation',
+        children: [
+            {
+                name: '专题管理',
+                path: 'operation/special',
+                permission: ['edit', 'add', 'delete']
+            },
+            {
+                name: '商品管理',
+                path: 'operation/special/goods',
+                permission: ['view', 'add', 'delete']
+            }
+        ]
     },
     {
         name: '套餐管理',

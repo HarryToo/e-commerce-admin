@@ -1,4 +1,5 @@
 import shoplistRoutes from './shoplist'//商品列表
+import operationRoutes from './operation'
 import setMealRoutes from './setMeal'
 import customerRoutes from './customer'
 import permissionRoutes from './permission'
@@ -23,6 +24,7 @@ const dynamicRoutes = [
         },
         component: () => import('@/views/main/supplier')
     },
+    ...operationRoutes,
     ...setMealRoutes,
     ...customerRoutes,
     ...permissionRoutes

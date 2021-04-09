@@ -35,16 +35,18 @@
             <el-popover placement="left" title="查看备注" :width="300" trigger="click" :content="scope.row.remark"
                         v-if="scope.row.remark">
               <template #reference>
-                <el-button @click="" type="text" size="small">查看备注</el-button>
+                <el-button type="text" size="small">查看备注</el-button>
               </template>
             </el-popover>
-            <el-popover placement="left" title="添加备注" :width="300" trigger="click" :content="scope.row.remark" v-else>
+            <el-popover placement="left" title="添加备注" :width="300" trigger="click"
+                        v-else>
               <template #reference>
-                <el-button @click="" type="text" size="small">备注</el-button>
+                <el-button type="text" size="small" v-permission="[$route, 'edit']">备注</el-button>
               </template>
               <div style="text-align: right;">
-                <el-input v-model.trim="tableData.form.remark" type="textarea" placeholder="请输入备注内容"></el-input>
-                <el-button class="custom" size="mini" style="margin-top: 8px;"
+                <el-input v-model.trim="tableData.form.remark" type="textarea" placeholder="请输入备注内容"
+                          @keyup.enter="tableData.commitRemark(scope.row)"></el-input>
+                <el-button class="custom" size="mini" style="margin-top: 10px;"
                            @click="tableData.commitRemark(scope.row)">提交
                 </el-button>
               </div>
@@ -62,7 +64,7 @@
 </template>
 
 <script>
-import {defineComponent, ref, reactive, computed, provide, toRef} from 'vue'
+import {defineComponent, ref, reactive, computed} from 'vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import $api from '@/api'
 import {exportExcel} from '@/utils/tool'
@@ -113,10 +115,10 @@ export default defineComponent({
 
     const tableData = reactive({
       list: [],
+      total: 0,
       form: {
         remark: ''
       },
-      total: 0,
       getList: async () => {
         const {list, total} = await $api.supplierApi.getList({
           page: page.index,
@@ -132,8 +134,8 @@ export default defineComponent({
           remark: tableData.form.remark
         })
         if (code === 200) {
+          data.remark = tableData.form.remark
           tableData.form.remark = ''
-          await tableData.getList()
         }
       }
     })
