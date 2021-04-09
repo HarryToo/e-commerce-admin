@@ -150,7 +150,7 @@ export default defineComponent({
         }
       },
       remove: (data) => {
-        ElMessageBox.confirm(`移除后，当前专题库将不再显示该${moduleName}，请谨慎操作！`, `确认移除${moduleName}编号“${data.number}”？`, {type: 'warning'}).then(() => {
+        ElMessageBox.confirm(`移除后，当前专题库将不再显示该${moduleName}，请谨慎操作！`, `确认移除编号“${data.number}”${moduleName}？`, {type: 'warning'}).then(() => {
           tableData.removeHandler([data.id])
         }).catch(err => {
         })
