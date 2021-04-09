@@ -64,6 +64,7 @@
 
 <script>
 import {defineComponent, ref, reactive} from 'vue'
+import {useRoute} from 'vue-router'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import WideGoodsItem from '@/components/goods/WideGoodsItem'
 import $api from '@/api'
@@ -71,13 +72,14 @@ import $api from '@/api'
 const moduleName = '商品'
 
 export default defineComponent({
-  name: "SpecialList",
+  name: "SpecialGoodsList",
   components: {
     WideGoodsItem
   },
   setup() {
+    const route = useRoute()
     const searchForm = ref()
-    const tableHeight = window.innerHeight - 350
+    const tableHeight = window.innerHeight - 340
 
     const exportLoading = ref(false)
 
@@ -118,6 +120,7 @@ export default defineComponent({
       },
       getList: async () => {
         const {list, total} = await $api.operationApi.special.getGoodsList({
+          specialId: route.query.specialId,
           page: page.index,
           pageSize: page.size,
           ...search.form

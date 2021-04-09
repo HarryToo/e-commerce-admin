@@ -1,6 +1,6 @@
 <template>
   <div class="wide-goods-item">
-    <div class="goods-cover" :style="{'background-image': `url('${goods.cover}')`}"></div>
+    <el-image class="goods-cover" :src="goods.cover" fit="cover" lazy :scroll-container="scrollContainer"></el-image>
     <div class="goods-texts">
       <div class="name text-cut-2" :title="goods.name">{{ goods.name }}</div>
       <div class="classify text-cut-1" :title="goods.classify">
@@ -33,6 +33,9 @@ export default defineComponent({
       default() {
         return {}
       }
+    },
+    scrollContainer: {
+      type: [String, HTMLElement]
     }
   }
 })

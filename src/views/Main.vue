@@ -14,7 +14,7 @@
         <div class="main-area" :class="{'block-view': !$route.meta.noBg}">
           <router-view v-slot="{ Component }">
             <transition name="el-fade-in-linear" mode="out-in">
-              <keep-alive>
+              <keep-alive :exclude="excludeCacheComponents">
                 <component :is="Component"/>
               </keep-alive>
             </transition>
@@ -26,7 +26,8 @@
 </template>
 
 <script>
-import {defineComponent} from 'vue'
+import {defineComponent, ref} from 'vue'
+import {useRouter} from 'vue-router'
 import HeaderBar from "./main/components/HeaderBar"
 import SideMenuBar from "./main/components/SideMenuBar"
 import BreadcrumbNav from "./main/components/BreadcrumbNav"
@@ -37,6 +38,21 @@ export default defineComponent({
     HeaderBar,
     SideMenuBar,
     BreadcrumbNav
+  },
+  setup() {
+    const allRoutes = useRouter().getRoutes()
+
+    // keep-alive排除对业务层面第三级及以上路由的缓存(/main/xx/xx/xx...)
+    const noKeepAliveRoutes = allRoutes.filter((route) => {
+      return route.path.match(/\//g).length > 3
+    })
+    const excludeCacheComponents = noKeepAliveRoutes.map((route) => {
+      return route.components.default.name
+    })
+
+    return {
+      excludeCacheComponents
+    }
   }
 })
 </script>
