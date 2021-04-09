@@ -1,3 +1,6 @@
+import {ref} from 'vue'
+import TableOptionsHeader from '@/components/common/TableOptionsHeader'
+
 export default {
     install: (app, options) => {
         // 按钮级鉴权指令
@@ -15,5 +18,15 @@ export default {
                 }
             }
         })
+
+        // 全局注册组件
+        app.component('table-options-header', TableOptionsHeader)
+
+        // 全局获取表格内容滚动区域高度
+        app.config.globalProperties.$getTableHeight = (haveOptionsHeader = true) => {
+            let height = window.innerHeight - 270
+            if (haveOptionsHeader) height -= 80
+            return height
+        }
     }
 }

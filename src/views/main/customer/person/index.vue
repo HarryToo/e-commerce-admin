@@ -1,6 +1,40 @@
 <template>
   <div style="height: 100%;display: flex;flex-direction: column;">
-    <div class="options-area">
+<!--    <div class="options-area">-->
+<!--      <el-form :model="search.form" ref="searchForm" inline label-position="top">-->
+<!--        <el-space size="medium">-->
+<!--          <el-form-item label="客户来源" prop="source" size="small" style="margin-bottom: 0;width: 180px;">-->
+<!--            <el-input v-model="search.form.source" placeholder="请输入机构名称"></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="客户账号" prop="account" size="small" style="margin-bottom: 0;width: 180px;">-->
+<!--            <el-input v-model="search.form.account" placeholder="请输入客户账号"></el-input>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="当前套餐" prop="setMealId" size="small" style="margin-bottom: 0;width: 160px;">-->
+<!--            <el-select v-model="search.form.setMealId" placeholder="请选择当前套餐">-->
+<!--              <el-option label="全部" value=""></el-option>-->
+<!--              <el-option v-for="item in setMealData.list" :key="item.id" :label="item.name"-->
+<!--                         :value="item.id"></el-option>-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="状态" prop="states" size="small" style="margin-bottom: 0;width: 160px;">-->
+<!--            <el-select v-model="search.form.states" placeholder="请选择当前套餐">-->
+<!--              <el-option label="全部" value=""></el-option>-->
+<!--              <el-option label="正常" :value="1"></el-option>-->
+<!--              <el-option label="已冻结" :value="0"></el-option>-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="入驻时间" prop="joinTime" size="small" style="margin-bottom: 0;">-->
+<!--            <el-date-picker v-model="search.form.joinTime" type="daterange" start-placeholder="开始日期"-->
+<!--                            end-placeholder="结束日期" style="width: 220px;"></el-date-picker>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item size="small" style="margin-bottom: 0;margin-top: 30px;">-->
+<!--            <el-button class="custom" @click="search.search">查询</el-button>-->
+<!--            <el-button @click="search.reset">清空条件</el-button>-->
+<!--          </el-form-item>-->
+<!--        </el-space>-->
+<!--      </el-form>-->
+<!--    </div>-->
+    <table-options-header>
       <el-form :model="search.form" ref="searchForm" inline label-position="top">
         <el-space size="medium">
           <el-form-item label="客户来源" prop="source" size="small" style="margin-bottom: 0;width: 180px;">
@@ -33,9 +67,9 @@
           </el-form-item>
         </el-space>
       </el-form>
-    </div>
+    </table-options-header>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
-      <el-table :data="tableData.list" stripe :height="tableHeight">
+      <el-table :data="tableData.list" stripe :height="$getTableHeight()">
         <el-table-column prop="joinTime" label="入驻时间" width="170"></el-table-column>
         <el-table-column prop="account" label="客户账号"></el-table-column>
         <el-table-column prop="setMealId" label="当前套餐" width="110">
@@ -112,7 +146,6 @@ export default defineComponent({
     const route = useRoute()
 
     const searchForm = ref()
-    const tableHeight = window.innerHeight - 350
 
     const search = reactive({
       form: {
@@ -225,7 +258,6 @@ export default defineComponent({
 
     return {
       searchForm,
-      tableHeight,
       search,
       page,
       setMealData,
@@ -236,12 +268,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.options-area {
-  display: flex;
-  align-items: center;
-
-  ::v-deep .el-form--label-top .el-form-item__label {
-    padding-bottom: 0;
-  }
+::v-deep .table-options-header .el-form--label-top .el-form-item__label {
+  padding-bottom: 0;
 }
 </style>

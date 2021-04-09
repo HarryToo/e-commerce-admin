@@ -25,7 +25,6 @@ function permissionRoutesGenerator(dynamicRoutes, permissionTree) {
             if (route.path.includes('/:')) {
                 // 带参数的动态路由匹配
                 absPath = route.path.substr(0, route.path.indexOf('/:'))
-                console.log(absPath);
             }
             if (route.path === item.path || absPath === item.path) {
                 if (item.permission) {

@@ -1,3 +1,5 @@
+import SpecialGoodsList from '@/views/main/operation/special/goods'
+
 export default [
     {
         path: 'operation',
@@ -22,6 +24,6 @@ export default [
         meta: {
             title: '商品管理'
         },
-        component: () => import('@/views/main/operation/special/goods')
+        component: SpecialGoodsList
     }
 ]

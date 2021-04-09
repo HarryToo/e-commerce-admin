@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%;display: flex;flex-direction: column;">
-    <div class="options-area">
+    <table-options-header>
       <el-form :model="search.form" ref="searchForm" inline>
         <el-space size="medium">
           <el-form-item label="商品名称" prop="name" size="small" style="margin-bottom: 0;">
@@ -12,15 +12,15 @@
           </el-form-item>
         </el-space>
       </el-form>
-      <div>
+      <template #right>
         <el-button type="danger" size="small" :disabled="!tableData.selectionIds.length"
                    v-permission="[$route, 'delete']" @click="tableData.batchRemove">批量移除
         </el-button>
         <el-button class="custom" size="small" v-permission="[$route, 'add']">添加商品</el-button>
-      </div>
-    </div>
+      </template>
+    </table-options-header>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
-      <el-table :data="tableData.list" stripe :height="tableHeight" @selection-change="tableData.selectionChange">
+      <el-table :data="tableData.list" stripe :height="$getTableHeight()" @selection-change="tableData.selectionChange">
         <el-table-column type="selection" width="50" v-permission="[$route, 'delete']"></el-table-column>
         <el-table-column prop="number" label="商品编号" width="150"></el-table-column>
         <el-table-column prop="info" label="商品信息" width="480">
@@ -64,20 +64,23 @@
 
 <script>
 import {defineComponent, ref, reactive} from 'vue'
+import {useRoute} from 'vue-router'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import WideGoodsItem from '@/components/goods/WideGoodsItem'
 import $api from '@/api'
+import TableOptionsHeader from "@/components/common/TableOptionsHeader";
 
 const moduleName = '商品'
 
 export default defineComponent({
-  name: "SpecialList",
+  name: "SpecialGoodsList",
   components: {
+    TableOptionsHeader,
     WideGoodsItem
   },
   setup() {
+    const route = useRoute()
     const searchForm = ref()
-    const tableHeight = window.innerHeight - 350
 
     const exportLoading = ref(false)
 
@@ -118,6 +121,7 @@ export default defineComponent({
       },
       getList: async () => {
         const {list, total} = await $api.operationApi.special.getGoodsList({
+          specialId: route.query.specialId,
           page: page.index,
           pageSize: page.size,
           ...search.form
@@ -167,7 +171,6 @@ export default defineComponent({
 
     return {
       searchForm,
-      tableHeight,
       exportLoading,
       search,
       page,
@@ -178,9 +181,4 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.options-area {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 </style>

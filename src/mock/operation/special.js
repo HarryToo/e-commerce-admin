@@ -80,9 +80,9 @@ $mock.get('/operation/goodsList', ({url}) => {
     data[`list|${pageSize}`] = [
         {
             'id|+1': 1,
-            'number|+1': 1000000000,
+            'number|+1': 10000000000,
             info: {
-                cover: '@image("100x100", "#F9612E")',
+                cover: '@image("80x80", "#F9612E")',
                 name: '@cword(30, 50)',
                 classify: '@cword(15, 30)',
                 origin: {
