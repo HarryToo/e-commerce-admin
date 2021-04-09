@@ -52,7 +52,7 @@ $mock.get('/customer/organizationList', ({url}) => {
             earningTotal: '@float(1000, 10000, 2, 2)',
             seatTotal: '@integer(100, 500)',
             studentTotal: '@integer(100, 500)',
-            states: '@integer(0, 2)',
+            status: '@integer(0, 2)',
             openPeople: '@cword(2, 3)'
         }
     ]
@@ -121,7 +121,7 @@ $mock.get('/customer/personList', ({url}) => {
                 purchase: '@float(1000, 10000, 2, 2)',
                 profit: '@float(1000, 10000, 2, 2)'
             },
-            states: '@integer(0, 1)'
+            status: '@integer(0, 1)'
         }
     ]
     return $mock.mock(data)

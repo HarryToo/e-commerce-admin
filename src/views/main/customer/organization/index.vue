@@ -34,42 +34,42 @@
         <el-table-column prop="account" label="登录账号" width="140"></el-table-column>
         <el-table-column prop="earningTotal" label="累计收益" width="100">
           <template #default="scope">
-            <span>{{ scope.row.states === 0 || !scope.row.earningTotal ? '--' : '￥' + scope.row.earningTotal }}</span>
+            <span>{{ scope.row.status === 0 || !scope.row.earningTotal ? '--' : '￥' + scope.row.earningTotal }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="seatTotal" label="总席位数">
           <template #default="scope">
-            <span>{{ scope.row.states === 0 || !scope.row.seatTotal ? '--' : scope.row.seatTotal }}</span>
+            <span>{{ scope.row.status === 0 || !scope.row.seatTotal ? '--' : scope.row.seatTotal }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="studentTotal" label="学员数">
           <template #default="scope">
-            <span>{{ scope.row.states === 0 || !scope.row.studentTotal ? '--' : scope.row.studentTotal }}</span>
+            <span>{{ scope.row.status === 0 || !scope.row.studentTotal ? '--' : scope.row.studentTotal }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="states" label="状态" width="80">
+        <el-table-column prop="status" label="状态" width="80">
           <template #default="scope">
-            <span>{{ ['待激活', '已禁用', '正常'][scope.row.states] }}</span>
+            <span>{{ ['待激活', '已禁用', '正常'][scope.row.status] }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="openPeople" label="开通人"></el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="scope">
             <!--            <el-button @click="tableData.detail(scope.row)" type="text" size="small" v-permission="[$route, 'view']"-->
-            <!--                       v-if="scope.row.states !== 0">详情-->
+            <!--                       v-if="scope.row.status !== 0">详情-->
             <!--            </el-button>-->
             <el-button
                 @click="$router.push({path: '/main/customer/person', query: {organizationName: scope.row.name}})"
-                type="text" size="small" v-permission="[$route, 'view']" v-if="scope.row.states !== 0">查看学员
+                type="text" size="small" v-permission="[$route, 'view']" v-if="scope.row.status !== 0">查看学员
             </el-button>
             <el-button @click="tableData.edit(scope.row)" type="text" size="small" v-permission="[$route, 'edit']">编辑
             </el-button>
             <el-button @click="tableData.del(scope.row)" type="text" size="small" v-permission="[$route, 'delete']"
-                       v-if="scope.row.states === 0">删除
+                       v-if="scope.row.status === 0">删除
             </el-button>
-            <el-button @click="tableData.enable(scope.row)" type="text" size="small" v-if="scope.row.states === 1">启用
+            <el-button @click="tableData.enable(scope.row)" type="text" size="small" v-if="scope.row.status === 1">启用
             </el-button>
-            <el-button @click="tableData.disable(scope.row)" type="text" size="small" v-if="scope.row.states === 2">禁用
+            <el-button @click="tableData.disable(scope.row)" type="text" size="small" v-if="scope.row.status === 2">禁用
             </el-button>
           </template>
         </el-table-column>

@@ -1,39 +1,5 @@
 <template>
   <div style="height: 100%;display: flex;flex-direction: column;">
-<!--    <div class="options-area">-->
-<!--      <el-form :model="search.form" ref="searchForm" inline label-position="top">-->
-<!--        <el-space size="medium">-->
-<!--          <el-form-item label="客户来源" prop="source" size="small" style="margin-bottom: 0;width: 180px;">-->
-<!--            <el-input v-model="search.form.source" placeholder="请输入机构名称"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="客户账号" prop="account" size="small" style="margin-bottom: 0;width: 180px;">-->
-<!--            <el-input v-model="search.form.account" placeholder="请输入客户账号"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="当前套餐" prop="setMealId" size="small" style="margin-bottom: 0;width: 160px;">-->
-<!--            <el-select v-model="search.form.setMealId" placeholder="请选择当前套餐">-->
-<!--              <el-option label="全部" value=""></el-option>-->
-<!--              <el-option v-for="item in setMealData.list" :key="item.id" :label="item.name"-->
-<!--                         :value="item.id"></el-option>-->
-<!--            </el-select>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="状态" prop="states" size="small" style="margin-bottom: 0;width: 160px;">-->
-<!--            <el-select v-model="search.form.states" placeholder="请选择当前套餐">-->
-<!--              <el-option label="全部" value=""></el-option>-->
-<!--              <el-option label="正常" :value="1"></el-option>-->
-<!--              <el-option label="已冻结" :value="0"></el-option>-->
-<!--            </el-select>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="入驻时间" prop="joinTime" size="small" style="margin-bottom: 0;">-->
-<!--            <el-date-picker v-model="search.form.joinTime" type="daterange" start-placeholder="开始日期"-->
-<!--                            end-placeholder="结束日期" style="width: 220px;"></el-date-picker>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item size="small" style="margin-bottom: 0;margin-top: 30px;">-->
-<!--            <el-button class="custom" @click="search.search">查询</el-button>-->
-<!--            <el-button @click="search.reset">清空条件</el-button>-->
-<!--          </el-form-item>-->
-<!--        </el-space>-->
-<!--      </el-form>-->
-<!--    </div>-->
     <table-options-header>
       <el-form :model="search.form" ref="searchForm" inline label-position="top">
         <el-space size="medium">
@@ -50,8 +16,8 @@
                          :value="item.id"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="状态" prop="states" size="small" style="margin-bottom: 0;width: 160px;">
-            <el-select v-model="search.form.states" placeholder="请选择当前套餐">
+          <el-form-item label="状态" prop="status" size="small" style="margin-bottom: 0;width: 160px;">
+            <el-select v-model="search.form.status" placeholder="请选择当前套餐">
               <el-option label="全部" value=""></el-option>
               <el-option label="正常" :value="1"></el-option>
               <el-option label="已冻结" :value="0"></el-option>
@@ -109,16 +75,16 @@
             <div>盈利：￥{{ scope.row.earningTotal.profit }}</div>
           </template>
         </el-table-column>
-        <el-table-column prop="states" label="状态" width="80">
+        <el-table-column prop="status" label="状态" width="80">
           <template #default="scope">
-            <span>{{ ['已冻结', '正常'][scope.row.states] }}</span>
+            <span>{{ ['已冻结', '正常'][scope.row.status] }}</span>
           </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="60">
           <template #default="scope">
-            <el-button @click="tableData.enable(scope.row)" type="text" size="small" v-if="scope.row.states === 0">启用
+            <el-button @click="tableData.enable(scope.row)" type="text" size="small" v-if="scope.row.status === 0">启用
             </el-button>
-            <el-button @click="tableData.disable(scope.row)" type="text" size="small" v-if="scope.row.states === 1">冻结
+            <el-button @click="tableData.disable(scope.row)" type="text" size="small" v-if="scope.row.status === 1">冻结
             </el-button>
           </template>
         </el-table-column>
@@ -152,7 +118,7 @@ export default defineComponent({
         source: '',
         account: '',
         setMealId: '',
-        states: '',
+        status: '',
         joinTime: []
       },
       param: computed(() => {
@@ -160,7 +126,7 @@ export default defineComponent({
           source: search.form.source,
           account: search.form.account,
           setMealId: search.form.setMealId,
-          states: search.form.states,
+          status: search.form.status,
           startTime: search.form.joinTime[0] || '',
           endTime: search.form.joinTime[1] || ''
         }

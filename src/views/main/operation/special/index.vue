@@ -205,7 +205,7 @@ export default defineComponent({
             id: data.id
           })
           if (code === 200) {
-            data.states = 0
+            data.status = 0
           }
         }).catch(err => {
         })
@@ -215,7 +215,7 @@ export default defineComponent({
           id: data.id
         })
         if (code === 200) {
-          data.states = 1
+          data.status = 1
         }
       },
       edit: async (data) => {
