@@ -16,7 +16,7 @@ $mock.get('/permission/byAccount', [
                 permission: ['view', 'edit', 'add', 'delete']
             },
 			{
-			    name: '个人-编辑',
+			    name: '编辑',
 			    path: 'goodlist/PersonalCollectionLibrary/edit',
 			    permission: ['view', 'edit', 'add', 'delete']
 			},

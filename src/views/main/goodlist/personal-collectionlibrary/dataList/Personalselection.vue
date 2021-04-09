@@ -32,6 +32,7 @@
 		<div>
 			<el-button type='primary'>清空选项</el-button>
 		</div>
+	
 	</div>
 	
 </template>
@@ -71,7 +72,7 @@
 		methods: {
 			getPersonLbSourcePlatformData(){
 				var that = this
-				 $api.shoplistApi.getPersonLbSourcePlatformData().then((data) => {that.platformSourceSelect = data})
+				 $api.shopListApi.getPersonLbSourcePlatformData().then((data) => {that.platformSourceSelect = data})
 			},
 			SelectData() {
 				console.log("商品来源"+this.platformSourceSelectVal)

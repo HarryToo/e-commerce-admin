@@ -1,3 +1,5 @@
+	import PersonalCollectionLibraryEdit from '@/views/main/goodlist/personal-collectionlibrary/edit'
+	
 	export default [
 		{
 	    path: 'goodlist',
@@ -22,7 +24,7 @@
 	    meta: {
 	        title: '编辑'
 	    },
-	    component: () => import('@/views/main/goodlist/personal-collectionlibrary/edit/index')
+		component: PersonalCollectionLibraryEdit
 	},
 	{
 	    path: 'goodlist/PlatformGoodLibrary',

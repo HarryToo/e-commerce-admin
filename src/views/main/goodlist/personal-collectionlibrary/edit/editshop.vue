@@ -71,15 +71,39 @@
 									<div class="sku-r2-w1-r2">
 										<span>属性值</span><span>单属性最多50个属性值，多属性最多20个属性值，每个属性不超过20个字符，可拖动排序</span>
 									</div>
-									<div class="sku-r2-w1-list">
-										<div class="sku-r2-w1-label"><span>黑色-高配七重减震-变频节能-汽车电池约350公里</span><span><img
+									<!-- <div class="sku-r2-w1-list"> -->
+									<!-- 	<div class="sku-r2-w1-label"><span>黑色-高配七重减震-变频节能-汽车电池约350公里</span><span><img
 													src="../../../../../assets/logo.png" alt=""></span></div>
 										<div class="sku-r2-w1-label"><span>黑色-高配七重减震-变频节能-汽车电池约350公里</span><span><img
 													src="../../../../../assets/logo.png" alt=""></span></div>
-										<div class="sku-r2-w1-label"><span>黑色-高配七重减震-变频节能-汽车电池约350公里</span><span><img
-													src="../../../../../assets/logo.png" alt=""></span></div>
-										<div class="sku-r2-w1-add">+添加属性值</div>
-									</div>
+										<div class="sku-r2-w1-label"></div> -->
+										
+			<!-- 							<ul class="sku-r2-w1-list">
+											<li class="sku-r2-w1-label"
+												v-for="color in sku.colors"
+												v-dragging="{ item: color, list: sku.colors, group: 'color' }"
+												>
+												
+												<span>黑色-高配七重减震-变频节能-汽车电池约350公里</span><span><img
+															src="../../../../../assets/logo.png" alt=""></span>
+											</li>
+											<li class="sku-r2-w1-add">+添加属性值</li>
+										</ul> -->
+										
+									<!-- </div> -->
+		
+									      <draggable
+									        class="list-group"
+									        :list="sku.colors"
+									        group="moveOne"
+									        @change="log"
+									        itemKey="name"
+									      >
+									        <template #item="{ element, index }">
+									          <div class="list-group-item">{{ element.text }} {{ index }}</div>
+									        </template>
+									      </draggable>
+	
 								</div>
 							</div>
 						</div>
@@ -138,7 +162,7 @@
 									</div>
 									<input class="el-upload__input" type="file" name="file" @change="addfile"
 										ref="image" accept="">
-										<img :src="shopImg.addImg" alt="">
+									<img :src="shopImg.addImg" alt="">
 								</div>
 							</div>
 						</div>
@@ -187,6 +211,8 @@
 				</el-tab-pane>
 			</el-tabs>
 		</div>
+		
+		
 		<el-dialog v-model="shopSelcetShow">
 			<el-select v-model="ClassValue[0]" filterable placeholder="请选择">
 				<el-option v-for="val in shopSelcet.first" :key="val.value" :label="val.label" :value="val.value">
@@ -212,19 +238,47 @@
 </template>
 
 <script>
-	import {
-		defineComponent,
-		ref
-	} from 'vue'
+	import {defineComponent,ref} from 'vue'
+	// import {VueDND} from 'awe-dnd'
+	import draggable from "vuedraggable";
+	// import draggable from 'vuedraggable'
 	import $api from "@/api"
 
 	export default defineComponent({
 		name: "UserList",
+        components: {
+            draggable,
+        },
+
 		data() {
 			return {
+
+				sku:{
+					ars:'',
+					colors: [{
+					          text: "Aquamarine"
+					        }, {
+					          text: "Hotpink"
+					        }, {
+					          text: "Gold"
+					        }, {
+					          text: "Crimson"
+					        }, {
+					          text: "Blueviolet"
+					        }, {
+					          text: "Lightblue"
+					        }, {
+					          text: "Cornflowerblue"
+					        }, {
+					          text: "Skyblue"
+					        }, {
+					          text: "Burlywood"
+					        }],
+					otherData:'1',
+				},
 				shopImg: {
 					checkAll: false,
-					addImg:'',
+					addImg: '',
 					checkedVal: [1, 2, 3],
 					ValData: [{
 						img: require('../../../../../assets/logo.png'),
@@ -279,10 +333,16 @@
 			};
 		},
 		mounted() {
+
+			
 			this.PersonEditClassData()
 		},
 		methods: {
-
+		
+			    log: function(evt) {
+					console.log(this.sku.colors)
+			      window.console.log(evt.moved.element);
+			    },
 			//商品主图
 			showfileinput() {
 				this.$refs.image.click();
@@ -309,7 +369,7 @@
 				}
 				// 文件转化base64格式，用于页面预览（或调用接口上传图片，获取图片地址，再赋值
 				var reader = new FileReader();
-				
+
 				reader.onload = (data) => {
 					that.addImg = data.target.result; // 图片赋值
 				};
@@ -333,7 +393,7 @@
 			},
 			PersonEditClassData() {
 				var that = this
-				$api.shoplistApi.getPersonEditClassData().then((data) => {
+				$api.shopListApi.getPersonEditClassData().then((data) => {
 					that.shopSelcet = data
 				})
 			},
@@ -352,29 +412,35 @@
 			font-weight: 600;
 			padding-bottom: 10px;
 		}
-		
+
 		.editshopBox {
-			::v-deep .el-tabs__content{
+			::v-deep .el-tabs__content {
 				height: 585px;
 				overflow-y: scroll;
 			}
-			::v-deep .el-tabs__content::-webkit-scrollbar{
-			  width:10px;
+
+			::v-deep .el-tabs__content::-webkit-scrollbar {
+				width: 10px;
 			}
-			::v-deep .el-tabs__content::-webkit-scrollbar-track{
-			  background: #efefef;
-			  border-radius:2px;
+
+			::v-deep .el-tabs__content::-webkit-scrollbar-track {
+				background: #efefef;
+				border-radius: 2px;
 			}
-			::v-deep .el-tabs__content::-webkit-scrollbar-thumb{
-			  background: #cecece;
-			  border-radius:10px;
+
+			::v-deep .el-tabs__content::-webkit-scrollbar-thumb {
+				background: #cecece;
+				border-radius: 10px;
 			}
-			::v-deep .el-tabs__content::-webkit-scrollbar-thumb:hover{
-			  background: #ff632f;
+
+			::v-deep .el-tabs__content::-webkit-scrollbar-thumb:hover {
+				background: #ff632f;
 			}
-			::v-deep .el-tabs__content::-webkit-scrollbar-corner{
-			  background: #9a8a37;
+
+			::v-deep .el-tabs__content::-webkit-scrollbar-corner {
+				background: #9a8a37;
 			}
+
 			::v-deep .el-tabs__nav-wrap {
 				padding-left: 1rem;
 				background-color: #EEEEEE;
@@ -454,6 +520,7 @@
 					margin-left: 5px;
 					color: #afafaf;
 					width: calc(100% - 115px);
+
 					.el-input {
 						width: 100%;
 					}

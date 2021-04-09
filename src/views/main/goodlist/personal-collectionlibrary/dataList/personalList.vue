@@ -1,6 +1,6 @@
 <template>
 	<div class="Library-List">
-		<el-table :data="TabData" style="width: 100%" @selection-change="selectAll" border ref="multipleTable"  height="630">
+		<el-table :data="TabData" style="width: 100%" @selection-change="selectAll" stripe ref="multipleTable"  :height="$getTableHeight()">
 
 			<el-table-column type="selection" width="110" align="center">
 
@@ -65,24 +65,30 @@
 				</template>
 			</el-table-column>
 
-			<el-table-column prop="collectionPeoPle" label="操作" width="150" align="center">
+			<el-table-column fixed="right" prop="collectionPeoPle" label="操作" width="150" align="center">
 				<template #default="scope" align="center">
 					<div v-if="scope.row.collectionState != 1" class="GoodOperation">
 						<div v-if="scope.row.collectionState == 2" @click='RetryShop(scope.$index)'>重试</div>
-						<div v-else><router-link to='PersonalCollectionLibrary/edit'>编辑</router-link></div>|
+						<div v-else @click="$router.push({path: '/main/goodlist/PersonalCollectionLibrary/edit', query: {specialId: [scope.row.id]}})">
+							编辑
+						</div>|
 						<div @click='DeleteShop(scope.$index)'>删除</div>
 					</div>
 				</template>
 			</el-table-column>
 
 		</el-table>
-		<el-button @click='BatchRetryShop()'>批量重试</el-button>
-		<el-button @click='BatchDeleteShop()'>批量删除</el-button>
-		<el-button>批量编辑</el-button>
-		<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-			:page-sizes="[2, 4, 6, 8]" :page-size="2" layout="total, sizes, prev, pager, next, jumper"
-			:total="TabData.length">
-		</el-pagination>
+		<div class="footerBox">
+			<div class="footerBtm">
+				<el-button @click='BatchRetryShop()'>批量重试</el-button>
+				<el-button @click='BatchDeleteShop()'>批量删除</el-button>
+				<el-button @click="$router.push({path: '/main/goodlist/PersonalCollectionLibrary/edit', query: {specialId: selectId}})">批量编辑</el-button>
+			</div>
+			<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+				:page-sizes="[2, 4, 6, 8]" :page-size="2" layout="total, sizes, prev, pager, next, jumper"
+				:total="TabData.length">
+			</el-pagination>
+		</div>
 	</div>
 
 </template>
@@ -101,19 +107,18 @@
 		},
 		data() {
 			return {
+				shopListHeight:window.innerHeight - 350,
 				TabData: [],
 				multipleSelection: [],
+				selectId:[],
 				currentPage:1,
 			}
 		},
 		mounted() {
+			
 			this.getPersonLbShopListData()
 		},
 		methods: {
-			secg(a, b) {
-				console.log(a)
-				console.log(b)
-			},
 			//批量删除
 			BatchDeleteShop() {
 				var that = this
@@ -162,12 +167,11 @@
 					type: 'warning'
 				}).then(() => {
 					data.forEach(function(item, index) {
-					
 						if(item.collectionState != 2){
-							that.$message({
-							          message: '只能重试采集失败商品',
-							          type: 'warning'
-							        });
+							// that.$message({
+							//           message: '只能重试采集失败商品',
+							//           type: 'warning'
+							//         });
 							 return false
 						}
 						that.TabData.forEach(function(itemI, indexI) {							
@@ -210,13 +214,17 @@
 			},
 			getPersonLbShopListData() {
 				var that = this
-				$api.shoplistApi.getPersonLbShopListData().then((data) => {
+				$api.shopListApi.getPersonLbShopListData().then((data) => {
 					that.TabData = data;
 				})
 			},
 			selectAll(val) {
-				this.multipleSelection = val;
-				console.log(val)
+				this.multipleSelection = val 
+				var that = this
+				that.selectId = [];
+				val.forEach(function(itemI, indexI) {							
+					that.selectId.push(itemI.id)
+				})
 			},
 			handleSizeChange(val) {
 				console.log(val+'handleSizeChange');
@@ -307,10 +315,12 @@
 			font-size: 14px;
 			font-family: SourceHanSansSC-regular;
 		}
-	}
-	.el-dialog{
-		margin: 0 auto;
-		margin-left: 260px;
-	}
-
+		.footerBox{
+			display: flex;
+			justify-content: space-between;
+			.footerBtm{
+				margin-top: 30px;
+			}
+		}
+	}	
 </style>
