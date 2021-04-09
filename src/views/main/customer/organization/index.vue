@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%;display: flex;flex-direction: column;">
-    <div class="options-area">
+    <table-options-header>
       <el-form :model="search.form" ref="searchForm" inline>
         <el-space size="medium">
           <el-form-item label="机构名称" prop="name" size="small" style="margin-bottom: 0;">
@@ -16,10 +16,12 @@
           </el-form-item>
         </el-space>
       </el-form>
-      <el-button class="custom" size="small" @click="tableData.add" v-permission="[$route, 'add']">开通机构账号</el-button>
-    </div>
+      <template #right>
+        <el-button class="custom" size="small" @click="tableData.add" v-permission="[$route, 'add']">开通机构账号</el-button>
+      </template>
+    </table-options-header>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
-      <el-table :data="tableData.list" stripe :height="tableHeight">
+      <el-table :data="tableData.list" stripe :height="$getTableHeight()">
         <el-table-column prop="openTime" label="开通时间" width="170"></el-table-column>
         <el-table-column prop="name" label="机构名称" width="180"></el-table-column>
         <el-table-column prop="contact" label="联系人"></el-table-column>
@@ -101,7 +103,6 @@ export default defineComponent({
   },
   setup() {
     const searchForm = ref()
-    const tableHeight = window.innerHeight - 353
 
     const search = reactive({
       form: {
@@ -243,7 +244,6 @@ export default defineComponent({
 
     return {
       searchForm,
-      tableHeight,
       search,
       page,
       dialog,
@@ -255,9 +255,4 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.options-area {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 </style>

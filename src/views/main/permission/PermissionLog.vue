@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100%;display: flex;flex-direction: column;">
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
-      <el-table :data="tableData.list" stripe :height="tableHeight">
+      <el-table :data="tableData.list" stripe :height="$getTableHeight(false)">
         <el-table-column prop="time" label="时间" width="250"></el-table-column>
         <el-table-column prop="description" label="操作描述"></el-table-column>
       </el-table>
@@ -20,8 +20,6 @@ import $api from '@/api'
 export default defineComponent({
   name: "PermissionLog",
   setup() {
-    const tableHeight = window.innerHeight - 260
-
     const page = reactive({
       index: 1,
       size: 15,
@@ -51,7 +49,6 @@ export default defineComponent({
     tableData.getList()
 
     return {
-      tableHeight,
       page,
       tableData
     }

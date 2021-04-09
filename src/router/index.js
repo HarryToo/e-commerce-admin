@@ -9,6 +9,7 @@ const staticRoutes = [
     {
         path: '/main',
         name: 'Main',
+        redirect: '/main/dataCenter',
         meta: {
             title: '主界面'
         },

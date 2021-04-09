@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%;display: flex;flex-direction: column;">
-    <div class="options-area">
+    <table-options-header>
       <el-form :model="search.form" ref="searchForm" inline>
         <el-space size="medium">
           <el-form-item label="专题名称" prop="name" size="small" style="margin-bottom: 0;">
@@ -12,20 +12,23 @@
           </el-form-item>
         </el-space>
       </el-form>
-      <el-popover placement="left" title="创建专题" :width="300" trigger="click">
-        <template #reference>
-          <el-button class="custom" size="small" v-permission="[$route, 'add']">创建专题</el-button>
-        </template>
-        <div style="text-align: right;">
-          <el-input v-model.trim="tableData.form.name" placeholder="请输入专题名称"
-                    @keyup.enter="tableData.add"></el-input>
-          <el-button class="custom" size="mini" style="margin-top: 10px;" @click="tableData.add">创建
-          </el-button>
-        </div>
-      </el-popover>
-    </div>
+      <template #right>
+        <el-popover placement="left" title="创建专题" :width="300" trigger="click">
+          <template #reference>
+            <el-button class="custom" size="small" v-permission="[$route, 'add']">创建专题</el-button>
+          </template>
+          <div style="text-align: right;">
+            <el-input v-model.trim="tableData.form.name" placeholder="请输入专题名称"
+                      @keyup.enter="tableData.add"></el-input>
+            <el-button class="custom" size="mini" style="margin-top: 10px;" @click="tableData.add">创建
+            </el-button>
+          </div>
+        </el-popover>
+      </template>
+    </table-options-header>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
-      <el-table :data="tableData.list" stripe :tree-props="{children: 'children'}" row-key="id" default-expand-all :height="tableHeight">
+      <el-table :data="tableData.list" stripe :tree-props="{children: 'children'}" row-key="id" default-expand-all
+                :height="$getTableHeight()">
         <el-table-column prop="name" label="专题名称" width="400">
           <template #default="scope">
             <span>{{ scope.row.name }}</span>
@@ -107,7 +110,6 @@ export default defineComponent({
   name: "SpecialList",
   setup() {
     const searchForm = ref()
-    const tableHeight = window.innerHeight - 351
 
     const exportLoading = ref(false)
 
@@ -235,7 +237,6 @@ export default defineComponent({
 
     return {
       searchForm,
-      tableHeight,
       exportLoading,
       search,
       page,
@@ -246,12 +247,6 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.options-area {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .el-table__row--level-1 {
   td:first-child {
     position: relative;

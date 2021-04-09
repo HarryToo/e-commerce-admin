@@ -1,10 +1,12 @@
 <template>
   <div style="height: 100%;display: flex;flex-direction: column;">
-    <div class="options-area">
-      <el-button class="custom" size="small" @click="tableData.add" v-permission="[$route, 'add']">添加部门</el-button>
-    </div>
+    <table-options-header>
+      <template #right>
+        <el-button class="custom" size="small" @click="tableData.add" v-permission="[$route, 'add']">添加部门</el-button>
+      </template>
+    </table-options-header>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
-      <el-table :data="tableData.list" stripe :height="tableHeight">
+      <el-table :data="tableData.list" stripe :height="$getTableHeight()">
         <el-table-column prop="name" label="部门名称" width="250"></el-table-column>
         <el-table-column prop="description" label="部门描述"></el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
@@ -45,8 +47,6 @@ export default defineComponent({
     Detail
   },
   setup() {
-    const tableHeight = window.innerHeight - 353
-
     const page = reactive({
       index: 1,
       size: 10,
@@ -125,7 +125,6 @@ export default defineComponent({
     provide('closeDialog', dialog.close)
 
     return {
-      tableHeight,
       page,
       dialog,
       tableData
@@ -135,9 +134,4 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.options-area {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
 </style>

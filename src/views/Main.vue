@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import {defineComponent, ref} from 'vue'
+import {defineComponent} from 'vue'
 import {useRouter} from 'vue-router'
 import HeaderBar from "./main/components/HeaderBar"
 import SideMenuBar from "./main/components/SideMenuBar"
@@ -85,12 +85,6 @@ export default defineComponent({
     .main-area {
       flex-grow: 1;
       overflow-y: hidden;
-
-      ::v-deep .options-area {
-        height: 84px;
-        padding: 0 25px;
-        border-bottom: 1px solid #EEEEEE;
-      }
     }
   }
 }
