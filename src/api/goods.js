@@ -1,10 +1,6 @@
 import $http from '@/utils/http'
 
 export default {
-    // 商品采集
-    collect: {
-
-    },
     // 个人采集库
     personLibrary: {
         // 搜索条件 来源平台

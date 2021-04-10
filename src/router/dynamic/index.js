@@ -1,4 +1,5 @@
-import shoplistRoutes from './shoplist'//商品列表
+import collectorRoutes from './collector'
+import goodsRoutes from './goods'
 import operationRoutes from './operation'
 import setMealRoutes from './setMeal'
 import customerRoutes from './customer'
@@ -15,7 +16,8 @@ const dynamicRoutes = [
         },
         component: () => import('@/views/main/dash-board')
     },
-    ...shoplistRoutes,
+    ...collectorRoutes,
+    ...goodsRoutes,
     {
         path: 'supplier',
         name: 'Supplier',

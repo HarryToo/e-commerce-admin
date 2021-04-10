@@ -69,7 +69,7 @@
 				<template #default="scope" align="center">
 					<div v-if="scope.row.collectionState != 1" class="GoodOperation">
 						<div v-if="scope.row.collectionState == 2" @click='RetryShop(scope.$index)'>重试</div>
-						<div v-else @click="$router.push({path: '/main/goodlist/PersonalCollectionLibrary/edit', query: {specialId: [scope.row.id]}})">
+						<div v-else @click="$router.push({path: '/main/goods/PersonalCollectionLibrary/edit', query: {specialId: [scope.row.id]}})">
 							编辑
 						</div>|
 						<div @click='DeleteShop(scope.$index)'>删除</div>
@@ -82,7 +82,7 @@
 			<div class="footerBtm">
 				<el-button @click='BatchRetryShop()'>批量重试</el-button>
 				<el-button @click='BatchDeleteShop()'>批量删除</el-button>
-				<el-button @click="$router.push({path: '/main/goodlist/PersonalCollectionLibrary/edit', query: {specialId: selectId}})">批量编辑</el-button>
+				<el-button @click="$router.push({path: '/main/goods/PersonalCollectionLibrary/edit', query: {specialId: selectId}})">批量编辑</el-button>
 			</div>
 			<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
 				:page-sizes="[2, 4, 6, 8]" :page-size="2" layout="total, sizes, prev, pager, next, jumper"

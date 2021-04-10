@@ -1,5 +1,10 @@
 import $mock from '@/utils/mock'
 
+// 文件上传
+$mock.post('/fileUpload', {
+    code: 200,
+    url: '@image(40x40, #F9612E)'
+})
 // 概览数据
 $mock.get('/overviewData', {
     warning_goods_num: '@integer(0, 100)',

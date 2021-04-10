@@ -1,7 +1,9 @@
 import axios from 'axios'
 
+const baseURL = process.env.VUE_APP_API_MOCK_URL
+
 const http = axios.create({
-    baseURL: process.env.VUE_APP_API_MOCK_URL,
+    baseURL,
     timeout: 5000,
     headers: {
         'Authorization': sessionStorage.getItem('token')
@@ -45,5 +47,6 @@ export default {
     },
     del(url, params) {
         return http.delete(url, {params})
-    }
+    },
+    baseURL
 }

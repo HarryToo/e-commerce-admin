@@ -1,3 +1,4 @@
+import $http from '@/utils/http'
 import TableOptionsHeader from '@/components/common/TableOptionsHeader'
 
 export default {
@@ -21,6 +22,8 @@ export default {
         // 全局注册组件
         app.component('table-options-header', TableOptionsHeader)
 
+        // 文件上传地址(action)
+        app.config.globalProperties.$uploadAction = $http.baseURL + '/fileUpload'
         // 全局获取表格内容滚动区域高度
         app.config.globalProperties.$getTableHeight = (haveOptionsHeader = true) => {
             let height = window.innerHeight - 270

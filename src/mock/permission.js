@@ -7,22 +7,45 @@ $mock.get('/permission/byAccount', [
         path: 'dashBoard'
     },
     {
+        name: '商品采集',
+        path: 'collector',
+        children: [
+            {
+                name: '链接采集',
+                path: 'collector/collectGoods'
+            },
+            {
+                name: '店铺采集',
+                path: 'collector/collectStore'
+            },
+            {
+                name: '插件采集',
+                path: 'collector/plugin'
+            },
+            {
+                name: '采集配置',
+                path: 'collector/config',
+                permission: ['edit']
+            }
+        ]
+    },
+    {
         name: '商品列表',
-        path: 'goodlist',
+        path: 'goods',
         children: [
             {
                 name: '个人采集库',
-                path: 'goodlist/PersonalCollectionLibrary',
+                path: 'goods/PersonalCollectionLibrary',
                 permission: ['view', 'edit', 'add', 'delete']
             },
-			{
-			    name: '编辑',
-			    path: 'goodlist/PersonalCollectionLibrary/edit',
-			    permission: ['view', 'edit', 'add', 'delete']
-			},
+            {
+                name: '编辑',
+                path: 'goods/PersonalCollectionLibrary/edit',
+                permission: ['view', 'edit', 'add', 'delete']
+            },
             {
                 name: '平台商品库',
-                path: 'goodlist/PlatformGoodLibrary',
+                path: 'goods/PlatformGoodLibrary',
                 permission: ['view', 'edit', 'add', 'delete']
             }
         ]

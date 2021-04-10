@@ -1,9 +1,10 @@
 import './account'
 import './common'
-import './order'
-import './customer'
+import './collector'
 import "./goods";
+import './order'
 import './supplier'
 import './operation'
 import './setMeal'
+import './customer'
 import './permission'
