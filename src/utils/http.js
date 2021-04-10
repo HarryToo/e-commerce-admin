@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {ElLoading} from 'element-plus'
 
 const baseURL = process.env.VUE_APP_API_MOCK_URL
 
@@ -8,31 +9,42 @@ const http = axios.create({
     headers: {
         'Authorization': sessionStorage.getItem('token')
     }
-});
+})
+
+let loadingInstance
 
 // 添加请求拦截器
 http.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
+    if (loadingInstance) {
+        loadingInstance.close()
+    }
+    loadingInstance = ElLoading.service({
+        target: '.el-main',
+        text: '让我转一会儿'
+    })
     return config;
 }, function (error) {
     // 对请求错误做些什么
-    return Promise.reject(error);
+    return Promise.reject(error)
 })
 
 // 添加响应拦截器
 http.interceptors.response.use(function (response) {
+    // 对响应数据做点什么
     let reqData
     if (response.config.method === 'get') {
         reqData = response.config.params
     } else {
-        reqData = typeof response.config.data === 'string' ? JSON.parse(response.config.data) : response.config.data;
+        reqData = typeof response.config.data === 'string' ? JSON.parse(response.config.data) : response.config.data
     }
-    console.log(response.config.method + '请求：' + response.config.url + '\n', reqData, response.data);
-    // 对响应数据做点什么
+    loadingInstance.close()
+    console.log(response.config.method + '请求：' + response.config.url + '\n', reqData, response.data)
     return response.data;
 }, function (error) {
     // 对响应错误做点什么
-    return Promise.reject(error);
+    loadingInstance.close()
+    return Promise.reject(error)
 })
 
 export default {

@@ -1,18 +1,20 @@
 <template>
-  <div
-      style="height: 100%;padding: 25px;display: flex;flex-direction: column;justify-content: center;align-items: center;">
-    <div style="width: 550px;">
-      <div class="download">
-        <i class="el-icon-download icon"></i>
-        <el-button class="custom" @click="downloadPlugin">下载采集插件</el-button>
-      </div>
-      <div class="tips">
-        <div class="title">插件采集操作流程：</div>
-        <ol>
-          <li>点击下载采集插件并安装</li>
-          <li>在已安装插件的浏览器中打开要采集的货源平台</li>
-          <li>选择要采集的商品，支持多选后批量采集</li>
-        </ol>
+  <div style="height: 100%;">
+    <div
+        style="height: 100%;padding: 25px;display: flex;flex-direction: column;justify-content: center;align-items: center;">
+      <div style="width: 550px;">
+        <div class="download">
+          <i class="el-icon-download icon"></i>
+          <el-button class="custom" @click="downloadPlugin">下载采集插件</el-button>
+        </div>
+        <div class="tips">
+          <div class="title">插件采集操作流程：</div>
+          <ol>
+            <li>点击下载采集插件并安装</li>
+            <li>在已安装插件的浏览器中打开要采集的货源平台</li>
+            <li>选择要采集的商品，支持多选后批量采集</li>
+          </ol>
+        </div>
       </div>
     </div>
   </div>
