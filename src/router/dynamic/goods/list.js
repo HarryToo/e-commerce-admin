@@ -2,7 +2,7 @@ import PersonalCollectionLibraryEdit from '@/views/main/goods/personal-library/e
 
 export default [
     {
-        path: 'goods',
+        path: 'goodsList',
         redirect: to => {
             return to.path + '/PersonalCollectionLibrary'
         },
@@ -11,7 +11,7 @@ export default [
         }
     },
     {
-        path: 'goods/PersonalCollectionLibrary',
+        path: 'goodsList/PersonalCollectionLibrary',
         name: 'PersonalCollectionLibrary',
         meta: {
             title: '个人采集库'
@@ -19,7 +19,7 @@ export default [
         component: () => import('@/views/main/goods/personal-library/PersonalCollectionLibrary')
     },
     {
-        path: 'goods/PersonalCollectionLibrary/edit',
+        path: 'goodsList/PersonalCollectionLibrary/edit',
         name: 'edit',
         meta: {
             title: '编辑'
@@ -27,7 +27,7 @@ export default [
         component: PersonalCollectionLibraryEdit
     },
     {
-        path: 'goods/PlatformGoodLibrary',
+        path: 'goodsList/PlatformGoodLibrary',
         name: 'PlatformGoodLibrary',
         meta: {
             title: '平台采集库'

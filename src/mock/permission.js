@@ -31,21 +31,37 @@ $mock.get('/permission/byAccount', [
     },
     {
         name: '商品列表',
-        path: 'goods',
+        path: 'goodsList',
         children: [
             {
                 name: '个人采集库',
-                path: 'goods/PersonalCollectionLibrary',
+                path: 'goodsList/PersonalCollectionLibrary',
                 permission: ['view', 'edit', 'add', 'delete']
             },
             {
                 name: '编辑',
-                path: 'goods/PersonalCollectionLibrary/edit',
+                path: 'goodsList/PersonalCollectionLibrary/edit',
                 permission: ['view', 'edit', 'add', 'delete']
             },
             {
                 name: '平台商品库',
-                path: 'goods/PlatformGoodLibrary',
+                path: 'goodsList/PlatformGoodLibrary',
+                permission: ['view', 'edit', 'add', 'delete']
+            }
+        ]
+    },
+    {
+        name: '商品管理',
+        path: 'goodsManage',
+        children: [
+            {
+                name: '分类管理',
+                path: 'goodsManage/classify',
+                permission: ['view', 'edit', 'add', 'delete']
+            },
+            {
+                name: '预警管理',
+                path: 'goodsManage/warning',
                 permission: ['view', 'edit', 'add', 'delete']
             }
         ]
