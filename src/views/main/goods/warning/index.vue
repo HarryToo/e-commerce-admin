@@ -52,7 +52,8 @@
       </el-pagination>
     </div>
 
-    <el-dialog title="预警设置" v-model="dialog.visible" custom-class="custom">
+    <el-dialog title="预警设置" width="500px" v-model="dialog.visible" custom-class="custom" :close-on-click-modal="false"
+               destroy-on-close>
       <setting></setting>
     </el-dialog>
   </div>

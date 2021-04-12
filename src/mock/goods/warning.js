@@ -1,4 +1,5 @@
 import $mock from '@/utils/mock'
+import moment from "moment";
 
 // 预警商品列表
 $mock.get('/goods/warning/list', ({url}) => {
@@ -34,4 +35,11 @@ $mock.get('/goods/warning/list', ({url}) => {
         }
     ]
     return $mock.mock(data)
+})
+
+// 当前预警设置
+$mock.get('/goods/warning/settings', {
+    time: '@time()',
+    options: [1, 2, 3],
+    minInventory: ''
 })

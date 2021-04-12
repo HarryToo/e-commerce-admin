@@ -32,5 +32,7 @@ export default {
     warning: {
         // 预警商品列表
         getList: (data) => $http.get('/goods/warning/list', data),
+        // 当前预警设置
+        getSettings: (data) => $http.get('/goods/warning/settings', data),
     }
 }
