@@ -1,5 +1,17 @@
 import XLSX from "xlsx"
 
+// 防抖
+export function debounce(fn, delay = 200) {
+    let timer;
+    return function () {
+        if (timer) {
+            clearTimeout(timer);
+            timer = null;
+        }
+        timer = setTimeout(fn, delay);
+    }
+}
+
 // 将一个sheet转成最终的excel文件的blob对象，然后利用URL.createObjectURL下载
 function sheet2blob(sheet, sheetName) {
     sheetName = sheetName || 'sheet1';

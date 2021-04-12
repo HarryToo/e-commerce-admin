@@ -15,11 +15,22 @@ export default {
     },
     // 商品分类
     classify: {
-        // 分类树
+        // 分类列表
         getList: (data) => $http.get('/goods/classify/list', data),
+        // 新增分类
+        add: (data) => $http.post('/goods/classify/add', data),
+        // 编辑分类
+        edit: (data) => $http.post('/goods/classify/edit', data),
+        // 禁用分类
+        disable: (data) => $http.post('/goods/classify/disable', data),
+        // 启用分类
+        enable: (data) => $http.post('/goods/classify/enable', data),
+        // 删除分类
+        del: (data) => $http.del('/goods/classify/del', data)
     },
     // 商品预警
     warning: {
-
+        // 预警商品列表
+        getList: (data) => $http.get('/goods/warning/list', data),
     }
 }

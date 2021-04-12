@@ -60,7 +60,7 @@ import md5 from 'md5'
 export default defineComponent({
   name: "RoleDetail",
   props: {
-    // 模式：add编辑/view查看/edit编辑
+    // 模式：add添加/view查看/edit编辑
     mode: {
       type: String,
       default: 'add'
@@ -74,6 +74,7 @@ export default defineComponent({
   setup(props) {
     const {mode, id} = toRefs(props)
     const closeDialog = inject('closeDialog')
+    const getList = inject('getList')
     const detailForm = ref()
     const rules = {
       name: [{required: true, message: '请输入用户名称'}],
@@ -122,6 +123,7 @@ export default defineComponent({
         const {code} = await $api.permissionApi.user[mode.value](param)
         if (code === 200) {
           closeDialog()
+          getList()
         }
       }
     }

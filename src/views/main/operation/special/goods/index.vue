@@ -83,8 +83,6 @@ export default defineComponent({
     const route = useRoute()
     const searchForm = ref()
 
-    const exportLoading = ref(false)
-
     const search = reactive({
       form: {
         name: ''
@@ -172,7 +170,6 @@ export default defineComponent({
 
     return {
       searchForm,
-      exportLoading,
       search,
       page,
       tableData

@@ -123,6 +123,7 @@ export default defineComponent({
     tableData.getList()
 
     provide('closeDialog', dialog.close)
+    provide('getList', tableData.getList)
 
     return {
       page,

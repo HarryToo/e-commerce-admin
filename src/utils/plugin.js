@@ -25,9 +25,10 @@ export default {
         // 文件上传地址(action)
         app.config.globalProperties.$uploadAction = $http.baseURL + '/fileUpload'
         // 全局获取表格内容滚动区域高度
-        app.config.globalProperties.$getTableHeight = (haveOptionsHeader = true) => {
-            let height = window.innerHeight - 270
+        app.config.globalProperties.$getTableHeight = (haveOptionsHeader = true, havePager = true) => {
+            let height = window.innerHeight - 200
             if (haveOptionsHeader) height -= 80
+            if (havePager) height -= 56
             return height
         }
     }

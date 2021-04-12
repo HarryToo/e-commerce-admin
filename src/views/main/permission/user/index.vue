@@ -192,6 +192,7 @@ export default defineComponent({
     provide('departmentList', toRef(departmentData, 'list'))
     provide('roleList', toRef(roleData, 'list'))
     provide('closeDialog', dialog.close)
+    provide('getList', tableData.getList)
 
     return {
       searchForm,

@@ -3,8 +3,11 @@
     <table-options-header>
       <el-form :model="search.form" ref="searchForm" inline>
         <el-space size="medium">
-          <el-form-item label="专题名称" prop="name" size="small" style="margin-bottom: 0;">
-            <el-input v-model="search.form.name" placeholder="请输入专题名称"></el-input>
+          <el-form-item label="分类名称" prop="name" size="small" style="margin-bottom: 0;">
+            <el-input v-model="search.form.name" placeholder="请输入分类名称"></el-input>
+          </el-form-item>
+          <el-form-item label="分类编号" prop="id" size="small" style="margin-bottom: 0;">
+            <el-input v-model="search.form.id" placeholder="请输入分类编号"></el-input>
           </el-form-item>
           <el-form-item size="small" style="margin-bottom: 0;">
             <el-button class="custom" @click="search.search">查询</el-button>
@@ -13,30 +16,22 @@
         </el-space>
       </el-form>
       <template #right>
-        <el-popover placement="left" title="创建专题" :width="300" trigger="click">
-          <template #reference>
-            <el-button class="custom" size="small" v-permission="[$route, 'add']">创建专题</el-button>
-          </template>
-          <div style="text-align: right;">
-            <el-input v-model.trim="tableData.form.name" placeholder="请输入专题名称"
-                      @keyup.enter="tableData.add"></el-input>
-            <el-button class="custom" size="mini" style="margin-top: 10px;" @click="tableData.add">创建
-            </el-button>
-          </div>
-        </el-popover>
+        <el-button class="custom" size="small" v-permission="[$route, 'add']" @click="tableData.add(0)">新建一级分类
+        </el-button>
       </template>
     </table-options-header>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
       <el-table :data="tableData.list" stripe :tree-props="{children: 'children'}" row-key="id" default-expand-all
-                :height="$getTableHeight()">
-        <el-table-column prop="name" label="专题名称" width="400">
+                :height="$getTableHeight(true, false)">
+        <el-table-column prop="id" label="分类编号" width="220"></el-table-column>
+        <el-table-column prop="label" label="分类名称" width="380">
           <template #default="scope">
             <span>{{ scope.row.name }}</span>
             <i class="el-icon-folder" style="padding-left: 6px;color: #F9612E;" v-if="scope.row.children"></i>
           </template>
         </el-table-column>
-        <el-table-column prop="updateTime" label="更新时间" width="250"></el-table-column>
-        <el-table-column prop="goodsNum" label="商品数" width="180"></el-table-column>
+        <el-table-column prop="updateTime" label="更新时间" width="200"></el-table-column>
+        <el-table-column prop="goodsNum" label="商品数"></el-table-column>
         <el-table-column prop="status" label="状态" width="150">
           <template #default="scope">
             <span style="color: #1CB903;" v-if="scope.row.status">启用</span>
@@ -44,40 +39,16 @@
           </template>
         </el-table-column>
         <el-table-column prop="updater" label="更新人"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="280">
+        <el-table-column fixed="right" label="操作" width="250">
           <template #default="scope">
-            <div :style="{'padding-left': scope.row.pid ? '40px' : '0'}">
-              <el-popover placement="left" title="新建子专题" :width="300" trigger="click" v-if="!scope.row.pid">
-                <template #reference>
-                  <el-button type="text" size="small" v-permission="[$route, 'add']">新建子专题</el-button>
-                </template>
-                <div style="text-align: right;">
-                  <el-input v-model.trim="tableData.form.name" placeholder="请输入子专题名称"
-                            @keyup.enter="tableData.add(scope.row)"></el-input>
-                  <el-button class="custom" size="mini" style="margin-top: 10px;"
-                             @click="tableData.add(scope.row)">创建
-                  </el-button>
-                </div>
-              </el-popover>
-              <el-button
-                  @click="$router.push({path: '/main/operation/special/goods', query: {specialId: scope.row.id}})"
-                  type="text" size="small" v-permission="[$route, 'edit']" v-if="!scope.row.children">
-                管理商品
+            <div
+                :style="{'padding-left': `${(scope.row.deep - 1) * 20}px`}">
+              <el-button type="text" size="small" v-permission="[$route, 'add']" v-if="scope.row.deep !== 3"
+                         @click="tableData.add(scope.row.id)">新建子分类
               </el-button>
-              <el-popover placement="left" title="编辑专题" :width="300" trigger="click">
-                <template #reference>
-                  <el-button @click="tableData.form.name = scope.row.name" type="text" size="small"
-                             v-permission="[$route, 'edit']">编辑
-                  </el-button>
-                </template>
-                <div style="text-align: right;">
-                  <el-input v-model.trim="tableData.form.name" placeholder="请输入专题名称"
-                            @keyup.enter="tableData.edit(scope.row)"></el-input>
-                  <el-button class="custom" size="mini" style="margin-top: 10px;"
-                             @click="tableData.edit(scope.row)">提交
-                  </el-button>
-                </div>
-              </el-popover>
+              <el-button @click="tableData.edit(scope.row)" type="text" size="small"
+                         v-permission="[$route, 'edit']">编辑
+              </el-button>
               <el-button @click="tableData.disable(scope.row)" type="text" size="small" v-permission="[$route, 'edit']"
                          v-if="scope.row.status">禁用
               </el-button>
@@ -91,116 +62,108 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination small :current-page="page.index" :page-size="page.size" :page-sizes="[10, 15, 30, 50]"
-                     layout="total, sizes, prev, pager, next, jumper" :total="tableData.total"
-                     @size-change="page.sizeChange" @current-change="page.indexChange">
-      </el-pagination>
     </div>
+
+    <el-dialog custom-class="custom" :title="dialog.title" v-model="dialog.visible" :close-on-click-modal="false"
+               destroy-on-close>
+      <detail :pid="dialog.currPid" :detail="dialog.currData" :mode="dialog.mode"></detail>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {defineComponent, ref, reactive} from 'vue'
+import {defineComponent, ref, reactive, computed, provide} from 'vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
+import Detail from './components/Detail'
 import $api from '@/api'
 
-const moduleName = '专题'
+const moduleName = '分类'
+
+// 平铺列表转树形列表
+function list2Tree(list) {
+  const firstLevelList = list.filter((item) => item.deep === 1)
+  const secondLevelList = list.filter((item) => item.deep === 2)
+  const thirdLevelList = list.filter((item) => item.deep === 3)
+  secondLevelList.forEach((secondLevelItem) => {
+    thirdLevelList.forEach((thirdLevelItem) => {
+      if (thirdLevelItem.pid === secondLevelItem.id) {
+        if (secondLevelItem.children) {
+          secondLevelItem.children.push(thirdLevelItem)
+        } else {
+          secondLevelItem.children = [thirdLevelItem]
+        }
+      }
+    })
+  })
+  firstLevelList.forEach((firstLevelItem) => {
+    secondLevelList.forEach((secondLevelItem) => {
+      if (secondLevelItem.pid === firstLevelItem.id) {
+        if (firstLevelItem.children) {
+          firstLevelItem.children.push(secondLevelItem)
+        } else {
+          firstLevelItem.children = [secondLevelItem]
+        }
+      }
+    })
+  })
+  return firstLevelList
+}
 
 export default defineComponent({
   name: "GoodsClassify",
+  components: {
+    Detail
+  },
   setup() {
     const searchForm = ref()
-
-    const exportLoading = ref(false)
-
     const search = reactive({
       form: {
-        name: ''
+        name: '',
+        id: ''
       },
       search() {
-        page.index = 1
         tableData.getList()
       },
       reset() {
         searchForm.value.resetFields()
-        page.index = 1
         tableData.getList()
       }
     })
 
-    const page = reactive({
-      index: 1,
-      size: 10,
-      sizeChange(size) {
-        page.size = size
-        tableData.getList()
+    const dialog = reactive({
+      visible: false,
+      currPid: 0,
+      currData: {},
+      mode: 'add',
+      title: computed(() => {
+        const titles = {
+          add: `新建${dialog.currPid ? '子' : '一级'}${moduleName}`,
+          view: `${moduleName}详情`,
+          edit: `编辑${moduleName}`
+        }
+        return titles[dialog.mode]
+      }),
+      open() {
+        dialog.visible = true
       },
-      indexChange(index) {
-        page.index = index
-        tableData.getList()
+      close() {
+        dialog.visible = false
       }
     })
 
     const tableData = reactive({
       list: [],
-      total: 0,
-      form: {
-        name: ''
-      },
       getList: async () => {
-        const {list, total} = await $api.operationApi.special.getList({
-          page: page.index,
-          pageSize: page.size,
-          ...search.form
-        })
-        tableData.list = list
-        tableData.total = total
+        const {list} = await $api.goodsApi.classify.getList(search.form)
+        tableData.list = list2Tree(list)
       },
-      add: (data) => {
-        if (!data.children && data.goodsNum) {
-          // 一级专题下创建子专题，当有商品时提醒
-          ElMessageBox.confirm(`${moduleName}“${data.name}”当前为一级${moduleName}，此操作将移除其所有已添加商品，是否继续？`, {type: 'warning'}).then(() => {
-            tableData.addHandler(data)
-          }).catch(err => {
-            tableData.form.name = ''
-          })
-        } else {
-          tableData.addHandler(data)
-        }
-      },
-      addHandler: async (data) => {
-        if (!tableData.form.name) {
-          return ElMessage.error(`请输入${data ? '子专题' : '专题'}名称`)
-        }
-        const param = {
-          name: tableData.form.name
-        }
-        if (data) {
-          param.id = data.id
-        }
-        const {code} = await $api.operationApi.special.add(param)
-        if (code === 200) {
-          tableData.form.name = ''
-          tableData.getList()
-        }
-      },
-      del: (data) => {
-        let msg = '删除后，不可恢复，请谨慎操作！'
-        if (data.children) {
-          msg = `此操作将一并删除其下所有子${moduleName}数据，` + msg
-        }
-        ElMessageBox.confirm(msg, `确认删除${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
-          const {code} = await $api.operationApi.special.del({
-            id: data.id
-          })
-          if (code === 200) {
-            tableData.getList()
-          }
-        }).catch(err => {
-        })
+      add(pid) {
+        dialog.mode = 'add'
+        dialog.currPid = pid
+        dialog.open()
       },
       disable: (data) => {
-        ElMessageBox.confirm(`确认禁用${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
+        ElMessageBox.confirm(`禁用后，该${moduleName}下将不再支持新增商品，请谨慎禁用！`, `确认禁用${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
           const {code} = await $api.operationApi.special.disable({
             id: data.id
           })
@@ -218,29 +181,43 @@ export default defineComponent({
           data.status = 1
         }
       },
-      edit: async (data) => {
-        if (!tableData.form.name) {
-          return ElMessage.error('请输入专题名称')
-        }
-        const {code} = await $api.operationApi.special.edit({
-          id: data.id,
-          name: tableData.form.name
-        })
-        if (code === 200) {
-          data.name = tableData.form.name
-          tableData.form.name = ''
+      edit(data) {
+        dialog.mode = 'edit'
+        dialog.currData = data
+        dialog.open()
+      },
+      del: (data) => {
+        if (data.goodsNum) {
+          ElMessageBox.confirm(`当前${moduleName}“${data.name}”下含有商品，无法执行删除！`, `删除${moduleName}失败！`, {
+            type: 'error',
+            showCancelButton: false
+          }).then(async () => {
+          }).catch(err => {
+          })
+        } else {
+          ElMessageBox.confirm(`删除后，用户将无法通过该${moduleName}查找商品，请谨慎删除！`, `确认删除${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
+            const {code} = await $api.goodsApi.classify.del({
+              id: data.id
+            })
+            if (code === 200) {
+              tableData.getList()
+            }
+          }).catch(err => {
+          })
         }
       }
     })
 
     tableData.getList()
 
+    provide('closeDialog', dialog.close)
+    provide('getList', tableData.getList)
+
     return {
       searchForm,
-      exportLoading,
       search,
-      page,
-      tableData
+      tableData,
+      dialog
     }
   }
 })
@@ -248,7 +225,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .el-table__row--level-1 {
-  td:first-child {
+  td:nth-child(2) {
     position: relative;
 
     &:before, &:after {
@@ -258,21 +235,51 @@ export default defineComponent({
     }
 
     &:before {
-      left: 50px;
+      left: 30px;
       top: 18px;
       width: 1px;
       height: 10px;
     }
 
     &:after {
-      left: 50px;
+      left: 30px;
       top: 50%;
       width: 10px;
       height: 1px;
     }
 
     .cell {
-      padding-left: 30px;
+      padding-left: 46px;
+    }
+  }
+}
+
+.el-table__row--level-2 {
+  td:nth-child(2) {
+    position: relative;
+
+    &:before, &:after {
+      content: '';
+      position: absolute;
+      background-color: #F9612E;
+    }
+
+    &:before {
+      left: 70px;
+      top: 18px;
+      width: 1px;
+      height: 10px;
+    }
+
+    &:after {
+      left: 70px;
+      top: 50%;
+      width: 10px;
+      height: 1px;
+    }
+
+    .cell {
+      padding-left: 86px;
     }
   }
 }

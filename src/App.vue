@@ -43,6 +43,27 @@ body {
   }
 }
 
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+  background-color: #F8F8F8;
+}
+
+/*定义滚动条轨道*/
+::-webkit-scrollbar-track {
+}
+
+/*定义滑块*/
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(249, 97, 46, 0.15);
+
+  &:hover {
+    background-color: rgba(249, 97, 46, 0.4);
+  }
+}
+
 .text-cut-1 {
   overflow: hidden;
   text-overflow: ellipsis;

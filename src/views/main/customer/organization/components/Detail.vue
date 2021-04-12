@@ -66,7 +66,7 @@ import md5 from 'md5'
 export default defineComponent({
   name: "RoleDetail",
   props: {
-    // 模式：add编辑/view查看/edit编辑
+    // 模式：add添加/view查看/edit编辑
     mode: {
       type: String,
       default: 'add'

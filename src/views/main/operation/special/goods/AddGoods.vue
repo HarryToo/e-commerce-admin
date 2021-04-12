@@ -8,7 +8,7 @@
           </el-form-item>
           <el-form-item label="商品分类" prop="classify" size="small" style="margin-bottom: 0;">
             <el-cascader v-model="search.form.classify" :options="search.options.classify" placeholder="请选择商品分类"
-                         :props="{expandTrigger: 'hover'}" @change=""></el-cascader>
+                         :props="{expandTrigger: 'hover', value: 'id', label: 'name'}" @change=""></el-cascader>
           </el-form-item>
           <el-form-item label="排序方式" prop="sort" size="small" style="margin-bottom: 0;">
             <el-select v-model="search.form.sort" placeholder="请选择排序方式">
@@ -66,8 +66,8 @@ export default defineComponent({
       options: {
         classify: [
           {
-            value: '',
-            label: '全部'
+            id: '',
+            name: '全部'
           }
         ],
         sort: [

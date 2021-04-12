@@ -65,7 +65,7 @@ export default defineComponent({
     padding: 0 20px;
     background-color: #FFFFFF;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
-    z-index: 999999;
+    z-index: 999;
   }
 
   .el-aside {
@@ -85,6 +85,10 @@ export default defineComponent({
     .main-area {
       flex-grow: 1;
       overflow-y: hidden;
+    }
+
+    ::v-deep .el-loading-mask {
+      z-index: 998;
     }
   }
 }
