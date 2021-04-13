@@ -30,7 +30,7 @@ export default {
         app.config.globalProperties.$getTableHeight = (haveOptionsHeader = true, havePager = true) => {
             let height = window.innerHeight - 200
             if (haveOptionsHeader) height -= 80
-            if (havePager) height -= 56
+            if (havePager) height -= 52
             return height
         }
     }

@@ -33,7 +33,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .table-pagination-footer {
-  height: 56px;
+  height: 52px;
   display: flex;
   flex-shrink: 0;
   justify-content: space-between;

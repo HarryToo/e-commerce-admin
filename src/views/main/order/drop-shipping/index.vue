@@ -106,7 +106,7 @@
         <el-button class="custom" size="small" :disabled="!tableData.selectionIds.length"
                    v-if="search.form.status === 2" @click="tableData.batchDeleteOrder">批量发货
         </el-button>
-        <span class="tips" v-if="search.form.status !== 4 && search.form.status !== 2">提示：通过右上方订单状态筛选后有相应的批量操作功能</span>
+        <span class="tips" v-if="search.form.status !== 4 && search.form.status !== 2">提示：通过订单状态筛选订单后有相应的批量操作功能</span>
       </table-pagination-footer>
     </div>
 
