@@ -52,15 +52,14 @@
       </el-pagination>
     </div>
 
-    <el-dialog title="预警设置" width="500px" v-model="dialog.visible" custom-class="custom" :close-on-click-modal="false"
-               destroy-on-close>
+    <el-dialog title="预警设置" width="500px" v-model="dialog.visible" custom-class="custom" :close-on-click-modal="false">
       <setting></setting>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import {defineComponent, reactive} from 'vue'
+import {defineComponent, reactive, provide} from 'vue'
 import {ElMessageBox} from 'element-plus'
 import WideGoodsItem from '@/components/goods/WideGoodsItem'
 import Setting from './components/Setting'
@@ -69,7 +68,7 @@ import $api from '@/api'
 const moduleName = '商品'
 
 export default defineComponent({
-  name: "SpecialGoodsList",
+  name: "GoodsWarning",
   components: {
     WideGoodsItem,
     Setting
@@ -89,7 +88,10 @@ export default defineComponent({
     })
 
     const dialog = reactive({
-      visible: false
+      visible: false,
+      close() {
+        dialog.visible = false
+      }
     })
 
     const tableData = reactive({
@@ -116,28 +118,30 @@ export default defineComponent({
         }
       },
       delHandler: async (ids) => {
-        const {code} = await $api.operationApi.special.removeGoods({
-          id: ids
-        })
-        if (code === 200) {
-          tableData.getList()
-        }
+        // const {code} = await $api.operationApi.special.removeGoods({
+        //   id: ids
+        // })
+        // if (code === 200) {
+        //   tableData.getList()
+        // }
       },
       del: (data) => {
-        ElMessageBox.confirm(`移除后，当前专题库将不再显示该${moduleName}，请谨慎操作！`, `确认移除编号“${data.number}”${moduleName}？`, {type: 'warning'}).then(() => {
-          tableData.removeHandler([data.id])
+        ElMessageBox.confirm(`删除后，将无法恢复该${moduleName}，请谨慎删除！`, `确认删除编号“${data.number}”${moduleName}？`, {type: 'warning'}).then(() => {
+          tableData.delHandler([data.id])
         }).catch(err => {
         })
       },
       batchDelete() {
-        ElMessageBox.confirm(`移除后，当前专题库将不再显示所选${moduleName}，请谨慎操作！`, `确认移除所选${moduleName}？`, {type: 'warning'}).then(() => {
-          tableData.removeHandler(tableData.selectionIds)
+        ElMessageBox.confirm(`删除后，将无法恢复所选${moduleName}记录，请谨慎删除！`, `确认删除所选${moduleName}？`, {type: 'warning'}).then(() => {
+          tableData.delHandler(tableData.selectionIds)
         }).catch(err => {
         })
       }
     })
 
     tableData.getList()
+
+    provide('closeDialog', dialog.close)
 
     return {
       page,

@@ -36,10 +36,13 @@ $mock.get('/goods/warning/list', ({url}) => {
     ]
     return $mock.mock(data)
 })
-
 // 当前预警设置
 $mock.get('/goods/warning/settings', {
-    time: '@time()',
-    options: [1, 2, 3],
+    time: '00:20:00',
+    options: [1, 2],
     minInventory: ''
+})
+// 保存预警设置
+$mock.post('/goods/warning/settings', {
+    code: 200
 })

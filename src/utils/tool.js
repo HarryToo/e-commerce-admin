@@ -63,3 +63,16 @@ export function exportExcel(aoa, fileName) {
     const blob = sheet2blob(sheet)
     createDownload(blob, fileName + '.xlsx')
 }
+
+// 常用正则
+const Regex = {
+    phone: /^1[3-9]\d{9}$/
+}
+// 自动生成对应校验函数，如：checkPhone(value)
+Object.keys(Regex).forEach((key) => {
+    Regex['check' + key.substring(0, 1).toUpperCase() + key.slice(1)] = function (value) {
+        return Regex[key].test(value)
+    }
+})
+
+export const reg = Regex

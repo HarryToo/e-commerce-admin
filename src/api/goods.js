@@ -34,5 +34,7 @@ export default {
         getList: (data) => $http.get('/goods/warning/list', data),
         // 当前预警设置
         getSettings: (data) => $http.get('/goods/warning/settings', data),
+        // 保存预警设置
+        saveSettings: (data) => $http.post('/goods/warning/settings', data)
     }
 }

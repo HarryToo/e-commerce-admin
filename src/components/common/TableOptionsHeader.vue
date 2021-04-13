@@ -33,8 +33,14 @@ export default defineComponent({
   height: 80px;
   padding: 0 25px;
   display: flex;
+  flex-shrink: 0;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #EEEEEE;
+  overflow: auto hidden;
+
+  & > div {
+    flex-shrink: 0;
+  }
 }
 </style>
