@@ -31,10 +31,9 @@
       <div class="goods-list" :style="{height: $getTableHeight() + 'px'}">
         <square-goods-item choosable v-for="item in tableData.list" :key="item.id" :goods="item" @change="tableData.chooseChange"></square-goods-item>
       </div>
-      <el-pagination small :current-page="page.index" :page-size="page.size" :page-sizes="[10, 15, 30, 50]"
-                     layout="total, sizes, prev, pager, next, jumper" :total="tableData.total" class="custom"
-                     @size-change="page.sizeChange" @current-change="page.indexChange">
-      </el-pagination>
+      <table-pagination-footer :page-index="page.index" :page-size="page.size" :total="tableData.total"
+                               @size-change="page.sizeChange" @index-change="page.indexChange">
+      </table-pagination-footer>
     </div>
   </div>
 </template>

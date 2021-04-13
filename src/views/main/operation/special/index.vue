@@ -91,10 +91,9 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination small :current-page="page.index" :page-size="page.size" :page-sizes="[10, 15, 30, 50]"
-                     layout="total, sizes, prev, pager, next, jumper" :total="tableData.total"
-                     @size-change="page.sizeChange" @current-change="page.indexChange">
-      </el-pagination>
+      <table-pagination-footer :page-index="page.index" :page-size="page.size" :total="tableData.total"
+                               @size-change="page.sizeChange" @index-change="page.indexChange">
+      </table-pagination-footer>
     </div>
   </div>
 </template>
@@ -103,8 +102,6 @@
 import {defineComponent, ref, reactive} from 'vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import $api from '@/api'
-
-const moduleName = '专题'
 
 export default defineComponent({
   name: "SpecialList",
@@ -159,7 +156,7 @@ export default defineComponent({
       add: (data) => {
         if (!data.children && data.goodsNum) {
           // 一级专题下创建子专题，当有商品时提醒
-          ElMessageBox.confirm(`${moduleName}“${data.name}”当前为一级${moduleName}，此操作将移除其所有已添加商品，是否继续？`, {type: 'warning'}).then(() => {
+          ElMessageBox.confirm(`专题“${data.name}”当前为一级专题，此操作将移除其所有已添加商品，是否继续？`, {type: 'warning'}).then(() => {
             tableData.addHandler(data)
           }).catch(err => {
             tableData.form.name = ''
@@ -187,9 +184,9 @@ export default defineComponent({
       del: (data) => {
         let msg = '删除后，不可恢复，请谨慎操作！'
         if (data.children) {
-          msg = `此操作将一并删除其下所有子${moduleName}数据，` + msg
+          msg = `此操作将一并删除其下所有子专题数据，` + msg
         }
-        ElMessageBox.confirm(msg, `确认删除${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
+        ElMessageBox.confirm(msg, `确认删除专题“${data.name}”？`, {type: 'warning'}).then(async () => {
           const {code} = await $api.operationApi.special.del({
             id: data.id
           })
@@ -200,7 +197,7 @@ export default defineComponent({
         })
       },
       disable: (data) => {
-        ElMessageBox.confirm(`确认禁用${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
+        ElMessageBox.confirm(`确认禁用专题“${data.name}”？`, {type: 'warning'}).then(async () => {
           const {code} = await $api.operationApi.special.disable({
             id: data.id
           })

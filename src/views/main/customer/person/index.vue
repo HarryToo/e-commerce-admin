@@ -89,11 +89,9 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination small :current-page="page.index" :page-size="page.size" :page-sizes="[10, 15, 30, 50]"
-                     layout="total, sizes, prev, pager, next, jumper" :total="tableData.total"
-                     @size-change="page.sizeChange"
-                     @current-change="page.indexChange">
-      </el-pagination>
+      <table-pagination-footer :page-index="page.index" :page-size="page.size" :total="tableData.total"
+                               @size-change="page.sizeChange" @index-change="page.indexChange">
+      </table-pagination-footer>
     </div>
   </div>
 </template>
@@ -103,8 +101,6 @@ import {defineComponent, ref, reactive, computed, onMounted, onActivated} from '
 import {useRoute} from 'vue-router'
 import {ElMessageBox, ElMessage} from 'element-plus'
 import $api from '@/api'
-
-const moduleName = '个人'
 
 export default defineComponent({
   name: "PersonList",
@@ -191,7 +187,7 @@ export default defineComponent({
         }
       },
       disable(data) {
-        ElMessageBox.confirm(`冻结后，${moduleName}不可再登录，请谨慎操作！`, `确认冻结${moduleName}“${data.account}”？`, {type: 'warning'}).then(async () => {
+        ElMessageBox.confirm(`冻结后，个人不可再登录，请谨慎操作！`, `确认冻结个人“${data.account}”？`, {type: 'warning'}).then(async () => {
           const {code} = await $api.customerApi.person.disable({
             id: data.id
           })

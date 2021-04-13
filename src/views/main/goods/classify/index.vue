@@ -77,8 +77,6 @@ import {ElMessage, ElMessageBox} from 'element-plus'
 import Detail from './components/Detail'
 import $api from '@/api'
 
-const moduleName = '分类'
-
 // 平铺列表转树形列表
 function list2Tree(list) {
   const firstLevelList = list.filter((item) => item.deep === 1)
@@ -137,9 +135,9 @@ export default defineComponent({
       mode: 'add',
       title: computed(() => {
         const titles = {
-          add: `新建${dialog.currPid ? '子' : '一级'}${moduleName}`,
-          view: `${moduleName}详情`,
-          edit: `编辑${moduleName}`
+          add: `新建${dialog.currPid ? '子' : '一级'}分类`,
+          view: `分类详情`,
+          edit: `编辑分类`
         }
         return titles[dialog.mode]
       }),
@@ -163,7 +161,7 @@ export default defineComponent({
         dialog.open()
       },
       disable: (data) => {
-        ElMessageBox.confirm(`禁用后，该${moduleName}下将不再支持新增商品，请谨慎禁用！`, `确认禁用${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
+        ElMessageBox.confirm(`禁用后，该分类下将不再支持新增商品，请谨慎禁用！`, `确认禁用分类“${data.name}”？`, {type: 'warning'}).then(async () => {
           const {code} = await $api.operationApi.special.disable({
             id: data.id
           })
@@ -188,14 +186,14 @@ export default defineComponent({
       },
       del: (data) => {
         if (data.goodsNum) {
-          ElMessageBox.confirm(`当前${moduleName}“${data.name}”下含有商品，无法执行删除！`, `删除${moduleName}失败！`, {
+          ElMessageBox.confirm(`当前分类“${data.name}”下含有商品，无法执行删除！`, `删除分类失败！`, {
             type: 'error',
             showCancelButton: false
           }).then(async () => {
           }).catch(err => {
           })
         } else {
-          ElMessageBox.confirm(`删除后，用户将无法通过该${moduleName}查找商品，请谨慎删除！`, `确认删除${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
+          ElMessageBox.confirm(`删除后，用户将无法通过该分类查找商品，请谨慎删除！`, `确认删除分类“${data.name}”？`, {type: 'warning'}).then(async () => {
             const {code} = await $api.goodsApi.classify.del({
               id: data.id
             })

@@ -46,10 +46,9 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination small :current-page="page.index" :page-size="page.size" :page-sizes="[10, 15, 30, 50]"
-                     layout="total, sizes, prev, pager, next, jumper" :total="tableData.total" class="custom"
-                     @size-change="page.sizeChange" @current-change="page.indexChange">
-      </el-pagination>
+      <table-pagination-footer :page-index="page.index" :page-size="page.size" :total="tableData.total"
+                               @size-change="page.sizeChange" @index-change="page.indexChange">
+      </table-pagination-footer>
     </div>
 
     <el-dialog title="预警设置" width="500px" v-model="dialog.visible" custom-class="custom" :close-on-click-modal="false">
@@ -64,8 +63,6 @@ import {ElMessageBox} from 'element-plus'
 import WideGoodsItem from '@/components/goods/WideGoodsItem'
 import Setting from './components/Setting'
 import $api from '@/api'
-
-const moduleName = '商品'
 
 export default defineComponent({
   name: "GoodsWarning",
@@ -126,13 +123,13 @@ export default defineComponent({
         // }
       },
       del: (data) => {
-        ElMessageBox.confirm(`删除后，将无法恢复该${moduleName}，请谨慎删除！`, `确认删除编号“${data.number}”${moduleName}？`, {type: 'warning'}).then(() => {
+        ElMessageBox.confirm(`删除后，将无法恢复该商品，请谨慎删除！`, `确认删除编号“${data.number}”商品？`, {type: 'warning'}).then(() => {
           tableData.delHandler([data.id])
         }).catch(err => {
         })
       },
       batchDelete() {
-        ElMessageBox.confirm(`删除后，将无法恢复所选${moduleName}记录，请谨慎删除！`, `确认删除所选${moduleName}？`, {type: 'warning'}).then(() => {
+        ElMessageBox.confirm(`删除后，将无法恢复所选商品记录，请谨慎删除！`, `确认删除所选商品？`, {type: 'warning'}).then(() => {
           tableData.delHandler(tableData.selectionIds)
         }).catch(err => {
         })
