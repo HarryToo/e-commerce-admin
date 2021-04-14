@@ -8,7 +8,7 @@
       </el-select>
     </el-form-item>
     <el-form-item label="快递单号" prop="number">
-      <el-input v-model="formData.number" placeholder="请输入快递单号"></el-input>
+      <el-input v-model="formData.number" clearable placeholder="请输入快递单号"></el-input>
     </el-form-item>
     <div class="delivery-info">
       <div>订单号：{{ info.orderNum }}</div>
@@ -30,8 +30,8 @@
 
 <script>
 import {defineComponent, ref, inject, reactive, toRefs, computed} from 'vue'
+import {ElMessage} from "element-plus"
 import $api from '@/api'
-import {ElMessage} from "element-plus";
 
 export default defineComponent({
   name: "ExpressInfo",
@@ -76,7 +76,7 @@ export default defineComponent({
 
     const saveInfo = async () => {
       if (await form.value.validate()) {
-        const {code} = await $api.orderApi.dropShipping.editDeliveryInfo(resultData.value)
+        const {code} = await $api.orderApi.dropShipping.deliverGoods(resultData.value)
         form.value.resetFields()
         if (code === 200) {
           ElMessage.success('发货成功')

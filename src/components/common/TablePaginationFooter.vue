@@ -4,7 +4,7 @@
       <slot></slot>
     </div>
     <el-pagination small :current-page="pageIndex" :page-size="pageSize" :page-sizes="pageSizeOptions"
-                   layout="total, sizes, prev, pager, next, jumper" :total="total"
+                   layout="total, sizes, prev, pager, next, jumper" :total="total" v-if="pager"
                    @size-change="$emit('size-change', $event)"
                    @current-change="$emit('index-change', $event)">
     </el-pagination>
@@ -17,6 +17,10 @@ import {defineComponent} from 'vue'
 export default defineComponent({
   name: "TablePaginationFooter",
   props: {
+    pager: {
+      type: Boolean,
+      default: true
+    },
     pageIndex: Number,
     pageSize: Number,
     pageSizeOptions: {

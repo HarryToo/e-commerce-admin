@@ -2,11 +2,6 @@
   <div style="height: 100%;display: flex;flex-direction: column;">
     <table-options-header>
       <el-button class="custom" size="small" @click="dialog.visible = true">预警设置</el-button>
-      <template #right>
-        <el-button type="danger" size="small" :disabled="!tableData.selectionIds.length"
-                   v-permission="[$route, 'delete']" @click="tableData.batchDelete">批量删除
-        </el-button>
-      </template>
     </table-options-header>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
       <el-table :data="tableData.list" stripe :height="$getTableHeight()" @selection-change="tableData.selectionChange">
@@ -48,6 +43,9 @@
       </el-table>
       <table-pagination-footer :page-index="page.index" :page-size="page.size" :total="tableData.total"
                                @size-change="page.sizeChange" @index-change="page.indexChange">
+        <el-button type="danger" size="small" :disabled="!tableData.selectionIds.length"
+                   v-permission="[$route, 'delete']" @click="tableData.batchDelete">批量删除
+        </el-button>
       </table-pagination-footer>
     </div>
 

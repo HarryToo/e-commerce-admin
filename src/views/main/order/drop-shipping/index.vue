@@ -16,7 +16,8 @@
             <el-input v-model="search.form.recipientPhone" placeholder="请输入收件人电话" style="width: 160px;"></el-input>
           </el-form-item>
           <el-form-item label="下单时间" prop="placeOrderTime">
-            <el-date-picker v-model="search.form.placeOrderTime" type="daterange" start-placeholder="开始日期"
+            <el-date-picker v-model="search.form.placeOrderTime" :disabled-date="search.disabledDate" type="daterange"
+                            start-placeholder="开始日期"
                             end-placeholder="结束日期" style="width: 220px;"></el-date-picker>
           </el-form-item>
           <el-form-item style="margin-top: 30px;">
@@ -80,7 +81,7 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="170" align="center">
           <template #default="scope">
-            <el-button @click="" type="text" size="small">查看</el-button>
+            <el-button @click="$router.push('/main/order/dropShipping/detail/' + scope.row.id)" type="text" size="small">查看</el-button>
             <el-button @click="dialog.expressInfo.open(scope.row)" type="text" size="small"
                        v-if="scope.row.status === 2">确认发货
             </el-button>
@@ -104,7 +105,9 @@
                    v-if="search.form.status === 4" @click="tableData.batchDeleteOrder">批量删除
         </el-button>
         <el-button class="custom" size="small" :disabled="!tableData.selectionIds.length"
-                   v-if="search.form.status === 2" @click="tableData.batchDeleteOrder">批量发货
+                   v-if="search.form.status === 2"
+                   @click="$router.push({name: 'BatchDeliver', params: { list: JSON.stringify(tableData.selectionList) }})">
+          批量发货
         </el-button>
         <span class="tips" v-if="search.form.status !== 4 && search.form.status !== 2">提示：通过订单状态筛选订单后有相应的批量操作功能</span>
       </table-pagination-footer>
@@ -122,13 +125,12 @@
 </template>
 
 <script>
-import {defineComponent, ref, reactive, computed, provide} from 'vue'
+import {defineComponent, ref, reactive, computed, provide, onActivated} from 'vue'
 import {ElMessage, ElMessageBox} from "element-plus"
 import WideGoodsItem from "@/components/goods/WideGoodsItem"
 import DeliveryInfo from "./components/DeliveryInfo"
 import ExpressInfo from "./components/ExpressInfo"
 import $api from '@/api'
-import moment from 'moment'
 
 export default defineComponent({
   name: "DropShippingOrder",
@@ -145,7 +147,7 @@ export default defineComponent({
         goodsName: '',
         recipientsName: '',
         recipientPhone: '',
-        placeOrderTime: [moment().toDate(), moment().toDate()],
+        placeOrderTime: [],
         status: ''
       },
       params: computed(() => {
@@ -155,11 +157,14 @@ export default defineComponent({
           goodsName: form.goodsName,
           recipientsName: form.recipientsName,
           recipientPhone: form.recipientPhone,
-          startTime: form.placeOrderTime[0],
-          endTime: form.placeOrderTime[1],
+          startTime: form.placeOrderTime[0] || '',
+          endTime: form.placeOrderTime[1] || '',
           status: form.status
         }
       }),
+      disabledDate(time) {
+        return time.getTime() > Date.now() - 8.64e6
+      },
       search() {
         page.index = 1
         tableData.getList()
@@ -215,6 +220,9 @@ export default defineComponent({
       list: [],
       total: 0,
       selectionIds: [],
+      selectionList: computed(() => {
+        return tableData.list.filter((item) => tableData.selectionIds.includes(item.id))
+      }),
       selectionChange(selection) {
         tableData.selectionIds = selection.map((item) => item.id)
       },
@@ -266,6 +274,7 @@ export default defineComponent({
     })
 
     tableData.getList()
+    window.addEventListener('back_refresh', tableData.getList)
 
     provide('closeDeliveryInfoDialog', dialog.deliveryInfo.close)
     provide('closeExpressInfoDialog', dialog.expressInfo.close)

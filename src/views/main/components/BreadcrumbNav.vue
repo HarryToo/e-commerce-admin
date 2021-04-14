@@ -20,14 +20,18 @@ export default defineComponent({
 
     const historyList = computed(() => {
       let basePath = '/main'
-      const pathSplitArr = route.fullPath.replace(basePath + '/', '').split('/')
+      const pathSplitArr = route.path.replace(basePath + '/', '').split('/')
       const list = []
-      const queryReg = /\?.*$/
       pathSplitArr.forEach((levelPath) => {
         basePath += '/' + levelPath
         allRoutes.forEach((item) => {
-          if (item.path === basePath.replace(queryReg, '')) {
+          if (item.path === basePath) {
             list.push(item)
+          } else if (/:.*$/.test(item.path) && !item.path.includes('/:pathMatch(.*)')) {
+            // 动态路由匹配
+            if (item.path.replace(/[^/]+(?!.*\/)/, '') === basePath.replace(/[^/]+(?!.*\/)/, '')) {
+              list.push(item)
+            }
           }
         })
       })

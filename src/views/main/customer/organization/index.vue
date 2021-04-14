@@ -7,8 +7,8 @@
             <el-input v-model="search.form.name" placeholder="请输入机构名称"></el-input>
           </el-form-item>
           <el-form-item label="开通时间" prop="openTime" size="small" style="margin-bottom: 0;">
-            <el-date-picker v-model="search.form.openTime" type="daterange" start-placeholder="开始日期"
-                            end-placeholder="结束日期" style="width: 240px;"></el-date-picker>
+            <el-date-picker v-model="search.form.openTime" :disabled-date="search.disabledDate" type="daterange"
+                            start-placeholder="开始日期" end-placeholder="结束日期" style="width: 240px;"></el-date-picker>
           </el-form-item>
           <el-form-item size="small" style="margin-bottom: 0;">
             <el-button class="custom" @click="search.search">查询</el-button>
@@ -112,6 +112,9 @@ export default defineComponent({
           endTime: search.form.openTime[1] || ''
         }
       }),
+      disabledDate(time) {
+        return time.getTime() > Date.now() - 8.64e6
+      },
       search() {
         page.index = 1
         tableData.getList()

@@ -15,5 +15,11 @@ export default {
         deleteOrder: (data) => $http.del('/order/dropShipping/delete', data),
         // 修改收货信息
         editDeliveryInfo: (data) => $http.post('/order/dropShipping/editDeliveryInfo', data),
+        // 发货
+        deliverGoods: (data) => $http.post('/order/dropShipping/deliverGoods', data),
+        // 批量发货
+        batchDeliverGoods: (data) => $http.post('/order/dropShipping/batchDeliverGoods', data),
+        // 订单详情
+        getDetail: (data) => $http.get('/order/dropShipping/detail', data)
     }
 }

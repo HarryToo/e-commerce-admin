@@ -74,6 +74,14 @@ $mock.get('/permission/byAccount', [
                 name: '代发下单',
                 path: 'order/dropShipping',
                 permission: ['view', 'edit', 'add', 'delete']
+            },
+            {
+                name: '批量发货',
+                path: 'order/dropShipping/batchDeliver'
+            },
+            {
+                name: '查看订单',
+                path: 'order/dropShipping/detail'
             }
         ]
     },

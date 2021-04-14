@@ -45,6 +45,36 @@ import {ElMessage} from 'element-plus'
 import SquareGoodsItem from '@/components/goods/SquareGoodsItem'
 import $api from '@/api'
 
+// 平铺列表转树形列表
+function list2Tree(list) {
+  const firstLevelList = list.filter((item) => item.deep === 1)
+  const secondLevelList = list.filter((item) => item.deep === 2)
+  const thirdLevelList = list.filter((item) => item.deep === 3)
+  secondLevelList.forEach((secondLevelItem) => {
+    thirdLevelList.forEach((thirdLevelItem) => {
+      if (thirdLevelItem.pid === secondLevelItem.id) {
+        if (secondLevelItem.children) {
+          secondLevelItem.children.push(thirdLevelItem)
+        } else {
+          secondLevelItem.children = [thirdLevelItem]
+        }
+      }
+    })
+  })
+  firstLevelList.forEach((firstLevelItem) => {
+    secondLevelList.forEach((secondLevelItem) => {
+      if (secondLevelItem.pid === firstLevelItem.id) {
+        if (firstLevelItem.children) {
+          firstLevelItem.children.push(secondLevelItem)
+        } else {
+          firstLevelItem.children = [secondLevelItem]
+        }
+      }
+    })
+  })
+  return firstLevelList
+}
+
 export default defineComponent({
   name: "AddGoods",
   components: {
@@ -108,7 +138,7 @@ export default defineComponent({
       },
       getClassifyOptions: async () => {
         const {list} = await $api.goodsApi.classify.getList()
-        search.options.classify = search.options.classify.concat(list)
+        search.options.classify = search.options.classify.concat(list2Tree(list))
       }
     })
 

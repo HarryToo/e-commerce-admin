@@ -24,8 +24,8 @@
             </el-select>
           </el-form-item>
           <el-form-item label="入驻时间" prop="joinTime" size="small" style="margin-bottom: 0;">
-            <el-date-picker v-model="search.form.joinTime" type="daterange" start-placeholder="开始日期"
-                            end-placeholder="结束日期" style="width: 220px;"></el-date-picker>
+            <el-date-picker v-model="search.form.joinTime" :disabled-date="search.disabledDate" type="daterange"
+                            start-placeholder="开始日期" end-placeholder="结束日期" style="width: 220px;"></el-date-picker>
           </el-form-item>
           <el-form-item size="small" style="margin-bottom: 0;margin-top: 30px;">
             <el-button class="custom" @click="search.search">查询</el-button>
@@ -127,6 +127,9 @@ export default defineComponent({
           endTime: search.form.joinTime[1] || ''
         }
       }),
+      disabledDate(time) {
+        return time.getTime() > Date.now() - 8.64e6
+      },
       search() {
         page.index = 1
         tableData.getList()
