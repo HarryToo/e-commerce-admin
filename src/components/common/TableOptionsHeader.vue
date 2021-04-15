@@ -5,7 +5,7 @@
     </div>
     <div class="right">
       <slot name="right"></slot>
-      <el-button size="small" type="primary" @click="$router.back" v-if="back">返回</el-button>
+      <el-button size="small" @click="$router.back" v-if="back">返回</el-button>
     </div>
   </div>
 </template>

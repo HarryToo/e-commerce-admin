@@ -82,6 +82,24 @@ $mock.get('/permission/byAccount', [
             {
                 name: '查看订单',
                 path: 'order/dropShipping/detail'
+            },
+            {
+                name: '退货订单',
+                path: 'order/returned',
+                permission: ['view', 'edit', 'add', 'delete']
+            },
+            {
+                name: '查看订单',
+                path: 'order/returned/detail'
+            },
+            {
+                name: '换货订单',
+                path: 'order/exchange',
+                permission: ['view', 'edit', 'add', 'delete']
+            },
+            {
+                name: '查看订单',
+                path: 'order/exchange/detail'
             }
         ]
     },

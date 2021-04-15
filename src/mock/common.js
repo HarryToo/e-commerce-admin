@@ -23,3 +23,14 @@ $mock.get('/common/courierCompanyList', {
         }
     ]
 })
+// 订单快递信息
+$mock.get('/common/logisticsInfo', {
+    companyName: '@cword(2)快递',
+    number: '@string(upper, 2)@string(number, 10)',
+    'list|6': [
+        {
+            content: '@cparagraph(2)',
+            time: '@datetime()'
+        }
+    ]
+})

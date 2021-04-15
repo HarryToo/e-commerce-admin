@@ -17,8 +17,7 @@
           </el-form-item>
           <el-form-item label="下单时间" prop="placeOrderTime">
             <el-date-picker v-model="search.form.placeOrderTime" :disabled-date="search.disabledDate" type="daterange"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期" style="width: 220px;"></el-date-picker>
+                            start-placeholder="开始日期" end-placeholder="结束日期" style="width: 220px;"></el-date-picker>
           </el-form-item>
           <el-form-item style="margin-top: 30px;">
             <el-button class="custom" @click="search.search">查询</el-button>
@@ -41,7 +40,8 @@
     </table-options-header>
     <div style="padding: 25px;">
       <el-table :data="tableData.list" stripe :height="$getTableHeight()" @selection-change="tableData.selectionChange">
-        <el-table-column type="selection" width="50" v-permission="[$route, 'delete']"></el-table-column>
+        <el-table-column type="selection" width="50" v-permission="[$route, 'delete']"
+                         v-if="[2, 4].includes(search.form.status)"></el-table-column>
         <el-table-column prop="orderNum" label="订单号" width="150"></el-table-column>
         <el-table-column prop="info" label="商品信息" width="480">
           <template #default="scope">
@@ -81,7 +81,9 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="170" align="center">
           <template #default="scope">
-            <el-button @click="$router.push('/main/order/dropShipping/detail/' + scope.row.id)" type="text" size="small">查看</el-button>
+            <el-button @click="$router.push('/main/order/dropShipping/detail/' + scope.row.id)" type="text"
+                       size="small">查看
+            </el-button>
             <el-button @click="dialog.expressInfo.open(scope.row)" type="text" size="small"
                        v-if="scope.row.status === 2">确认发货
             </el-button>
@@ -91,7 +93,8 @@
             <el-button @click="tableData.cancelOrder(scope.row)" type="text" size="small"
                        v-if="scope.row.status === 1 || scope.row.status === 2">取消订单
             </el-button>
-            <el-button @click="" type="text" size="small" v-if="scope.row.status === 3 || scope.row.status === 5">物流跟踪
+            <el-button @click="dialog.logisticsInfo.open(scope.row)" type="text" size="small"
+                       v-if="scope.row.status === 3 || scope.row.status === 5">物流跟踪
             </el-button>
             <el-button @click="tableData.deleteOrder(scope.row)" type="text" size="small" v-if="scope.row.status === 4">
               删除订单
@@ -121,15 +124,20 @@
                custom-class="custom">
       <express-info :info="dialog.expressInfo.currInfo"></express-info>
     </el-dialog>
+    <el-dialog v-model="dialog.logisticsInfo.visible" width="800px" title="物流跟踪" :close-on-click-modal="false"
+               destroy-on-close custom-class="custom">
+      <logistics-info :orderId="dialog.logisticsInfo.currOrderId"></logistics-info>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {defineComponent, ref, reactive, computed, provide, onActivated} from 'vue'
+import {defineComponent, ref, reactive, computed, provide} from 'vue'
 import {ElMessage, ElMessageBox} from "element-plus"
 import WideGoodsItem from "@/components/goods/WideGoodsItem"
 import DeliveryInfo from "./components/DeliveryInfo"
 import ExpressInfo from "./components/ExpressInfo"
+import LogisticsInfo from "./components/LogisticsInfo"
 import $api from '@/api'
 
 export default defineComponent({
@@ -137,7 +145,8 @@ export default defineComponent({
   components: {
     WideGoodsItem,
     DeliveryInfo,
-    ExpressInfo
+    ExpressInfo,
+    LogisticsInfo
   },
   setup() {
     const searchForm = ref()
@@ -171,6 +180,8 @@ export default defineComponent({
       },
       reset() {
         searchForm.value.resetFields()
+        page.index = 1
+        tableData.getList()
       }
     })
 
@@ -213,6 +224,18 @@ export default defineComponent({
         close() {
           dialog.expressInfo.visible = false
         }
+      },
+      // 物流信息弹窗
+      logisticsInfo: {
+        visible: false,
+        currOrderId: '',
+        open(data) {
+          dialog.logisticsInfo.currOrderId = data.id
+          dialog.logisticsInfo.visible = true
+        },
+        close() {
+          dialog.logisticsInfo.visible = false
+        }
       }
     })
 
@@ -235,6 +258,7 @@ export default defineComponent({
         tableData.list = list
         tableData.total = total
       },
+      // 删除订单
       deleteHandler: async (ids) => {
         const {code} = await $api.orderApi.dropShipping.deleteOrder({
           id: ids
@@ -256,9 +280,15 @@ export default defineComponent({
         }).catch(err => {
         })
       },
+      // 取消订单
       cancelOrder(data) {
         ElMessageBox.prompt('请在此写明取消原因', '取消订单', {
-          inputType: 'textarea'
+          inputType: 'textarea',
+          inputValidator(value) {
+            if (!value || !value.trim()) {
+              return '请输入取消原因'
+            }
+          }
         }).then(async ({value}) => {
           const {code} = await $api.orderApi.dropShipping.cancelOrder({
             id: data.id,
@@ -278,7 +308,7 @@ export default defineComponent({
 
     provide('closeDeliveryInfoDialog', dialog.deliveryInfo.close)
     provide('closeExpressInfoDialog', dialog.expressInfo.close)
-    provide('getList', tableData.getList)
+    provide('refreshData', tableData.getList)
 
     return {
       searchForm,

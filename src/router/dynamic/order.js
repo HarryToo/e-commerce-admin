@@ -1,5 +1,7 @@
 import BatchDeliver from '@/views/main/order/drop-shipping/BatchDeliver'
-import Detail from '@/views/main/order/drop-shipping/Detail'
+import DropShippingOrderDetail from '@/views/main/order/drop-shipping/Detail'
+import ReturnedOrderDetail from '@/views/main/order/returned/Detail'
+import ExchangeOrderDetail from '@/views/main/order/exchange/Detail'
 
 export default [
     {
@@ -34,6 +36,40 @@ export default [
             title: '查看订单',
             noBg: true
         },
-        component: Detail
+        component: DropShippingOrderDetail
+    },
+    {
+        path: 'order/returned',
+        name: 'ReturnedOrder',
+        meta: {
+            title: '退货订单'
+        },
+        component: () => import('@/views/main/order/returned')
+    },
+    {
+        path: 'order/returned/detail/:orderId',
+        name: 'ReturnedOrderDetail',
+        meta: {
+            title: '查看订单',
+            noBg: true
+        },
+        component: ReturnedOrderDetail
+    },
+    {
+        path: 'order/exchange',
+        name: 'ExchangeOrder',
+        meta: {
+            title: '换货订单'
+        },
+        component: () => import('@/views/main/order/exchange')
+    },
+    {
+        path: 'order/exchange/detail/:orderId',
+        name: 'ExchangeOrderDetail',
+        meta: {
+            title: '查看订单',
+            noBg: true
+        },
+        component: ExchangeOrderDetail
     }
 ]

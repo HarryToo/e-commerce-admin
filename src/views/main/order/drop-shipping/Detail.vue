@@ -6,18 +6,30 @@
         <span>{{ detail.orderNum }}</span>
       </div>
       <template #right>
-        <el-button size="small" type="danger" v-if="detail.status === 1 || detail.status === 2">取消订单</el-button>
+        <el-button @click="dialog.expressInfo.open" size="small" type="success" v-if="detail.status === 2">确认发货
+        </el-button>
+        <el-button @click="dialog.deliveryInfo.open" size="small" class="custom" v-if="detail.status === 2">修改收货信息
+        </el-button>
+        <el-button @click="dialog.logisticsInfo.open" size="small" class="custom"
+                   v-if="detail.status === 3 || detail.status === 5">物流跟踪
+        </el-button>
+        <el-button @click="cancelOrder" size="small" type="danger" v-if="detail.status === 1 || detail.status === 2">
+          取消订单
+        </el-button>
+        <el-button @click="deleteOrder" size="small" type="danger" v-if="detail.status === 4">删除订单</el-button>
       </template>
     </table-options-header>
     <div class="detail-cont" :style="{height: $getTableHeight(true, false) + 35 + 'px'}">
       <div class="block-view padding status-info">
         <div class="left">
           <div class="name">{{ ['待付款', '待发货', '待收货', '已取消', '已完成'][detail.status - 1] }}</div>
-          <div class="time" v-if="detail.status === 1 && payCountDown">{{ payCountDown }}</div>
-          <div class="cancel-reason" v-if="detail.status === 4 && detail.cancelReason">
-            <span style="color: #555555;">取消原因：</span>
-            <span>{{ detail.cancelReason }}</span>
-          </div>
+          <transition-group name="el-zoom-in-bottom" mode="out-in">
+            <div class="time" v-if="detail.status === 1 && payCountDown">{{ payCountDown }}</div>
+            <div class="cancel-reason" v-if="detail.status === 4 && detail.cancelReason">
+              <span style="color: #555555;">取消原因：</span>
+              <span>{{ detail.cancelReason }}</span>
+            </div>
+          </transition-group>
         </div>
         <div class="right">
           <el-steps :active="progressStatus" align-center>
@@ -98,14 +110,30 @@
         </el-table>
       </div>
     </div>
+
+    <el-dialog v-model="dialog.deliveryInfo.visible" width="500px" title="修改收货信息" :close-on-click-modal="false"
+               destroy-on-close custom-class="custom">
+      <delivery-info :info="detail"></delivery-info>
+    </el-dialog>
+    <el-dialog v-model="dialog.expressInfo.visible" width="500px" title="确认发货" :close-on-click-modal="false"
+               custom-class="custom">
+      <express-info :info="detail"></express-info>
+    </el-dialog>
+    <el-dialog v-model="dialog.logisticsInfo.visible" width="800px" title="物流跟踪" :close-on-click-modal="false"
+               destroy-on-close custom-class="custom">
+      <logistics-info :orderId="$route.params.orderId"></logistics-info>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {computed, defineComponent, ref, onUnmounted} from 'vue'
+import {computed, defineComponent, ref, onUnmounted, reactive, provide} from 'vue'
 import {useRoute} from 'vue-router'
-import {ElMessage} from "element-plus"
+import {ElMessage, ElMessageBox} from "element-plus"
 import WideGoodsItem from '@/components/goods/WideGoodsItem'
+import DeliveryInfo from "./components/DeliveryInfo"
+import ExpressInfo from "./components/ExpressInfo"
+import LogisticsInfo from "./components/LogisticsInfo"
 import $api from '@/api'
 import moment from 'moment'
 
@@ -114,13 +142,49 @@ let timer
 export default defineComponent({
   name: "DropShippingOrderDetail",
   components: {
-    WideGoodsItem
+    WideGoodsItem,
+    DeliveryInfo,
+    ExpressInfo,
+    LogisticsInfo
   },
   setup() {
     const route = useRoute()
-
     const detail = ref({})
     const payCountDown = ref(0)
+
+    const dialog = reactive({
+      // 修改收货信息弹窗
+      deliveryInfo: {
+        visible: false,
+        open() {
+          dialog.deliveryInfo.visible = true
+        },
+        close() {
+          dialog.deliveryInfo.visible = false
+        }
+      },
+      // 发货弹窗
+      expressInfo: {
+        visible: false,
+        open() {
+          dialog.expressInfo.visible = true
+        },
+        close() {
+          dialog.expressInfo.visible = false
+        }
+      },
+      // 物流信息弹窗
+      logisticsInfo: {
+        visible: false,
+        open() {
+          dialog.logisticsInfo.visible = true
+        },
+        close() {
+          dialog.logisticsInfo.visible = false
+        }
+      }
+    })
+
     // 商品信息表格数据
     const goodsInfoTableList = computed(() => {
       if (detail.value.goodsInfo) {
@@ -181,11 +245,51 @@ export default defineComponent({
     }
     getDetail()
 
+    const cancelOrder = () => {
+      ElMessageBox.prompt('请在此写明取消原因', '取消订单', {
+        inputType: 'textarea',
+        inputValidator(value) {
+          if (!value || !value.trim()) {
+            return '请输入取消原因'
+          }
+        }
+      }).then(async ({value}) => {
+        const {code} = await $api.orderApi.dropShipping.cancelOrder({
+          id: route.params.orderId,
+          reason: value.trim()
+        })
+        if (code === 200) {
+          ElMessage.success('已取消该订单')
+          getDetail()
+          window.dispatchEvent(new Event('back_refresh'))
+        }
+      }).catch(err => {
+      })
+    }
+
+    const deleteOrder = async () => {
+      const {code} = await $api.orderApi.dropShipping.deleteOrder({
+        id: route.params.orderId
+      })
+      if (code === 200) {
+        ElMessage.success(`已删除${ids.length > 1 ? '所选' : '该'}订单`)
+        getDetail()
+        window.dispatchEvent(new Event('back_refresh'))
+      }
+    }
+
+    provide('closeDeliveryInfoDialog', dialog.deliveryInfo.close)
+    provide('closeExpressInfoDialog', dialog.expressInfo.close)
+    provide('refreshData', getDetail)
+
     return {
       detail,
+      dialog,
       goodsInfoTableList,
       progressStatus,
-      payCountDown
+      payCountDown,
+      cancelOrder,
+      deleteOrder
     }
   }
 })

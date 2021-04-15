@@ -5,7 +5,7 @@ export default {
     getStatisticsChartData: (data) => $http.get('/order/statisticsChartData', data),
     // 订单比例图表数据
     getProportionChartData: (data) => $http.get('/order/ProportionChartData', data),
-    // 代发下单
+    // 代发下单订单
     dropShipping: {
         // 订单列表
         getList: (data) => $http.get('/order/dropShipping/list', data),
@@ -21,5 +21,20 @@ export default {
         batchDeliverGoods: (data) => $http.post('/order/dropShipping/batchDeliverGoods', data),
         // 订单详情
         getDetail: (data) => $http.get('/order/dropShipping/detail', data)
+    },
+    // 退货订单
+    returned: {
+        // 订单列表
+        getList: (data) => $http.get('/order/returned/list', data),
+        // 确认收货
+        received: (data) => $http.post('/order/returned/received', data),
+        // 确认退款
+        refund: (data) => $http.post('/order/returned/refund', data),
+        // 删除订单
+        deleteOrder: (data) => $http.del('/order/returned/delete', data),
+        // 订单详情
+        getDetail: (data) => $http.get('/order/returned/detail', data),
+        // 审核
+        review: (data) => $http.post('/order/returned/review', data)
     }
 }

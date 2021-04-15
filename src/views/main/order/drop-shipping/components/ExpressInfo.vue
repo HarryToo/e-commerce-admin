@@ -46,7 +46,7 @@ export default defineComponent({
   setup(props) {
     const {info} = toRefs(props)
     const closeDialog = inject('closeExpressInfoDialog')
-    const getList = inject('getList')
+    const refreshData = inject('refreshData')
 
     // 快递公司列表
     const courierCompanyList = ref([])
@@ -81,7 +81,8 @@ export default defineComponent({
         if (code === 200) {
           ElMessage.success('发货成功')
           closeDialog()
-          getList()
+          refreshData()
+          window.dispatchEvent(new Event('back_refresh'))
         }
       }
     }
