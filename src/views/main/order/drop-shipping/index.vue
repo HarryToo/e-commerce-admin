@@ -126,7 +126,8 @@
     </el-dialog>
     <el-dialog v-model="dialog.logisticsInfo.visible" width="800px" title="物流跟踪" :close-on-click-modal="false"
                destroy-on-close custom-class="custom">
-      <logistics-info :orderId="dialog.logisticsInfo.currOrderId"></logistics-info>
+      <logistics-info :number="dialog.logisticsInfo.currInfo.logisticsNum" :code="dialog.logisticsInfo.currInfo.logisticsCode"
+                      :phone="dialog.logisticsInfo.currInfo.deliveryInfo.phone"></logistics-info>
     </el-dialog>
   </div>
 </template>
@@ -135,18 +136,18 @@
 import {defineComponent, ref, reactive, computed, provide} from 'vue'
 import {ElMessage, ElMessageBox} from "element-plus"
 import WideGoodsItem from "@/components/goods/WideGoodsItem"
+import LogisticsInfo from "@/components/LogisticsInfo"
 import DeliveryInfo from "./components/DeliveryInfo"
 import ExpressInfo from "./components/ExpressInfo"
-import LogisticsInfo from "./components/LogisticsInfo"
 import $api from '@/api'
 
 export default defineComponent({
   name: "DropShippingOrder",
   components: {
     WideGoodsItem,
+    LogisticsInfo,
     DeliveryInfo,
-    ExpressInfo,
-    LogisticsInfo
+    ExpressInfo
   },
   setup() {
     const searchForm = ref()
@@ -228,9 +229,9 @@ export default defineComponent({
       // 物流信息弹窗
       logisticsInfo: {
         visible: false,
-        currOrderId: '',
+        currInfo: '',
         open(data) {
-          dialog.logisticsInfo.currOrderId = data.id
+          dialog.logisticsInfo.currInfo = data
           dialog.logisticsInfo.visible = true
         },
         close() {

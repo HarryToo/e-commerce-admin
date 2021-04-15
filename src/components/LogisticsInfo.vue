@@ -19,14 +19,26 @@ import $api from '@/api'
 export default defineComponent({
   name: "LogisticsInfo",
   props: {
-    orderId: [String, Number]
+    // 物流单号
+    number: {
+      type: [String, Number],
+      required: true
+    },
+    // 物流公司代码
+    code: {
+      type: [String, Number],
+      required: true
+    },
+    // 收货人手机号
+    phone: {
+      type: [String, Number],
+      required: true
+    }
   },
   setup(props) {
     const logisticsInfo = ref({})
     const getLogisticsInfo = async () => {
-      logisticsInfo.value = await $api.commonApi.getLogisticsInfo({
-        orderId: props.orderId
-      })
+      logisticsInfo.value = await $api.commonApi.getLogisticsInfo(props)
     }
     getLogisticsInfo()
 

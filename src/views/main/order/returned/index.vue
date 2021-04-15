@@ -94,7 +94,7 @@
         <el-button type="danger" size="small" :disabled="!tableData.selectionIds.length" v-if="search.form.status === 4"
                    @click="tableData.batchDeleteOrder">批量删除
         </el-button>
-        <el-button class="custom" size="small" :disabled="!tableData.selectionIds.length"
+        <el-button type="success" size="small" :disabled="!tableData.selectionIds.length"
                    v-if="search.form.status === 2" @click="tableData.batchReceived">批量收货
         </el-button>
         <el-button class="custom" size="small" :disabled="!tableData.selectionIds.length"

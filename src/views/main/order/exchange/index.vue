@@ -1,33 +1,37 @@
 <template>
   <div style="height: 100%;display: flex;flex-direction: column;">
     <table-options-header>
-      <el-form :model="search.form" ref="searchForm" inline size="small">
+      <el-form :model="search.form" ref="searchForm" size="small">
         <el-space size="medium">
-          <el-form-item label="退货单号" prop="orderNum" style="margin-bottom: 0;">
-            <el-input v-model="search.form.orderNum" placeholder="请输入退货单号" style="width: 160px;"></el-input>
+          <el-form-item label="换货单号" prop="orderNum">
+            <el-input v-model="search.form.orderNum" placeholder="请输入换货单号" style="width: 160px;"></el-input>
           </el-form-item>
-          <el-form-item label="商品名称" prop="goodsName" style="margin-bottom: 0;">
+          <el-form-item label="商品名称" prop="goodsName">
             <el-input v-model="search.form.goodsName" placeholder="请输入商品名称" style="width: 160px;"></el-input>
           </el-form-item>
-          <el-form-item label="申请时间" prop="applyTime" style="margin-bottom: 0;">
+          <el-form-item label="物流单号" prop="shipmentNum">
+            <el-input v-model="search.form.shipmentNum" placeholder="请输入物流单号" style="width: 160px;"></el-input>
+          </el-form-item>
+          <el-form-item label="申请时间" prop="applyTime">
             <el-date-picker v-model="search.form.applyTime" :disabled-date="search.disabledDate" type="daterange"
                             start-placeholder="开始日期" end-placeholder="结束日期" style="width: 220px;"></el-date-picker>
           </el-form-item>
-          <el-form-item style="margin-bottom: 0;">
+          <el-form-item style="margin-top: 30px;">
             <el-button class="custom" @click="search.search">查询</el-button>
             <el-button @click="search.reset">清空条件</el-button>
           </el-form-item>
         </el-space>
       </el-form>
       <template #right>
-        <div>
+        <div style="margin-top: 30px;">
           <el-radio-group v-model="search.form.status" size="small" fill="#F9612E" @change="search.search">
             <el-radio-button label="">全部</el-radio-button>
             <el-radio-button :label="1">待审核</el-radio-button>
             <el-radio-button :label="2">待收货</el-radio-button>
-            <el-radio-button :label="3">待退款</el-radio-button>
-            <el-radio-button :label="4">拒绝退货</el-radio-button>
-            <el-radio-button :label="5">已完成</el-radio-button>
+            <el-radio-button :label="3">待发新货</el-radio-button>
+            <el-radio-button :label="4">待用户收货</el-radio-button>
+            <el-radio-button :label="5">拒绝换货</el-radio-button>
+            <el-radio-button :label="6">已完成</el-radio-button>
           </el-radio-group>
         </div>
       </template>
@@ -35,8 +39,8 @@
     <div style="padding: 25px;">
       <el-table :data="tableData.list" stripe :height="$getTableHeight()" @selection-change="tableData.selectionChange">
         <el-table-column type="selection" width="50" v-permission="[$route, 'delete']"
-                         v-if="[2, 3, 4].includes(search.form.status)"></el-table-column>
-        <el-table-column prop="returnedNum" label="退货单号" width="150"></el-table-column>
+                         v-if="[2, 3, 5].includes(search.form.status)"></el-table-column>
+        <el-table-column prop="exchangeNum" label="换货单号" width="150"></el-table-column>
         <el-table-column prop="info" label="商品信息" width="480">
           <template #default="scope">
             <wide-goods-item :goods="scope.row.goodsInfo"></wide-goods-item>
@@ -52,12 +56,13 @@
             <span>￥{{ scope.row.actuallyMoney }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="money" label="退款金额" width="140">
+        <el-table-column prop="money" label="新货物流单号" width="180">
           <template #default="scope">
-            <span>￥{{ scope.row.refundMoney }}</span>
+            <div>{{ scope.row.logisticsName }}</div>
+            <div>{{ scope.row.logisticsNum }}</div>
           </template>
         </el-table-column>
-        <el-table-column prop="deliveryInfo" label="退货原因" width="120">
+        <el-table-column prop="deliveryInfo" label="换货原因" width="120">
           <template #default="scope">
             <span style="color: #FF3A30;">{{ scope.row.reason }}</span>
           </template>
@@ -66,9 +71,10 @@
           <template #default="scope">
             <div style="color: #FF3A30;" v-if="scope.row.status === 1">待审核</div>
             <div style="color: #3CC327;" v-if="scope.row.status === 2">待收货</div>
-            <div style="color: #0367D9;" v-if="scope.row.status === 3">待退款</div>
-            <div style="color: #BBBBBB;" v-if="scope.row.status === 4">拒绝退货</div>
-            <div style="color: #BBBBBB;" v-if="scope.row.status === 5">已完成</div>
+            <div style="color: #0367D9;" v-if="scope.row.status === 3">待发新货</div>
+            <div style="color: #BBBBBB;" v-if="scope.row.status === 4">待用户收货</div>
+            <div style="color: #BBBBBB;" v-if="scope.row.status === 5">拒绝换货</div>
+            <div style="color: #BBBBBB;" v-if="scope.row.status === 6">已完成</div>
             <div>{{ scope.row.applyTime }}</div>
           </template>
         </el-table-column>
@@ -81,9 +87,12 @@
                        v-if="scope.row.status === 2">确认收货
             </el-button>
             <el-button @click="tableData.refund(scope.row)" type="text" size="small"
-                       v-if="scope.row.status === 3">确认退款
+                       v-if="scope.row.status === 3">确认发货
             </el-button>
-            <el-button @click="tableData.deleteOrder(scope.row)" type="text" size="small" v-if="scope.row.status === 4">
+            <el-button @click="tableData.refund(scope.row)" type="text" size="small"
+                       v-if="scope.row.status === 4">物流跟踪
+            </el-button>
+            <el-button @click="tableData.deleteOrder(scope.row)" type="text" size="small" v-if="scope.row.status === 5">
               删除订单
             </el-button>
           </template>
@@ -91,16 +100,16 @@
       </el-table>
       <table-pagination-footer :page-index="page.index" :page-size="page.size" :total="tableData.total"
                                @size-change="page.sizeChange" @index-change="page.indexChange">
-        <el-button type="danger" size="small" :disabled="!tableData.selectionIds.length" v-if="search.form.status === 4"
+        <el-button type="danger" size="small" :disabled="!tableData.selectionIds.length" v-if="search.form.status === 5"
                    @click="tableData.batchDeleteOrder">批量删除
         </el-button>
-        <el-button class="custom" size="small" :disabled="!tableData.selectionIds.length"
+        <el-button type="success" size="small" :disabled="!tableData.selectionIds.length"
                    v-if="search.form.status === 2" @click="tableData.batchReceived">批量收货
         </el-button>
         <el-button class="custom" size="small" :disabled="!tableData.selectionIds.length"
-                   v-if="search.form.status === 3" @click="tableData.batchRefund">批量退款
+                   v-if="search.form.status === 3" @click="tableData.batchRefund">批量发货
         </el-button>
-        <span class="tips" v-if="search.form.status !== 4 && search.form.status !== 2 && search.form.status !== 3">提示：通过订单状态筛选订单后有相应的批量操作功能</span>
+        <span class="tips" v-if="search.form.status !== 5 && search.form.status !== 2 && search.form.status !== 3">提示：通过订单状态筛选订单后有相应的批量操作功能</span>
       </table-pagination-footer>
     </div>
   </div>
@@ -123,6 +132,7 @@ export default defineComponent({
       form: {
         orderNum: '',
         goodsName: '',
+        shipmentNum: '',
         applyTime: [],
         status: ''
       },
@@ -176,7 +186,7 @@ export default defineComponent({
         tableData.selectionIds = selection.map((item) => item.id)
       },
       getList: async () => {
-        const {list, total} = await $api.orderApi.returned.getList({
+        const {list, total} = await $api.orderApi.exchange.getList({
           pageIndex: page.index,
           pageSize: page.size,
           ...search.params
@@ -208,7 +218,7 @@ export default defineComponent({
       },
       // 确认收货
       receivedHandler: async (ids) => {
-        const {code} = await $api.orderApi.returned.received({
+        const {code} = await $api.orderApi.exchange.received({
           id: ids
         })
         if (code === 200) {
@@ -230,7 +240,7 @@ export default defineComponent({
       },
       // 确认退款
       refundHandler: async (ids) => {
-        const {code} = await $api.orderApi.returned.refund({
+        const {code} = await $api.orderApi.exchange.refund({
           id: ids
         })
         if (code === 200) {

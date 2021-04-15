@@ -36,5 +36,20 @@ export default {
         getDetail: (data) => $http.get('/order/returned/detail', data),
         // 审核
         review: (data) => $http.post('/order/returned/review', data)
+    },
+    // 换货订单
+    exchange: {
+        // 订单列表
+        getList: (data) => $http.get('/order/exchange/list', data),
+        // 确认收货
+        received: (data) => $http.post('/order/exchange/received', data),
+        // 确认退款
+        refund: (data) => $http.post('/order/exchange/refund', data),
+        // 删除订单
+        deleteOrder: (data) => $http.del('/order/exchange/delete', data),
+        // 订单详情
+        getDetail: (data) => $http.get('/order/exchange/detail', data),
+        // 审核
+        review: (data) => $http.post('/order/exchange/review', data)
     }
 }

@@ -57,7 +57,7 @@ body {
 /*定义滑块*/
 ::-webkit-scrollbar-thumb {
   border-radius: 4px;
-  background-color: rgba(249, 97, 46, 0.1);
+  background-color: rgba(249, 97, 46, 0.15);
 
   &:hover {
     background-color: rgba(249, 97, 46, 0.4);

@@ -156,16 +156,16 @@ import {computed, defineComponent, ref, reactive, provide} from 'vue'
 import {useRoute} from 'vue-router'
 import {ElMessage, ElMessageBox} from "element-plus"
 import WideGoodsItem from '@/components/goods/WideGoodsItem'
+import LogisticsInfo from "@/components/LogisticsInfo"
 import DeliveryInfo from "./components/DeliveryInfo"
-import LogisticsInfo from "./components/LogisticsInfo"
 import $api from '@/api'
 
 export default defineComponent({
   name: "ExchangeOrderDetail",
   components: {
     WideGoodsItem,
-    DeliveryInfo,
-    LogisticsInfo
+    LogisticsInfo,
+    DeliveryInfo
   },
   setup() {
     const route = useRoute()

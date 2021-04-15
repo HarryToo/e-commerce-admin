@@ -37,6 +37,8 @@ $mock.get('/order/dropShipping/list', ({url}) => {
                 area: '锦江区',
                 address: '@cword(2)路@string(number, 2)号2楼'
             },
+            logisticsNum: '@string(upper, 2)@string(number, 10)',
+            logisticsCode: '@string(upper, 4)',
             status: '@integer(1, 5)',
             placeOrderTime: '@datetime()'
         }
@@ -67,7 +69,7 @@ $mock.post('/order/dropShipping/batchDeliverGoods', {
 $mock.get('/order/dropShipping/detail', () => {
     return $mock.mock({
         orderNum: '@string(number, 12)',
-        status: 1,
+        status: 3,
         cancelReason: '商品已下架',
         payEndTime: parseInt(new Date().getTime() / 1000) + (30 * 60),
         orderTime: '@datetime()',
@@ -83,6 +85,8 @@ $mock.get('/order/dropShipping/detail', () => {
             area: '锦江区',
             address: '@cword(2)路@string(number, 2)号2楼'
         },
+        logisticsNum: '@string(upper, 2)@string(number, 10)',
+        logisticsCode: '@string(upper, 4)',
         goodsMoney: '@float(1000, 1500, 2, 2)',
         freightMoney: '@float(10, 20, 2, 2)',
         skuNum: '@string(number, 10)',

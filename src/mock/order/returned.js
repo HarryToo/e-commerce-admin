@@ -55,7 +55,7 @@ $mock.get('/order/returned/detail', () => {
     return $mock.mock({
         orderNum: '@string(number, 12)',
         returnedNum: '@string(number, 12)',
-        status: 1,
+        status: 2,
         applyTime: '@datetime()',
         reviewTime: '',
         receiptTime: '',
@@ -99,6 +99,8 @@ $mock.get('/order/returned/detail', () => {
             area: '锦江区',
             address: '@cword(2)路@string(number, 2)号2楼'
         },
+        logisticsNum: '@string(upper, 2)@string(number, 10)',
+        logisticsCode: '@string(upper, 4)',
         remark: '商品已下架'
     })
 })
