@@ -24,6 +24,7 @@
 
 <script>
 import {defineComponent, ref, inject, toRefs, reactive} from 'vue'
+import {ElMessage} from "element-plus"
 import $api from '@/api'
 
 export default defineComponent({
@@ -74,6 +75,7 @@ export default defineComponent({
         }
         const {code} = await $api.orderApi.returnReason[mode.value](param)
         if (code === 200) {
+          ElMessage.success('保存成功')
           closeDialog()
           getList()
         }

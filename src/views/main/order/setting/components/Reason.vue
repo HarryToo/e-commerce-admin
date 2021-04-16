@@ -41,7 +41,7 @@
 
 <script>
 import {defineComponent, reactive, computed, provide} from 'vue'
-import {ElMessageBox} from "element-plus"
+import {ElMessage, ElMessageBox} from "element-plus"
 import ReasonEdit from './ReasonEdit'
 import $api from '@/api'
 
@@ -112,6 +112,7 @@ export default defineComponent({
             id: data.id
           })
           if (code === 200) {
+            ElMessage.success('已删除')
             await tableData.getList()
           }
         }).catch((err) => {
@@ -122,6 +123,7 @@ export default defineComponent({
           id: data.id
         })
         if (code === 200) {
+          ElMessage.success('已启用')
           data.status = 1
         }
       },
@@ -131,6 +133,7 @@ export default defineComponent({
             id: data.id
           })
           if (code === 200) {
+            ElMessage.success('已禁用')
             data.status = 0
           }
         }).catch((err) => {

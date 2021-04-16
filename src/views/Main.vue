@@ -72,6 +72,7 @@ export default defineComponent({
     height: 100%;
     background-color: #0D0D0D;
     overflow-y: auto;
+    user-select: none;
 
     &::-webkit-scrollbar {
       display: none

@@ -1,6 +1,6 @@
 <template>
   <div class="set-meal-wrapper">
-    <el-tabs type="border-card" model-value="1">
+    <el-tabs type="border-card">
       <el-tab-pane label="常规设置">
         <div class="tab-column-cont">
           <general></general>

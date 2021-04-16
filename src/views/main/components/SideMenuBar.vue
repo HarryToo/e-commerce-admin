@@ -54,6 +54,10 @@ export default defineComponent({
       border-bottom: 1px solid #0D0D0D;
       background-color: #333333 !important;
 
+      &:hover {
+        color: #FC7041 !important;
+      }
+
       &:last-child {
         border-bottom: none;
       }
@@ -63,6 +67,18 @@ export default defineComponent({
   .el-menu-item {
     &.is-active {
       background-color: #F9612E !important;
+
+      &:hover {
+        color: #FFFFFF !important;
+      }
+    }
+  }
+
+  .el-submenu__title {
+    &:hover {
+      i, span {
+        color: #FC7041 !important;
+      }
     }
   }
 }
