@@ -55,7 +55,7 @@ $mock.get('/order/returned/detail', () => {
     return $mock.mock({
         orderNum: '@string(number, 12)',
         returnedNum: '@string(number, 12)',
-        status: 2,
+        status: 1,
         applyTime: '@datetime()',
         reviewTime: '',
         receiptTime: '',

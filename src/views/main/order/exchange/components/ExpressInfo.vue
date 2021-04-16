@@ -76,7 +76,7 @@ export default defineComponent({
 
     const saveInfo = async () => {
       if (await form.value.validate()) {
-        const {code} = await $api.orderApi.dropShipping.deliverGoods(resultData.value)
+        const {code} = await $api.orderApi.exchange.deliverGoods(resultData.value)
         form.value.resetFields()
         if (code === 200) {
           ElMessage.success('发货成功')

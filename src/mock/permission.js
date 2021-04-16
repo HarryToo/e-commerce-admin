@@ -98,8 +98,16 @@ $mock.get('/permission/byAccount', [
                 permission: ['view', 'edit', 'add', 'delete']
             },
             {
+                name: '批量发货',
+                path: 'order/exchange/batchDeliver'
+            },
+            {
                 name: '查看订单',
                 path: 'order/exchange/detail'
+            },
+            {
+                name: '订单设置',
+                path: 'order/setting'
             }
         ]
     },

@@ -1,8 +1,12 @@
 <template>
   <div class="detail-dialog-cont">
-    <el-form :model="formData" ref="detailForm" :rules="rules" size="small" label-position="left" label-width="84px">
-      <el-form-item label="分类名称" prop="name">
-        <el-input v-model.trim="formData.name" placeholder="请输入分类名称"></el-input>
+    <el-form :model="formData" ref="form" :rules="rules" size="small" label-suffix="：" label-position="right"
+             label-width="110px">
+      <el-form-item label="退换货原因" prop="reason">
+        <el-input v-model.trim="formData.reason" placeholder="请输入分类名称"></el-input>
+      </el-form-item>
+      <el-form-item label="备注信息" prop="remark">
+        <el-input v-model.trim="formData.remark" placeholder="请输入备注信息，尽量使用简洁的语言"></el-input>
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-radio-group v-model="formData.status">
@@ -23,17 +27,12 @@ import {defineComponent, ref, inject, toRefs, reactive} from 'vue'
 import $api from '@/api'
 
 export default defineComponent({
-  name: "GoodsClassifyDetail",
+  name: "ReturnReasonEdit",
   props: {
-    // 模式：add新增/view查看/edit编辑
+    // 模式：add新增/edit编辑
     mode: {
       type: String,
       default: 'add'
-    },
-    // 添加到的父级id
-    pid: {
-      type: [String, Number],
-      default: 0
     },
     // 当条数据
     detail: {
@@ -44,34 +43,36 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const detailForm = ref()
+    const closeDialog = inject('closeDialog')
+    const getList = inject('getList')
+    const {mode, detail} = toRefs(props)
+
+    const form = ref()
     const formData = reactive({
-      name: '',
+      reason: '',
+      remark: '',
       status: 1
     })
     const rules = {
-      name: [{required: true, message: '请输入分类名称'}]
+      reason: [{required: true, message: '请输入退换货原因'}],
+      remark: [{required: true, message: '请输入备注信息'}],
+      status: [{required: true, message: '请选择启用状态'}]
     }
-    const {mode, pid, detail} = toRefs(props)
+
     if (mode.value === 'edit') {
-      formData.name = detail.value.name
+      formData.reason = detail.value.reason
+      formData.remark = detail.value.remark
       formData.status = detail.value.status
     }
 
-    const closeDialog = inject('closeDialog')
-    const getList = inject('getList')
-
     // 添加/编辑
     const submit = async () => {
-      if (await detailForm.value.validate()) {
-        let param = formData
-        if (mode.value === 'add') {
-          param.pid = pid.value
-        }
+      if (await form.value.validate()) {
+        const param = formData
         if (mode.value === 'edit') {
           param.id = detail.value.id
         }
-        const {code} = await $api.goodsApi.classify[mode.value](param)
+        const {code} = await $api.orderApi.returnReason[mode.value](param)
         if (code === 200) {
           closeDialog()
           getList()
@@ -80,7 +81,7 @@ export default defineComponent({
     }
 
     return {
-      detailForm,
+      form,
       formData,
       rules,
       closeDialog,

@@ -7,8 +7,8 @@
     <el-form-item label="联系电话" prop="phone">
       <el-input v-model="formData.phone" placeholder="请输入联系电话"></el-input>
     </el-form-item>
-    <el-form-item label="收货地址">
-      <el-cascader :options="regionData" v-model="formData.area"
+    <el-form-item label="收货地址" prop="area">
+      <el-cascader :options="regionData" v-model="formData.area" placeholder="请选择省/市/区"
                    :props="{expandTrigger: 'hover', value: 'label'}"></el-cascader>
     </el-form-item>
     <el-form-item label="详细地址" prop="address">
@@ -56,6 +56,9 @@ export default defineComponent({
         {required: true, message: '请输入联系电话'},
         {pattern: reg.phone, message: '请输入正确的联系电话'}
       ],
+      area: [
+        {required: true, message: '请选择省/市/区'},
+      ],
       address: [{required: true, message: '请输入详细地址'}]
     }
 
@@ -78,7 +81,6 @@ export default defineComponent({
           ElMessage.success('修改成功')
           closeDialog()
           refreshData()
-          window.dispatchEvent(new Event('back_refresh'))
         }
       }
     }

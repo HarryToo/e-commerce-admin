@@ -246,7 +246,6 @@ export default defineComponent({
         if (code === 200) {
           ElMessage.success('已拒绝退货')
           getDetail()
-          window.dispatchEvent(new Event('back_refresh'))
         }
       }).catch(err => {
       })
@@ -261,7 +260,6 @@ export default defineComponent({
         if (code === 200) {
           ElMessage.success(`已确认收货`)
           getDetail()
-          window.dispatchEvent(new Event('back_refresh'))
         }
       }).catch(err => {
       })
@@ -276,22 +274,9 @@ export default defineComponent({
         if (code === 200) {
           ElMessage.success(`已确认退款`)
           getDetail()
-          window.dispatchEvent(new Event('back_refresh'))
         }
       }).catch(err => {
       })
-    }
-
-    // 删除订单
-    const deleteOrder = async () => {
-      const {code} = await $api.orderApi.dropShipping.deleteOrder({
-        id: route.params.orderId
-      })
-      if (code === 200) {
-        ElMessage.success(`已删除${ids.length > 1 ? '所选' : '该'}订单`)
-        getDetail()
-        window.dispatchEvent(new Event('back_refresh'))
-      }
     }
 
     provide('closeDeliveryInfoDialog', dialog.deliveryInfo.close)
@@ -304,8 +289,7 @@ export default defineComponent({
       progressStatus,
       refusalReturn,
       received,
-      refund,
-      deleteOrder
+      refund
     }
   }
 })

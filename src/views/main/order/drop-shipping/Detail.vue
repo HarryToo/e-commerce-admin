@@ -129,7 +129,7 @@
 
 <script>
 import {computed, defineComponent, ref, onUnmounted, reactive, provide} from 'vue'
-import {useRoute} from 'vue-router'
+import {useRoute, useRouter} from 'vue-router'
 import {ElMessage, ElMessageBox} from "element-plus"
 import WideGoodsItem from '@/components/goods/WideGoodsItem'
 import LogisticsInfo from "@/components/LogisticsInfo"
@@ -150,6 +150,7 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute()
+    const router = useRouter()
     const detail = ref({})
     const payCountDown = ref(0)
 
@@ -262,7 +263,6 @@ export default defineComponent({
         if (code === 200) {
           ElMessage.success('已取消该订单')
           getDetail()
-          window.dispatchEvent(new Event('back_refresh'))
         }
       }).catch(err => {
       })
@@ -273,9 +273,8 @@ export default defineComponent({
         id: route.params.orderId
       })
       if (code === 200) {
-        ElMessage.success(`已删除${ids.length > 1 ? '所选' : '该'}订单`)
-        getDetail()
-        window.dispatchEvent(new Event('back_refresh'))
+        ElMessage.success(`已删除该订单`)
+        router.back()
       }
     }
 

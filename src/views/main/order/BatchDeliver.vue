@@ -44,7 +44,7 @@ export default defineComponent({
   setup() {
     const route = useRoute()
     const router = useRouter()
-    if (route.params.list) {
+    if (route.params.list && route.params.type) {
       // 快递公司列表
       const courierCompanyList = ref([])
       const getCourierCompanyList = async () => {
@@ -84,10 +84,14 @@ export default defineComponent({
               number: item.number
             }
           })
-          const {code} = await $api.orderApi.dropShipping.batchDeliverGoods(params)
+          // 根据路由参数type判断此次批量发货的订单类型：1.代发下单，2.换货订单
+          const type = route.params.type - 1
+          const apiModules = ['dropShipping', 'exchange']
+          const {code} = await $api.orderApi[apiModules[type]].batchDeliverGoods(params)
           if (code === 200) {
             ElMessage.success('发货成功')
-            window.dispatchEvent(new Event('back_refresh'))
+            const eventNames = ['refresh_drop_shipping_order', 'refresh_exchange_order']
+            window.dispatchEvent(new Event(eventNames[type]))
             router.back()
           }
         }

@@ -1,4 +1,4 @@
-import BatchDeliver from '@/views/main/order/drop-shipping/BatchDeliver'
+import BatchDeliver from '@/views/main/order/BatchDeliver'
 import DropShippingOrderDetail from '@/views/main/order/drop-shipping/Detail'
 import ReturnedOrderDetail from '@/views/main/order/returned/Detail'
 import ExchangeOrderDetail from '@/views/main/order/exchange/Detail'
@@ -23,7 +23,7 @@ export default [
     },
     {
         path: 'order/dropShipping/batchDeliver',
-        name: 'BatchDeliver',
+        name: 'dropShippingBatchDeliver',
         meta: {
             title: '批量发货'
         },
@@ -64,6 +64,14 @@ export default [
         component: () => import('@/views/main/order/exchange')
     },
     {
+        path: 'order/exchange/batchDeliver',
+        name: 'exchangeBatchDeliver',
+        meta: {
+            title: '批量发货'
+        },
+        component: BatchDeliver
+    },
+    {
         path: 'order/exchange/detail/:orderId',
         name: 'ExchangeOrderDetail',
         meta: {
@@ -71,5 +79,13 @@ export default [
             noBg: true
         },
         component: ExchangeOrderDetail
+    },
+    {
+        path: 'order/setting',
+        name: 'OrderSetting',
+        meta: {
+            title: '订单设置'
+        },
+        component: () => import('@/views/main/order/setting')
     }
 ]

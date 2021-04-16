@@ -109,7 +109,7 @@
         </el-button>
         <el-button class="custom" size="small" :disabled="!tableData.selectionIds.length"
                    v-if="search.form.status === 2"
-                   @click="$router.push({name: 'BatchDeliver', params: { list: JSON.stringify(tableData.selectionList) }})">
+                   @click="$router.push({name: 'dropShippingBatchDeliver', params: { list: JSON.stringify(tableData.selectionList), type: 1 }})">
           批量发货
         </el-button>
         <span class="tips" v-if="search.form.status !== 4 && search.form.status !== 2">提示：通过订单状态筛选订单后有相应的批量操作功能</span>
@@ -133,7 +133,7 @@
 </template>
 
 <script>
-import {defineComponent, ref, reactive, computed, provide} from 'vue'
+import {defineComponent, ref, reactive, computed, provide, onActivated} from 'vue'
 import {ElMessage, ElMessageBox} from "element-plus"
 import WideGoodsItem from "@/components/goods/WideGoodsItem"
 import LogisticsInfo from "@/components/LogisticsInfo"
@@ -304,8 +304,7 @@ export default defineComponent({
       }
     })
 
-    tableData.getList()
-    window.addEventListener('back_refresh', tableData.getList)
+    onActivated(tableData.getList)
 
     provide('closeDeliveryInfoDialog', dialog.deliveryInfo.close)
     provide('closeExpressInfoDialog', dialog.expressInfo.close)

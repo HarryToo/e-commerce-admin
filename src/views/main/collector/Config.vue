@@ -74,8 +74,8 @@
           <el-button size="small" style="margin-top: 20px;" @click="platform.add">新增一条</el-button>
         </div>
       </div>
-      <div style="margin: 60px 0 20px;text-align: right;">
-        <el-button class="custom" @click="save">保存生效</el-button>
+      <div style="margin: 60px 0 20px;">
+        <el-button class="custom" size="small" @click="save">保存生效</el-button>
       </div>
     </div>
   </div>

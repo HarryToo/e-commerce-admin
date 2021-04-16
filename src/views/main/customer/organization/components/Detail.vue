@@ -1,6 +1,6 @@
 <template>
   <div class="detail-dialog-cont">
-    <el-form ref="detailForm" label-position="top" :model="detail" :rules="rules">
+    <el-form ref="detailForm" size="small" label-position="top" :model="detail" :rules="rules">
       <h3>用户信息</h3>
       <el-row :gutter="30">
         <el-col :span="24">
@@ -51,8 +51,8 @@
         </el-col>
       </el-row>
       <div style="margin-top: 60px;text-align: right;" v-if="mode !== 'view'">
-        <el-button type="info" @click="closeDialog">取消</el-button>
-        <el-button class="custom" @click="submit">确定</el-button>
+        <el-button type="info" size="small" @click="closeDialog">取消</el-button>
+        <el-button class="custom" size="small" @click="submit">确定</el-button>
       </div>
     </el-form>
   </div>

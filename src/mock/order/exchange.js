@@ -52,8 +52,12 @@ $mock.get('/order/exchange/list', ({url}) => {
 $mock.post('/order/exchange/received', {
     code: 200
 })
-// 确认退款
-$mock.post('/order/exchange/refund', {
+// 发货
+$mock.post('/order/exchange/deliverGoods', {
+    code: 200
+})
+// 批量发货
+$mock.post('/order/exchange/batchDeliverGoods', {
     code: 200
 })
 // 删除订单
@@ -69,7 +73,7 @@ $mock.get('/order/exchange/detail', () => {
         applyTime: '@datetime()',
         reviewTime: '',
         receiptTime: '',
-        refundTime: '',
+        deliveryTime: '',
         completeTime: '',
         skuNum: '@string(number, 10)',
         goodsInfo: {
@@ -90,16 +94,11 @@ $mock.get('/order/exchange/detail', () => {
         goodsPrice: '@float(1000, 1500, 2, 2)',
         goodsNum: 1,
         actualMoney: '@goodsPrice',
-        refundableMoney: '@goodsPrice',
         returnedReason: '七天无理由退货',
         returnedDecs: '跟描述不相符，感觉不合适',
         'returnedImages|3': ['@image("120x120", "#F9612E")'],
-        goodsMoney: '@goodsPrice',
-        freightMoney: '@float(10, 20, 2, 2)',
-        isReturnFreightMoney: 0,
-        refundMoney: '@goodsPrice',
-        refundType: '原路返回',
         logisticsName: '@cword(2)快递',
+        logisticsCode: '@string(upper, 4)',
         logisticsNumber: '@string(upper, 2)@string(number, 10)',
         deliveryInfo: {
             name: '@cname()',
@@ -109,8 +108,17 @@ $mock.get('/order/exchange/detail', () => {
             area: '锦江区',
             address: '@cword(2)路@string(number, 2)号2楼'
         },
-        logisticsNum: '@string(upper, 2)@string(number, 10)',
-        logisticsCode: '@string(upper, 4)',
+        returnLogisticsName: '@cword(2)快递',
+        returnLogisticsCode: '@string(upper, 4)',
+        returnLogisticsNumber: '@string(upper, 2)@string(number, 10)',
+        returnDeliveryInfo: {
+            name: '@cname()',
+            phone: '1@string(number, 10)',
+            provinces: '四川省',
+            city: '成都市',
+            area: '龙泉驿区',
+            address: '@cword(2)路@string(number, 2)号16楼'
+        },
         remark: '商品已下架'
     })
 })

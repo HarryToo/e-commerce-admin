@@ -6,34 +6,36 @@
         <span>{{ detail.orderNum }}</span>
       </div>
       <template #right>
-        <el-button @click="dialog.deliveryInfo.open" size="small" class="custom" v-if="detail.status === 1 ">同意退货
+        <el-button @click="dialog.deliveryInfo.open" size="small" class="custom" v-if="detail.status === 1 ">同意换货
         </el-button>
-        <el-button @click="refusalReturn" size="small" type="danger" v-if="detail.status === 1 ">拒绝退货</el-button>
+        <el-button @click="refusalExchange" size="small" type="danger" v-if="detail.status === 1 ">拒绝换货</el-button>
         <el-button @click="received" size="small" type="success" v-if="detail.status === 2">确认收货</el-button>
-        <el-button @click="refund" size="small" class="custom" v-if="detail.status === 3">确认退款</el-button>
+        <el-button @click="dialog.expressInfo.open" size="small" class="custom" v-if="detail.status === 3">确认发货
+        </el-button>
       </template>
     </table-options-header>
     <div class="detail-cont" :style="{height: $getTableHeight(true, false) + 35 + 'px'}">
       <div class="block-view padding status-info">
         <div class="left">
-          <div class="name">{{ ['待审核', '待收货', '待退款', '拒绝退货', '已完成'][detail.status - 1] }}</div>
+          <div class="name">{{ ['待审核', '待收货', '待发新货', '待用户收货', '拒绝换货', '已完成'][detail.status - 1] }}</div>
         </div>
         <div class="right">
           <el-steps :active="progressStatus" align-center>
             <el-step title="提交申请" :description="detail.applyTime"></el-step>
-            <el-step title="审核" :status="detail.status === 4 ? 'error' :  'finish'"
-                     :description="detail.reviewTime"></el-step>
+            <el-step title="审核" status="wait" :description="detail.reviewTime" v-if="detail.status === 1"></el-step>
+            <el-step title="审核" :status="detail.status === 5 ? 'error' :  'finish'"
+                     :description="detail.reviewTime" v-else></el-step>
             <el-step title="确认收货" :description="detail.receiptTime"></el-step>
-            <el-step title="确认退款" :description="detail.refundTime"></el-step>
+            <el-step title="确认发货" :description="detail.deliveryTime"></el-step>
             <el-step title="完成" :description="detail.completeTime"></el-step>
           </el-steps>
         </div>
       </div>
       <div class="block-view padding goods-info">
-        <h3>退货商品：</h3>
+        <h3>换货商品：</h3>
         <el-table :data="goodsInfoTableList" stripe>
           <el-table-column prop="skuNum" label="SKU编号"></el-table-column>
-          <el-table-column prop="goodsInfo" label="商品信息" width="500">
+          <el-table-column prop="goodsInfo" label="商品信息" width="560">
             <template #default="scope">
               <wide-goods-item :goods="scope.row.goodsInfo"></wide-goods-item>
             </template>
@@ -53,23 +55,18 @@
               <span>￥{{ scope.row.actualMoney }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="shopNum" label="应退金额">
-            <template #default="scope">
-              <span>￥{{ scope.row.refundableMoney }}</span>
-            </template>
-          </el-table-column>
         </el-table>
         <div class="returned-reason">
           <div class="row">
-            <span class="label">退货原因：</span>
+            <span class="label">换货原因：</span>
             <div class="content">{{ detail.returnedReason }}</div>
           </div>
           <div class="row">
-            <span class="label">退货描述：</span>
+            <span class="label">换货描述：</span>
             <div class="content">{{ detail.returnedDecs }}</div>
           </div>
           <div class="row">
-            <span class="label">退货图片：</span>
+            <span class="label">换货图片：</span>
             <div class="content">
               <el-image v-for="item in detail.returnedImages" :src="item" filt="cover"
                         :preview-src-list="detail.returnedImages" hide-on-click-modal
@@ -79,74 +76,95 @@
         </div>
       </div>
       <div class="block-view padding returned-info">
-        <h3>退货单信息：</h3>
+        <h3>换货单信息：</h3>
         <table>
           <tr>
-            <td>退货单号/订单号</td>
+            <td>换货单号/订单号</td>
             <td>{{ detail.returnedNum }}/{{ detail.orderNum }}</td>
           </tr>
-          <tr>
-            <td>商品金额</td>
-            <td>￥{{ detail.goodsMoney }}</td>
-          </tr>
-          <tr>
-            <td>运费金额</td>
-            <td>￥{{ detail.freightMoney }}</td>
-          </tr>
-          <template v-if="detail.status !== 1 && detail.status !== 4">
+          <template v-if="detail.deliveryInfo">
             <tr>
-              <td>是否退运费</td>
-              <td>{{ detail.isReturnFreightMoney ? '退运费' : '不退运费' }}</td>
+              <td>发新货联系人</td>
+              <td>{{ detail.deliveryInfo.name }}</td>
             </tr>
             <tr>
-              <td>退款金额</td>
-              <td>￥{{ detail.refundMoney }}</td>
+              <td>发新货联系电话</td>
+              <td>{{ detail.deliveryInfo.phone }}</td>
             </tr>
             <tr>
-              <td>退款方式</td>
-              <td>{{ detail.refundType }}</td>
-            </tr>
-            <tr>
-              <td>退货物流单号</td>
+              <td>发新货收货地址</td>
               <td>
-                <span style="padding-right: 10px;">{{ detail.logisticsName }}：{{ detail.logisticsNumber }}</span>
-                <el-button size="mini" class="custom" @click="">查看物流</el-button>
+                <span>{{ detail.deliveryInfo.provinces }}</span>
+                <span>{{ detail.deliveryInfo.city }}</span>
+                <span>{{ detail.deliveryInfo.area }}</span>
+                <span>{{ detail.deliveryInfo.address }}</span>
               </td>
             </tr>
-            <template v-if="detail.deliveryInfo">
+          </template>
+          <template v-if="detail.status !== 1 && detail.status !== 5">
+            <tr>
+              <td>发新货物流单号</td>
+              <td>
+                <span style="padding-right: 10px;">{{ detail.logisticsName }}：{{ detail.logisticsNumber }}</span>
+                <el-button size="mini" class="custom" @click="dialog.logisticsInfo.open">查看物流</el-button>
+              </td>
+            </tr>
+            <template v-if="detail.returnDeliveryInfo">
               <tr>
-                <td>收货人姓名</td>
-                <td>{{ detail.deliveryInfo.name }}</td>
+                <td>返回商品收货人姓名</td>
+                <td>{{ detail.returnDeliveryInfo.name }}</td>
               </tr>
               <tr>
-                <td>收货人手机号</td>
-                <td>{{ detail.deliveryInfo.phone }}</td>
+                <td>返回商品收货人手机号</td>
+                <td>{{ detail.returnDeliveryInfo.phone }}</td>
               </tr>
               <tr>
-                <td>收货地址</td>
-                <td>{{ detail.deliveryInfo.provinces }}{{ detail.deliveryInfo.city }}{{ detail.deliveryInfo.area }}</td>
+                <td>返回商品收货地址</td>
+                <td>{{ detail.returnDeliveryInfo.provinces }}{{
+                    detail.returnDeliveryInfo.city
+                  }}{{ detail.returnDeliveryInfo.area }}
+                </td>
               </tr>
               <tr>
-                <td>详细地址</td>
-                <td>{{ detail.deliveryInfo.address }}</td>
+                <td>返回商品详细地址</td>
+                <td>{{ detail.returnDeliveryInfo.address }}</td>
               </tr>
             </template>
+            <tr v-if="detail.status === 4">
+              <td>返回商品物流单号</td>
+              <td>
+                <span style="padding-right: 10px;">{{ detail.returnLogisticsName }}：{{
+                    detail.returnLogisticsNumber
+                  }}</span>
+                <el-button size="mini" class="custom" @click="dialog.returnLogisticsInfo.open">查看物流</el-button>
+              </td>
+            </tr>
           </template>
           <tr v-if="detail.status !== 1">
             <td>备注信息</td>
-            <td :class="{highlight: detail.status === 4}">{{ detail.remark || '—' }}</td>
+            <td :class="{highlight: detail.status === 5}">{{ detail.remark || '—' }}</td>
           </tr>
         </table>
       </div>
     </div>
 
-    <el-dialog v-model="dialog.deliveryInfo.visible" width="550px" title="填写退货单信息" :close-on-click-modal="false"
+    <el-dialog v-model="dialog.deliveryInfo.visible" width="550px" title="填写换货单信息" :close-on-click-modal="false"
                destroy-on-close custom-class="custom">
       <delivery-info :info="detail"></delivery-info>
     </el-dialog>
+    <el-dialog v-model="dialog.expressInfo.visible" width="500px" title="确认发货" :close-on-click-modal="false"
+               custom-class="custom">
+      <express-info :info="detail"></express-info>
+    </el-dialog>
     <el-dialog v-model="dialog.logisticsInfo.visible" width="800px" title="物流跟踪" :close-on-click-modal="false"
                destroy-on-close custom-class="custom">
-      <logistics-info :orderId="$route.params.orderId"></logistics-info>
+      <logistics-info :number="detail.logisticsNumber" :code="detail.logisticsCode"
+                      :phone="detail.deliveryInfo.phone"></logistics-info>
+    </el-dialog>
+    <el-dialog v-model="dialog.returnLogisticsInfo.visible" width="800px" title="物流跟踪" :close-on-click-modal="false"
+               destroy-on-close custom-class="custom">
+      <logistics-info :number="detail.returnLogisticsNumber" :code="detail.returnLogisticsCode"
+                      :phone="detail.returnDeliveryInfo.phone"></logistics-info>
     </el-dialog>
   </div>
 </template>
@@ -158,6 +176,7 @@ import {ElMessage, ElMessageBox} from "element-plus"
 import WideGoodsItem from '@/components/goods/WideGoodsItem'
 import LogisticsInfo from "@/components/LogisticsInfo"
 import DeliveryInfo from "./components/DeliveryInfo"
+import ExpressInfo from "./components/ExpressInfo"
 import $api from '@/api'
 
 export default defineComponent({
@@ -165,14 +184,15 @@ export default defineComponent({
   components: {
     WideGoodsItem,
     LogisticsInfo,
-    DeliveryInfo
+    DeliveryInfo,
+    ExpressInfo
   },
   setup() {
     const route = useRoute()
     const detail = ref({})
 
     const dialog = reactive({
-      // 退货单信息填写弹窗
+      // 换货单信息填写弹窗
       deliveryInfo: {
         visible: false,
         open() {
@@ -182,7 +202,17 @@ export default defineComponent({
           dialog.deliveryInfo.visible = false
         }
       },
-      // 物流信息弹窗
+      // 发货弹窗
+      expressInfo: {
+        visible: false,
+        open(data) {
+          dialog.expressInfo.visible = true
+        },
+        close() {
+          dialog.expressInfo.visible = false
+        }
+      },
+      //  发新货物流信息弹窗
       logisticsInfo: {
         visible: false,
         open() {
@@ -190,6 +220,16 @@ export default defineComponent({
         },
         close() {
           dialog.logisticsInfo.visible = false
+        }
+      },
+      // 返回商品物流信息弹窗
+      returnLogisticsInfo: {
+        visible: false,
+        open() {
+          dialog.returnLogisticsInfo.visible = true
+        },
+        close() {
+          dialog.returnLogisticsInfo.visible = false
         }
       }
     })
@@ -202,17 +242,16 @@ export default defineComponent({
           goodsInfo: detail.value.goodsInfo,
           goodsPrice: detail.value.goodsPrice,
           goodsNum: detail.value.goodsNum,
-          actualMoney: detail.value.actualMoney,
-          refundableMoney: detail.value.refundableMoney
+          actualMoney: detail.value.actualMoney
         }]
       }
       return []
     })
-    // 时间线状态值（主要处理status为4时的拒绝退货状态展示）
+    // 时间线状态值（主要处理status为4时的拒绝换货状态展示）
     const progressStatus = computed(() => {
       if (detail.value.applyTime) {
         const status = detail.value.status
-        if (status === 4) {
+        if (status === 5) {
           return 1
         }
         return status
@@ -221,15 +260,15 @@ export default defineComponent({
     })
 
     const getDetail = async () => {
-      detail.value = await $api.orderApi.returned.getDetail({
+      detail.value = await $api.orderApi.exchange.getDetail({
         orderId: route.params.orderId
       })
     }
     getDetail()
 
-    // 拒绝退货
-    const refusalReturn = () => {
-      ElMessageBox.prompt('请填写拒绝原因', '拒绝退货', {
+    // 拒绝换货
+    const refusalExchange = () => {
+      ElMessageBox.prompt('请填写拒绝原因', '拒绝换货', {
         inputType: 'textarea',
         inputValidator(value) {
           if (!value || !value.trim()) {
@@ -237,15 +276,14 @@ export default defineComponent({
           }
         }
       }).then(async ({value}) => {
-        const {code} = await $api.orderApi.returned.review({
+        const {code} = await $api.orderApi.exchange.review({
           id: route.params.orderId,
           type: 2,
           remark: value.trim()
         })
         if (code === 200) {
-          ElMessage.success('已拒绝退货')
+          ElMessage.success('已拒绝换货')
           getDetail()
-          window.dispatchEvent(new Event('back_refresh'))
         }
       }).catch(err => {
       })
@@ -254,28 +292,12 @@ export default defineComponent({
     // 确认收货
     const received = () => {
       ElMessageBox.confirm(`确认后，不可更改，请注意核对订单及检查商品！`, `确认已收到该商品吗？`, {type: 'warning'}).then(async () => {
-        const {code} = await $api.orderApi.returned.received({
+        const {code} = await $api.orderApi.exchange.received({
           id: route.params.orderId
         })
         if (code === 200) {
           ElMessage.success(`已确认收货`)
           getDetail()
-          window.dispatchEvent(new Event('back_refresh'))
-        }
-      }).catch(err => {
-      })
-    }
-
-    // 确认退款
-    const refund = () => {
-      ElMessageBox.confirm(`确认后，系统将执行自动退款，请谨慎核对！`, `确认要执行该笔退款吗？`, {type: 'warning'}).then(async () => {
-        const {code} = await $api.orderApi.returned.refund({
-          id: route.params.orderId
-        })
-        if (code === 200) {
-          ElMessage.success(`已确认退款`)
-          getDetail()
-          window.dispatchEvent(new Event('back_refresh'))
         }
       }).catch(err => {
       })
@@ -283,17 +305,17 @@ export default defineComponent({
 
     // 删除订单
     const deleteOrder = async () => {
-      const {code} = await $api.orderApi.dropShipping.deleteOrder({
+      const {code} = await $api.orderApi.exchange.deleteOrder({
         id: route.params.orderId
       })
       if (code === 200) {
         ElMessage.success(`已删除${ids.length > 1 ? '所选' : '该'}订单`)
         getDetail()
-        window.dispatchEvent(new Event('back_refresh'))
       }
     }
 
     provide('closeDeliveryInfoDialog', dialog.deliveryInfo.close)
+    provide('closeExpressInfoDialog', dialog.expressInfo.close)
     provide('refreshData', getDetail)
 
     return {
@@ -301,9 +323,8 @@ export default defineComponent({
       dialog,
       goodsInfoTableList,
       progressStatus,
-      refusalReturn,
+      refusalExchange,
       received,
-      refund,
       deleteOrder
     }
   }

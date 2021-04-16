@@ -43,13 +43,37 @@ export default {
         getList: (data) => $http.get('/order/exchange/list', data),
         // 确认收货
         received: (data) => $http.post('/order/exchange/received', data),
-        // 确认退款
-        refund: (data) => $http.post('/order/exchange/refund', data),
+        // 发货
+        deliverGoods: (data) => $http.post('/order/exchange/deliverGoods', data),
+        // 批量发货
+        batchDeliverGoods: (data) => $http.post('/order/exchange/batchDeliverGoods', data),
         // 删除订单
         deleteOrder: (data) => $http.del('/order/exchange/delete', data),
         // 订单详情
         getDetail: (data) => $http.get('/order/exchange/detail', data),
         // 审核
         review: (data) => $http.post('/order/exchange/review', data)
+    },
+    // 订单设置
+    setting: {
+        // 常规设置
+        getConfigs: (data) => $http.get('/order/configs', data),
+        // 常规设置
+        saveConfigs: (data) => $http.post('/order/configs', data)
+    },
+    // 退换货原因
+    returnReason: {
+        // 列表
+        getList: (data) => $http.get('/order/reason/list', data),
+        // 新增
+        add: (data) => $http.post('/order/reason/add', data),
+        // 编辑
+        edit: (data) => $http.post('/order/reason/edit', data),
+        // 启用
+        enable: (data) => $http.post('/order/reason/enable', data),
+        // 禁用
+        disable: (data) => $http.post('/order/reason/disable', data),
+        // 删除
+        del: (data) => $http.del('/order/reason/del', data)
     }
 }

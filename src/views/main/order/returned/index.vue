@@ -72,7 +72,7 @@
             <div>{{ scope.row.applyTime }}</div>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" width="170" align="center">
+        <el-table-column fixed="right" label="操作" width="170">
           <template #default="scope">
             <el-button @click="$router.push('/main/order/returned/detail/' + scope.row.id)" type="text"
                        size="small">{{ scope.row.status === 1 ? '审核' : '查看' }}
@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import {defineComponent, ref, reactive, computed} from 'vue'
+import {defineComponent, ref, reactive, computed, onActivated} from 'vue'
 import {ElMessage, ElMessageBox} from "element-plus"
 import WideGoodsItem from "@/components/goods/WideGoodsItem"
 import $api from '@/api'
@@ -252,8 +252,7 @@ export default defineComponent({
       }
     })
 
-    tableData.getList()
-    window.addEventListener('back_refresh', tableData.getList)
+    onActivated(tableData.getList)
 
     return {
       searchForm,

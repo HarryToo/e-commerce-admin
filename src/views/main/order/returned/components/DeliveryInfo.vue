@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="form" :model="formData" :rules="formRules" size="small" label-position="left" label-width="110px"
+  <el-form ref="form" :model="formData" :rules="formRules" size="small" label-position="right" label-width="110px"
            label-suffix=":">
     <el-form-item label="是否退运费" prop="isReturnFreightMoney">
       <el-radio-group v-model="formData.isReturnFreightMoney">
@@ -13,8 +13,8 @@
     <el-form-item label="收货人" prop="name">
       <el-input v-model="formData.name" placeholder="请输入收货人姓名"></el-input>
     </el-form-item>
-    <el-form-item label="联系电话" prop="phone">
-      <el-input v-model="formData.phone" placeholder="请输入联系电话"></el-input>
+    <el-form-item label="收货人手机号" prop="phone">
+      <el-input v-model="formData.phone" placeholder="请输入收货人手机号"></el-input>
     </el-form-item>
     <el-form-item label="收货地址" prop="area">
       <el-cascader :options="regionData" v-model="formData.area" placeholder="请选择省/市/区"
@@ -71,8 +71,8 @@ export default defineComponent({
       isReturnFreightMoney: [{required: true, message: '请选择是否退运费'}],
       name: [{required: true, message: '请输入收货人姓名'}],
       phone: [
-        {required: true, message: '请输入联系电话'},
-        {pattern: reg.phone, message: '请输入正确的联系电话'}
+        {required: true, message: '请输入收货人手机号'},
+        {pattern: reg.phone, message: '请输入正确的收货人手机号'}
       ],
       area: [{required: true, message: '请选择收货地址'}],
       address: [{required: true, message: '请输入详细地址'}]
@@ -100,7 +100,6 @@ export default defineComponent({
           ElMessage.success('已同意退货')
           closeDialog()
           refreshData()
-          window.dispatchEvent(new Event('back_refresh'))
         }
       }
     }
