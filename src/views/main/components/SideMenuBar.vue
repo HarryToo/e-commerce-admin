@@ -73,12 +73,14 @@ export default defineComponent({
       }
     }
   }
+}
 
-  .el-submenu__title {
-    &:hover {
-      i, span {
-        color: #FC7041 !important;
-      }
+.el-menu-item, .el-submenu__title {
+  &:hover {
+    color: #FC7041 !important;
+
+    i, span {
+      color: #FC7041 !important;
     }
   }
 }
