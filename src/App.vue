@@ -18,7 +18,7 @@ export default defineComponent({
 
 <style lang="scss">
 $orange: #F9612E;
-$activeOrange: #FF3E00;
+$activeOrange: #F13B02;
 
 *:not([class^=el-]), body.el-popup-parent--hidden {
   margin: 0;
@@ -28,6 +28,7 @@ $activeOrange: #FF3E00;
 
 body {
   font-size: 14px;
+  color: #333333;
   overflow: hidden;
 
   #app {
@@ -47,7 +48,6 @@ body {
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
-  background-color: #F8F8F8;
 }
 
 /*定义滚动条轨道*/

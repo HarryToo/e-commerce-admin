@@ -18,7 +18,6 @@
         <template #title>{{ menu.title }}</template>
       </el-menu-item>
     </template>
-    {{ activePath }}
   </el-menu>
 </template>
 

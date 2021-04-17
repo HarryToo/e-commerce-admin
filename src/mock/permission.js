@@ -133,6 +133,11 @@ $mock.get('/permission/byAccount', [
             {
                 name: '添加商品',
                 path: 'operation/special/goods/add'
+            },
+            {
+                name: '网站装修',
+                path: 'operation/website',
+                permission: ['edit', 'add', 'delete']
             }
         ]
     },

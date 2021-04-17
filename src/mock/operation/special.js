@@ -1,5 +1,4 @@
 import $mock from '@/utils/mock'
-import $http from "@/utils/http";
 
 // 专题列表
 $mock.get('/operation/specialList', ({url}) => {

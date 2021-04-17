@@ -21,5 +21,9 @@ export default {
         addGoods: (data) => $http.post('/operation/addGoods', data),
         // 移除商品
         removeGoods: (data) => $http.post('/operation/removeGoods', data)
+    },
+    // 网站装修
+    website: {
+
     }
 }
