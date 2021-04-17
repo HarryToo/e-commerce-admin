@@ -4,7 +4,7 @@
       <el-radio v-model="formData.type" :label="1">固定logo</el-radio>
       <el-radio v-model="formData.type" :label="2">自动获取</el-radio>
     </el-form-item>
-    <el-form-item label="上传logo" v-if="formData.type === 1">
+    <el-form-item label="上传logo" v-show="formData.type === 1">
       <file-upload v-model="formData.logoUrl"></file-upload>
     </el-form-item>
   </el-form>
