@@ -7,7 +7,7 @@
     <div class="img-wrapper">
       <div class="home-page" v-show="pageIndex === 0">
         <el-image src="/images/operation/website/home_page.jpg" fit="contain"></el-image>
-        <div class="select-area logo" :class="{selected: moduleIndex === 0}" title="LOGO"
+        <div class="select-area logo" :class="{selected: moduleIndex === 0}" title="logo"
              @click="$emit('update:moduleIndex', 0)"></div>
         <div class="select-area classify" :class="{selected: moduleIndex === 1}" title="分类导航"
              @click="$emit('update:moduleIndex', 1)"></div>
