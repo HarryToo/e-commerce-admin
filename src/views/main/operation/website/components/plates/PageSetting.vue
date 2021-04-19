@@ -12,10 +12,12 @@
       </div>
       <div class="tabs-content">
         <div class="tabs-content-item" v-show="tabIndex === 0">
-          <logo v-show="pageIndex === 0 && moduleIndex === 0"></logo>
+          <logo-content v-show="pageIndex === 0 && moduleIndex === 0"></logo-content>
+          <classify-content v-show="pageIndex === 0 && moduleIndex === 1"></classify-content>
         </div>
         <div class="tabs-content-item" v-show="tabIndex === 1">
-          456789
+          <classify-style v-show="pageIndex === 0 && moduleIndex === 1"></classify-style>
+          <span class="tips" v-show="pageIndex === 0 && moduleIndex !== 1">暂无法设置此模块样式</span>
         </div>
       </div>
     </div>
@@ -24,12 +26,16 @@
 
 <script>
 import {defineComponent, ref} from 'vue'
-import Logo from '../settings/Logo'
+import LogoContent from '../settings/LogoContent'
+import ClassifyContent from '../settings/ClassifyContent'
+import ClassifyStyle from '../settings/ClassifyStyle'
 
 export default defineComponent({
   name: "PageSetting",
   components: {
-    Logo
+    LogoContent,
+    ClassifyContent,
+    ClassifyStyle
   },
   props: {
     // 选中的页面序号
@@ -114,6 +120,12 @@ export default defineComponent({
       height: calc(100% - 44px);
       padding: 16px 20px 20px;
       overflow-y: auto;
+
+      .tabs-content-item {
+        .tips {
+          color: #999999;
+        }
+      }
     }
   }
 }

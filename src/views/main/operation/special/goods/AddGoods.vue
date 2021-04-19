@@ -8,7 +8,7 @@
           </el-form-item>
           <el-form-item label="商品分类" prop="classify" size="small" style="margin-bottom: 0;">
             <el-cascader v-model="search.form.classify" :options="search.options.classify" placeholder="请选择商品分类"
-                         :props="{expandTrigger: 'hover', value: 'id', label: 'name'}" @change=""></el-cascader>
+                         :props="{expandTrigger: 'hover', value: 'id', label: 'name'}"></el-cascader>
           </el-form-item>
           <el-form-item label="排序方式" prop="sort" size="small" style="margin-bottom: 0;">
             <el-select v-model="search.form.sort" placeholder="请选择排序方式">
@@ -39,41 +39,12 @@
 </template>
 
 <script>
-import {defineComponent, ref, reactive} from 'vue'
+import {defineComponent, ref, reactive, computed} from 'vue'
+import {useStore} from 'vuex'
 import {useRoute} from 'vue-router'
 import {ElMessage} from 'element-plus'
 import SquareGoodsItem from '@/components/goods/SquareGoodsItem'
 import $api from '@/api'
-
-// 平铺列表转树形列表
-function list2Tree(list) {
-  const firstLevelList = list.filter((item) => item.deep === 1)
-  const secondLevelList = list.filter((item) => item.deep === 2)
-  const thirdLevelList = list.filter((item) => item.deep === 3)
-  secondLevelList.forEach((secondLevelItem) => {
-    thirdLevelList.forEach((thirdLevelItem) => {
-      if (thirdLevelItem.pid === secondLevelItem.id) {
-        if (secondLevelItem.children) {
-          secondLevelItem.children.push(thirdLevelItem)
-        } else {
-          secondLevelItem.children = [thirdLevelItem]
-        }
-      }
-    })
-  })
-  firstLevelList.forEach((firstLevelItem) => {
-    secondLevelList.forEach((secondLevelItem) => {
-      if (secondLevelItem.pid === firstLevelItem.id) {
-        if (firstLevelItem.children) {
-          firstLevelItem.children.push(secondLevelItem)
-        } else {
-          firstLevelItem.children = [secondLevelItem]
-        }
-      }
-    })
-  })
-  return firstLevelList
-}
 
 export default defineComponent({
   name: "AddGoods",
@@ -81,6 +52,7 @@ export default defineComponent({
     SquareGoodsItem
   },
   setup() {
+    const store = useStore()
     const route = useRoute()
     const searchForm = ref()
 
@@ -93,12 +65,7 @@ export default defineComponent({
         sort: 1
       },
       options: {
-        classify: [
-          {
-            id: '',
-            name: '全部'
-          }
-        ],
+        classify: computed(() => store.getters['goods/classifyOptionTree']),
         sort: [
           {
             value: 1,
@@ -135,14 +102,8 @@ export default defineComponent({
         searchForm.value.resetFields()
         page.index = 1
         tableData.getList()
-      },
-      getClassifyOptions: async () => {
-        const {list} = await $api.goodsApi.classify.getList()
-        search.options.classify = search.options.classify.concat(list2Tree(list))
       }
     })
-
-    search.getClassifyOptions()
 
     const page = reactive({
       index: 1,
@@ -174,7 +135,11 @@ export default defineComponent({
           specialId: route.query.specialId,
           page: page.index,
           pageSize: page.size,
-          ...search.form
+          name: search.form.name,
+          sort: search.form.sort,
+          level_1: search.form.classify[0] || '',
+          level_2: search.form.classify[0] || '',
+          level_3: search.form.classify[0] || ''
         })
         tableData.list = list
         tableData.total = total

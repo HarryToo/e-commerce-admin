@@ -89,6 +89,5 @@ export default {
         async loadPermissionTree({commit}) {
             commit('setPermissionTree', await $api.permissionApi.getAccountPermission())
         }
-    },
-    modules: {}
+    }
 }

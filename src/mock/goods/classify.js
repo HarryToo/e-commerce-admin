@@ -5,6 +5,7 @@ $mock.get('/goods/classify/list', {
     list: [
         {
             id: 1,
+            pid: 0,
             name: '服装',
             updateTime: '@datetime()',
             goodsNum: '@integer(100, 1000)',
@@ -74,6 +75,7 @@ $mock.get('/goods/classify/list', {
         },
         {
             id: 8,
+            pid: 0,
             name: '数码',
             updateTime: '@datetime()',
             goodsNum: '@integer(100, 1000)',

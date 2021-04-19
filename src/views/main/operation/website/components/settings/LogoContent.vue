@@ -15,7 +15,7 @@ import {defineComponent, ref} from 'vue'
 import FileUpload from '@/components/common/FileUpload'
 
 export default defineComponent({
-  name: "LogoSetting",
+  name: "LogoContentSetting",
   components: {
     FileUpload
   },

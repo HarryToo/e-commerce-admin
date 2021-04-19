@@ -73,39 +73,10 @@
 
 <script>
 import {defineComponent, ref, reactive, computed, provide} from 'vue'
+import {useStore} from 'vuex'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import Detail from './components/Detail'
 import $api from '@/api'
-
-// 平铺列表转树形列表
-function list2Tree(list) {
-  const firstLevelList = list.filter((item) => item.deep === 1)
-  const secondLevelList = list.filter((item) => item.deep === 2)
-  const thirdLevelList = list.filter((item) => item.deep === 3)
-  secondLevelList.forEach((secondLevelItem) => {
-    thirdLevelList.forEach((thirdLevelItem) => {
-      if (thirdLevelItem.pid === secondLevelItem.id) {
-        if (secondLevelItem.children) {
-          secondLevelItem.children.push(thirdLevelItem)
-        } else {
-          secondLevelItem.children = [thirdLevelItem]
-        }
-      }
-    })
-  })
-  firstLevelList.forEach((firstLevelItem) => {
-    secondLevelList.forEach((secondLevelItem) => {
-      if (secondLevelItem.pid === firstLevelItem.id) {
-        if (firstLevelItem.children) {
-          firstLevelItem.children.push(secondLevelItem)
-        } else {
-          firstLevelItem.children = [secondLevelItem]
-        }
-      }
-    })
-  })
-  return firstLevelList
-}
 
 export default defineComponent({
   name: "GoodsClassify",
@@ -113,6 +84,7 @@ export default defineComponent({
     Detail
   },
   setup() {
+    const store = useStore()
     const searchForm = ref()
     const search = reactive({
       form: {
@@ -150,10 +122,9 @@ export default defineComponent({
     })
 
     const tableData = reactive({
-      list: [],
-      getList: async () => {
-        const {list} = await $api.goodsApi.classify.getList(search.form)
-        tableData.list = list2Tree(list)
+      list: computed(() => store.getters['goods/classifyTree']),
+      getList: () => {
+        store.dispatch('goods/loadClassifyList', search.form)
       },
       add(pid) {
         dialog.mode = 'add'
@@ -205,8 +176,6 @@ export default defineComponent({
         }
       }
     })
-
-    tableData.getList()
 
     provide('closeDialog', dialog.close)
     provide('getList', tableData.getList)
