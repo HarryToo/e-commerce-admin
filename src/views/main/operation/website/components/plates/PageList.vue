@@ -8,11 +8,12 @@
 </template>
 
 <script>
-import {defineComponent, ref} from 'vue'
+import {defineComponent, ref, inject} from 'vue'
 
 export default defineComponent({
   name: "PageList",
   props: {
+    // 选中的页面编号
     modelValue: {
       type: Number,
       default: 0

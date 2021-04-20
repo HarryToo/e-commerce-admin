@@ -8,31 +8,31 @@
       <div class="preview-img home-page" v-show="pageIndex === 0">
         <img src="/images/operation/website/static_top.jpg" alt="" class="static_top">
         <img src="/images/operation/website/logo.png" alt="" class="selectable position logo"
-             :class="{selected: moduleIndex === 0}" title="logo"
-             @click="$emit('update:moduleIndex', 0)">
+             :class="{selected: modelValue === 0}" title="logo"
+             @click="$emit('update:modelValue', 0)">
         <img src="/images/operation/website/classify.png" alt="" class="selectable position classify"
-             :class="{selected: moduleIndex === 1}" title="分类导航"
-             @click="$emit('update:moduleIndex', 1)">
+             :class="{selected: modelValue === 1}" title="分类导航"
+             @click="$emit('update:modelValue', 1)">
         <img src="/images/operation/website/banner.png" alt="" class="selectable position banner"
-             :class="{selected: moduleIndex === 2}" title="轮播图"
-             @click="$emit('update:moduleIndex', 2)">
+             :class="{selected: modelValue === 2}" title="轮播图"
+             @click="$emit('update:modelValue', 2)">
         <div class="rearrange-area">
           <img src="/images/operation/website/floor_1.jpg" alt="" class="selectable floor_item"
-               :class="{selected: moduleIndex === 3}" title="发现好货"
-               @click="$emit('update:moduleIndex', 3)">
+               :class="{selected: modelValue === 3}" title="发现好货"
+               @click="$emit('update:modelValue', 3)">
           <img src="/images/operation/website/floor_2.jpg" alt="" class="selectable floor_item"
-               :class="{selected: moduleIndex === 4}" title="特色好货"
-               @click="$emit('update:moduleIndex', 4)">
+               :class="{selected: modelValue === 4}" title="特色货源"
+               @click="$emit('update:modelValue', 4)">
           <img src="/images/operation/website/floor_3.jpg" alt="" class="selectable floor_item"
-               :class="{selected: moduleIndex === 5}" title="楼层（风格一）"
-               @click="$emit('update:moduleIndex', 5)">
+               :class="{selected: modelValue === 5}" title="楼层（风格一）"
+               @click="$emit('update:modelValue', 5)">
           <img src="/images/operation/website/floor_4.jpg" alt="" class="selectable floor_item"
-               :class="{selected: moduleIndex === 6}" title="楼层（风格二）"
-               @click="$emit('update:moduleIndex', 6)">
+               :class="{selected: modelValue === 6}" title="楼层（风格二）"
+               @click="$emit('update:modelValue', 6)">
         </div>
         <img src="/images/operation/website/floor_5.jpg" alt="" class="selectable floor_item"
-             :class="{selected: moduleIndex === 7}" title="为您推荐"
-             @click="$emit('update:moduleIndex', 7)">
+             :class="{selected: modelValue === 7}" title="为您推荐"
+             @click="$emit('update:modelValue', 7)">
         <img src="/images/operation/website/footer.png" alt="" class="footer">
       </div>
     </div>
@@ -40,25 +40,26 @@
 </template>
 
 <script>
-import {defineComponent} from 'vue'
+import {defineComponent, inject, ref} from 'vue'
 
 export default defineComponent({
   name: "PagePreview",
   props: {
-    // 选中的页面序号
-    pageIndex: {
-      type: Number,
-      default: 0
-    },
-    // 页面上选中的模块
-    moduleIndex: {
+    // 页面上选中的模块编号
+    modelValue: {
       type: Number,
       default: 0
     }
   },
-  emits: ['update:moduleIndex'],
+  emits: ['update:modelValue'],
   setup() {
+    const pageIndex = inject('pageIndex')
+    const moduleIndex = ref(0)
 
+    return {
+      pageIndex,
+      moduleIndex
+    }
   }
 })
 </script>

@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import {defineComponent, ref} from 'vue'
+import {defineComponent, ref, inject} from 'vue'
 import LogoContent from '../settings/LogoContent'
 import ClassifyContent from '../settings/ClassifyContent'
 
@@ -27,19 +27,14 @@ export default defineComponent({
     LogoContent,
     ClassifyContent
   },
-  props: {
-    // 选中的页面序号
-    pageIndex: {
-      type: Number,
-      default: 0
-    },
-    // 页面上选中的模块
-    moduleIndex: {
-      type: Number,
-      default: 0
-    }
-  },
   setup() {
+    const pageIndex = inject('pageIndex')
+    const moduleIndex = inject('moduleIndex')
+
+    return {
+      pageIndex,
+      moduleIndex
+    }
   }
 })
 </script>
