@@ -6,18 +6,10 @@
       <el-button size="small" class="custom">发布</el-button>
     </div>
     <div class="bottom">
-      <div class="tabs-header">
-        <div class="tabs-header-item" :class="{active: tabIndex === 0}" @click="tabIndex = 0">内容</div>
-        <div class="tabs-header-item" :class="{active: tabIndex === 1}" @click="tabIndex = 1">样式</div>
-      </div>
-      <div class="tabs-content">
-        <div class="tabs-content-item" v-show="tabIndex === 0">
+      <div class="bottom-content">
+        <div class="tabs-content-item">
           <logo-content v-show="pageIndex === 0 && moduleIndex === 0"></logo-content>
           <classify-content v-show="pageIndex === 0 && moduleIndex === 1"></classify-content>
-        </div>
-        <div class="tabs-content-item" v-show="tabIndex === 1">
-          <classify-style v-show="pageIndex === 0 && moduleIndex === 1"></classify-style>
-          <span class="tips" v-show="pageIndex === 0 && moduleIndex !== 1">暂无法设置此模块样式</span>
         </div>
       </div>
     </div>
@@ -28,14 +20,12 @@
 import {defineComponent, ref} from 'vue'
 import LogoContent from '../settings/LogoContent'
 import ClassifyContent from '../settings/ClassifyContent'
-import ClassifyStyle from '../settings/ClassifyStyle'
 
 export default defineComponent({
   name: "PageSetting",
   components: {
     LogoContent,
-    ClassifyContent,
-    ClassifyStyle
+    ClassifyContent
   },
   props: {
     // 选中的页面序号
@@ -50,11 +40,6 @@ export default defineComponent({
     }
   },
   setup() {
-    const tabIndex = ref(0)
-
-    return {
-      tabIndex
-    }
   }
 })
 </script>
@@ -86,39 +71,12 @@ export default defineComponent({
   .bottom {
     height: calc(100% - 38px - 10px);
     margin-top: 10px;
+    padding: 20px;
     background-color: #FFFFFF;
     border-radius: 4px;
 
-    .tabs-header {
-      height: 44px;
-      padding: 0 16%;
-      display: flex;
-      justify-content: space-around;
-      border-bottom: 1px solid #EEEEEE;
-      user-select: none;
-
-      .tabs-header-item {
-        height: 43px;
-        line-height: 41px;
-        padding: 0 6px;
-        border-bottom: 2px solid transparent;
-        cursor: pointer;
-        transition: 0.2s;
-
-        &:hover {
-          color: #F9612E;
-        }
-
-        &.active {
-          color: #F9612E;
-          border-color: #F9612E;
-        }
-      }
-    }
-
-    .tabs-content {
-      height: calc(100% - 44px);
-      padding: 16px 20px 20px;
+    .bottom-content {
+      height: 100%;
       overflow-y: auto;
 
       .tabs-content-item {

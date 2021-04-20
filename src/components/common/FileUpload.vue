@@ -1,5 +1,5 @@
 <template>
-  <el-upload :action="$uploadAction" class="upload-btn" :show-file-list="false" :on-success="uploadSuccess">
+  <el-upload :action="$uploadAction" class="upload-btn" :show-file-list="false" :on-success="uploadSuccess" :limit="maxLength">
     <el-image v-if="modelValue" :src="modelValue" lazy fit="contain" class="image"></el-image>
     <div class="placeholder" v-else>
       <i class="el-icon-plus upload-icon"></i>
@@ -14,7 +14,11 @@ import {defineComponent} from 'vue'
 export default defineComponent({
   name: "FileUpload",
   props: {
-    modelValue: String
+    modelValue: String,
+    maxLength: {
+      type: Number,
+      default: 1
+    }
   },
   emits: ['update:modelValue', 'success'],
   setup(props, {emit}) {
@@ -57,9 +61,14 @@ export default defineComponent({
     font-size: 14px;
     color: #999999;
     background-color: #F8F8F8;
+    transition: 0.2s;
 
     i {
       font-size: 24px;
+    }
+
+    &:hover {
+      color: #F9612E;
     }
   }
 }

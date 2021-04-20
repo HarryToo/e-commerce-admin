@@ -138,8 +138,8 @@ export default defineComponent({
           name: search.form.name,
           sort: search.form.sort,
           level_1: search.form.classify[0] || '',
-          level_2: search.form.classify[0] || '',
-          level_3: search.form.classify[0] || ''
+          level_2: search.form.classify[1] || '',
+          level_3: search.form.classify[2] || ''
         })
         tableData.list = list
         tableData.total = total
