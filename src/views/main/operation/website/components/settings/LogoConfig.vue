@@ -11,19 +11,31 @@
 </template>
 
 <script>
-import {defineComponent, ref} from 'vue'
+import {defineComponent, ref, watch} from 'vue'
+import {useStore} from 'vuex'
 import FileUpload from '@/components/common/FileUpload'
 
 export default defineComponent({
-  name: "LogoContentSetting",
+  name: "LogoContentConfig",
   components: {
     FileUpload
   },
   setup() {
+    const store = useStore()
     const formData = ref({
       type: 1,
       logoUrl: ''
     })
+    if (store.state.decoration.massWebsite.homePage.logo) {
+      formData.value.logoUrl = store.state.decoration.massWebsite.homePage.logo
+    } else {
+      formData.value.type = 2
+    }
+
+    watch(formData, (data) => {
+      const logo = data.type === 1 ? data.logoUrl : ''
+      store.commit('decoration/massWebsite/saveLogoConfig', logo)
+    }, {deep: true})
 
     return {
       formData

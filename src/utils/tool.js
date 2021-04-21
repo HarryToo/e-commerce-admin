@@ -66,7 +66,8 @@ export function exportExcel(aoa, fileName) {
 
 // 常用正则
 const Regex = {
-    phone: /^1[3-9]\d{9}$/
+    phone: /^1[3-9]\d{9}$/,
+    url: /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/
 }
 // 自动生成对应校验函数，如：checkPhone(value)
 Object.keys(Regex).forEach((key) => {

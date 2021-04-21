@@ -1,22 +1,22 @@
 <template>
   <div style="height: 100%;display: flex;flex-direction: column;">
     <table-options-header>
-      <el-form :model="search.form" ref="searchForm" inline>
+      <el-form :model="search.form" ref="searchForm" size="small" inline>
         <el-space size="medium">
-          <el-form-item label="商品名称" prop="name" size="small" style="margin-bottom: 0;">
+          <el-form-item label="商品名称" prop="name" style="margin-bottom: 0;">
             <el-input v-model="search.form.name" placeholder="请输入商品名称"></el-input>
           </el-form-item>
-          <el-form-item label="商品分类" prop="classify" size="small" style="margin-bottom: 0;">
+          <el-form-item label="商品分类" prop="classify" style="margin-bottom: 0;">
             <el-cascader v-model="search.form.classify" :options="search.options.classify" placeholder="请选择商品分类"
                          :props="{expandTrigger: 'hover', value: 'id', label: 'name'}"></el-cascader>
           </el-form-item>
-          <el-form-item label="排序方式" prop="sort" size="small" style="margin-bottom: 0;">
+          <el-form-item label="排序方式" prop="sort" style="margin-bottom: 0;">
             <el-select v-model="search.form.sort" placeholder="请选择排序方式">
               <el-option v-for="item in search.options.sort" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item size="small" style="margin-bottom: 0;">
+          <el-form-item style="margin-bottom: 0;">
             <el-button class="custom" @click="search.search">查询</el-button>
             <el-button @click="search.reset">清空条件</el-button>
           </el-form-item>

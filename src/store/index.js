@@ -1,6 +1,7 @@
 import {createStore} from 'vuex'
 import permission from './modules/permission'
 import goods from './modules/goods'
+import decoration from './modules/decoration'
 
 export default createStore({
     state: {},
@@ -8,6 +9,7 @@ export default createStore({
     actions: {},
     modules: {
         permission,
-        goods
+        goods,
+        decoration
     }
 })

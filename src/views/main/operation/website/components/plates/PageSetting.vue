@@ -8,8 +8,9 @@
     <div class="bottom">
       <div class="bottom-content">
         <div class="tabs-content-item">
-          <logo-content v-show="pageIndex === 0 && moduleIndex === 0"></logo-content>
-          <classify-content v-show="pageIndex === 0 && moduleIndex === 1"></classify-content>
+          <logo-config v-show="pageIndex === 0 && moduleIndex === 0"></logo-config>
+          <classify-config v-show="pageIndex === 0 && moduleIndex === 1"></classify-config>
+          <banner-config v-show="pageIndex === 0 && moduleIndex === 2"></banner-config>
         </div>
       </div>
     </div>
@@ -18,14 +19,16 @@
 
 <script>
 import {defineComponent, ref, inject} from 'vue'
-import LogoContent from '../settings/LogoContent'
-import ClassifyContent from '../settings/ClassifyContent'
+import LogoConfig from '../settings/LogoConfig'
+import ClassifyConfig from '../settings/ClassifyConfig'
+import BannerConfig from '../settings/BannerConfig'
 
 export default defineComponent({
   name: "PageSetting",
   components: {
-    LogoContent,
-    ClassifyContent
+    LogoConfig,
+    ClassifyConfig,
+    BannerConfig
   },
   setup() {
     const pageIndex = inject('pageIndex')

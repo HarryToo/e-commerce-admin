@@ -5,8 +5,9 @@
 </template>
 
 <script>
-import {defineComponent, computed, ref} from 'vue'
+import {defineComponent, computed, ref, inject, onMounted} from 'vue'
 import {useStore} from 'vuex'
+import {ElMessage} from "element-plus"
 
 // 数组转树形
 function arr2Tree(list, pid = 0) {
@@ -29,20 +30,52 @@ function arr2Tree(list, pid = 0) {
 
 export default defineComponent({
   name: "GoodsClassifyTreeSelector",
-  setup() {
+  props: {
+    // 需要回填的数据
+    data: {
+      type: Object,
+      default() {
+        return null
+      }
+    }
+  },
+  emits: ['confirm'],
+  setup(props, {emit}) {
     const store = useStore()
     const tree = ref()
-
+    const tabIndex = inject('tabIndex')
+    const closeDialog = inject('closeDialog')
     const classifyOptions = computed(() => store.getters['goods/classifyTree'])
 
     const reset = () => {
-      tree.value.setCheckedKeys([])
+      if (props.data && props.data.ids.length) {
+        tree.value.setCheckedKeys(props.data.ids)
+      } else {
+        tree.value.setCheckedKeys([])
+      }
     }
 
+    onMounted(reset)
+
     const save = () => {
+      const checkedIds = tree.value.getCheckedKeys()
       const checkedNodes = tree.value.getCheckedNodes()
       const halfCheckedNodes = tree.value.getHalfCheckedNodes()
       const checkedTree = arr2Tree([...checkedNodes, ...halfCheckedNodes])
+      if (tabIndex.value === '1') {
+        if (checkedIds.length && checkedTree.length) {
+          emit('confirm', {
+            type: 1,
+            value: {
+              ids: checkedIds,
+              tree: checkedTree
+            }
+          })
+          closeDialog()
+        } else {
+          ElMessage.error('请选择分类')
+        }
+      }
     }
 
     return {

@@ -20,7 +20,7 @@ export default defineComponent({
 $orange: #F9612E;
 $activeOrange: #F13B02;
 
-*:not([class^=el-]), body.el-popup-parent--hidden {
+*:not([class^=el-]), body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
