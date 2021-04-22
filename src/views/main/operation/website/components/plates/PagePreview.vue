@@ -20,10 +20,11 @@
         <div class="rearrange-list">
           <div class="rearrange-item" v-for="(item, index) in floorList" :key="index">
             <img :src="floorTypes[item.type - 1].previewImg" alt="" class="selectable floor_item"
-                 :class="{selected: modelValue === 3}" :title="floorTypes[item.type - 1].title"
-                 @click="$emit('update:modelValue', 3)">
+                 :class="{selected: modelValue === 3 && floorIndex === index}"
+                 :title="floorTypes[item.type - 1].title"
+                 @click="$emit('update:modelValue', 3);$emit('update:floorIndex', index)">
             <div class="operate-group">
-              <!--4中楼层类型均可排序-->
+              <!--4种楼层类型均可排序-->
               <i class="el-icon-top" title="上移一层" v-if="index > 0" @click="moveUpFloorLevel(index)"></i>
               <!--可新增楼层类型为3/4板块-->
               <i class="el-icon-plus" :title="`新增“${floorTypes[item.type - 1].title}”板块`"
@@ -36,8 +37,7 @@
           </div>
         </div>
         <img src="/images/operation/website/floor_5.jpg" alt="" class="selectable floor_item"
-             :class="{selected: modelValue === 7}" title="为您推荐"
-             @click="$emit('update:modelValue', 7)">
+             :class="{selected: modelValue === 4}" title="为您推荐" @click="$emit('update:modelValue', 4)">
         <img src="/images/operation/website/footer.png" alt="" class="footer">
       </div>
     </div>
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import {computed, defineComponent, inject, ref} from 'vue'
+import {computed, defineComponent, inject, ref, watch} from 'vue'
 import {useStore} from 'vuex'
 import massWebsite from "@/store/modules/decoration/massWebsite";
 
@@ -76,14 +76,19 @@ const floorTypes = [
 export default defineComponent({
   name: "PagePreview",
   props: {
-    // 页面上选中的模块编号
+    // 页面上选中的模块（0:logo,1:分类,2:banner,3:可活动楼层区域,4:推荐商品列表）
     modelValue: {
+      type: Number,
+      default: 0
+    },
+    // 可活动楼层区域数据类型编号
+    floorIndex: {
       type: Number,
       default: 0
     }
   },
-  emits: ['update:modelValue'],
-  setup() {
+  emits: ['update:modelValue', 'update:floorIndex'],
+  setup(props, {emit}) {
     const store = useStore()
     const pageIndex = inject('pageIndex')
     const moduleIndex = ref(0)
@@ -137,6 +142,10 @@ export default defineComponent({
       if (index > 0) {
         const delArr = floorList.value.splice(index, 1)
         floorList.value.splice(index - 1, 0, delArr[0])
+        // 若移动的是当前选中的板块
+        if (props.floorIndex === index) {
+          emit('update:floorIndex', index - 1)
+        }
       }
     }
     // 新增楼层板块
@@ -148,6 +157,11 @@ export default defineComponent({
       const currFloorTypeNum = floorList.value
       floorList.value.splice(index, 1)
     }
+
+    // 变动保存
+    watch(floorList, (list) => {
+      store.commit('decoration/massWebsite/saveFloorConfig', list)
+    }, {deep: true})
 
     return {
       pageIndex,
@@ -221,14 +235,17 @@ export default defineComponent({
       .selectable {
         border: 1px dashed #CCCCCC;
         cursor: pointer;
+        transition: 0.2s;
 
         &:hover {
           border-color: #F9612E;
           background-color: rgba(255, 255, 255, 0.3);
+          box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
         }
 
         &.selected {
           border-width: 2px;
+          box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
           animation: selected-flicker 1s infinite;
         }
       }

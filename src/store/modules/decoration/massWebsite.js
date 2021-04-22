@@ -60,9 +60,7 @@ export default {
                     goodsIds: []
                 }
             ],
-            recommend: [
-
-            ]
+            recommend: []
         }
     },
     getters: {},
@@ -74,15 +72,18 @@ export default {
         // 保存首页-分类导航配置
         saveClassifyConfig(state, data) {
             state.homePage.classify = data
-            console.log(state.homePage)
         },
         // 保存首页-banner配置
         saveBannerConfig(state, data) {
             state.homePage.banner = data
         },
-        // 保存首页-可变楼层区域配置
+        // 保存首页-可活动楼层区域配置
         saveFloorConfig(state, data) {
             state.homePage.floor = data
+        },
+        // 保存首页-为你推荐商品列表配置
+        saveRecommendConfig(state, data) {
+            state.homePage.recommend = data
         }
     },
     actions: {}
