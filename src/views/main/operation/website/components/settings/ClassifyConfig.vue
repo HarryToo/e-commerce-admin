@@ -8,7 +8,7 @@
           </el-form-item>
           <el-form-item label="分类设置">
             <el-button class="custom" @click="currOperationIndex = index;configDialogVisible = true">
-              {{ formData.classify.ids.length ? `已包含${formData.classify.ids.length}个分类（不区分层级）` : '设置' }}
+              {{ formData.classify.ids.length ? '已设置' : '设置' }}
             </el-button>
           </el-form-item>
         </el-form>
@@ -20,8 +20,8 @@
       {{ formDataList.length < maxLength ? `还可添加${maxLength - formDataList.length}个` : `已达到添加上限${maxLength}个` }}
     </el-button>
 
-    <el-dialog v-model="configDialogVisible" title="内容数据配置" width="940px" custom-class="custom"
-               :close-on-click-modal="false" destroy-on-close>
+    <el-dialog v-model="configDialogVisible" title="内容数据配置" width="950px" custom-class="custom"
+               :close-on-click-modal="false">
       <config-dialog-inner :usable-tab="[1]" :data="formDataList[currOperationIndex].classify"
                                  @confirm="setClassify"></config-dialog-inner>
     </el-dialog>

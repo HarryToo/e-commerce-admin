@@ -11,7 +11,7 @@
           </el-form-item>
           <el-form-item label="链接设置">
             <el-button class="custom" @click="currOperationIndex = index;configDialogVisible = true">
-              {{ formData.link.value ? `已设置` : '设置' }}
+              {{ formData.link.value ? `已设置${['分类', '商品', '专题', '自定义链接'][formData.link.type - 1]}` : '设置' }}
             </el-button>
           </el-form-item>
           <el-form-item label="启用时段">
@@ -28,11 +28,10 @@
       {{ formDataList.length < maxLength ? `还可添加${maxLength - formDataList.length}个` : `已达到添加上限${maxLength}个` }}
     </el-button>
 
-    <el-dialog v-model="configDialogVisible" title="内容数据配置" width="940px" custom-class="custom"
-               :close-on-click-modal="false" destroy-on-close>
+    <el-dialog v-model="configDialogVisible" title="内容数据配置" width="950px" custom-class="custom"
+               :close-on-click-modal="false">
       <config-dialog-inner :type="formDataList[currOperationIndex].link.type"
-                                 :data="formDataList[currOperationIndex].link.value"
-                                 @confirm="setLink"></config-dialog-inner>
+                           :data="formDataList[currOperationIndex].link.value" @confirm="setLink"></config-dialog-inner>
     </el-dialog>
   </div>
 </template>

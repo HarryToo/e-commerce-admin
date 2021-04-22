@@ -1,13 +1,9 @@
 <template>
-  <div class="goods-selector">
+  <div class="special-subject-selector">
     <div class="search-header">
       <el-form :model="search.form" ref="searchRef" size="mini" inline>
-        <el-form-item prop="classify" style="margin-bottom: 0;">
-          <el-cascader v-model="search.form.classify" :options="search.options.classify" placeholder="请选择商品分类"
-                       :props="{expandTrigger: 'hover', value: 'id', label: 'name'}"></el-cascader>
-        </el-form-item>
         <el-form-item prop="name" style="margin-bottom: 0;">
-          <el-input v-model="search.form.name" placeholder="请输入商品ID/名称"></el-input>
+          <el-input v-model="search.form.name" placeholder="请输入专题名称"></el-input>
         </el-form-item>
         <el-form-item style="margin-bottom: 0;">
           <el-button class="custom" @click="search.search">查询</el-button>
@@ -15,12 +11,19 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="goods-list">
-      <select-group v-model="tableData.selectedIds" :list="tableData.list" single-selected>
-        <template #default="scope">
-          <square-goods-item :goods="scope.item"></square-goods-item>
-        </template>
-      </select-group>
+    <div class="special-subject-list">
+      <el-radio-group v-model="tableData.selectedId" style="display: block;">
+        <el-table :data="tableData.list" stripe height="395" @current-change="tableData.selectedRowChange">
+          <el-table-column label="专题名称" prop="name"></el-table-column>
+          <el-table-column label="商品数" prop="goodsNum"></el-table-column>
+          <el-table-column label="更新时间" prop="updateTime"></el-table-column>
+          <el-table-column width="60" align="center">
+            <template #default="scope">
+              <el-radio :label="scope.row.id">&nbsp;</el-radio>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-radio-group>
     </div>
     <div class="pagination-footer">
       <el-pagination :current-page="page.index" :page-size="10" small layout="total, prev, pager, next, jumper"
@@ -31,40 +34,26 @@
 </template>
 
 <script>
-import {computed, defineComponent, inject, reactive, ref} from 'vue'
-import {useStore} from 'vuex'
+import {defineComponent, inject, reactive, ref} from 'vue'
 import {ElMessage} from 'element-plus'
 import $api from '@/api'
-import SelectGroup from '@/components/common/SelectGroup'
-import SquareGoodsItem from '@/components/goods/SquareGoodsItem'
 
 export default defineComponent({
-  name: "GoodsSelector",
-  components: {
-    SelectGroup,
-    SquareGoodsItem
-  },
+  name: "SpecialSubjectSelector",
   props: {
-    // 需要回填的数据（商品数据）
-    goods: {
-      type: Object,
-      default() {
-        return {}
-      }
+    // 需要回填的数据（专题id）
+    id: {
+      type: [String, Number],
+      default: ''
     }
   },
   setup(props, {emit}) {
     const closeDialog = inject('closeDialog')
 
-    const store = useStore()
     const searchRef = ref()
     const search = reactive({
       form: {
-        classify: [''],
         name: ''
-      },
-      options: {
-        classify: computed(() => store.getters['goods/classifyOptionTree'])
       },
       search() {
         page.index = 1
@@ -93,18 +82,15 @@ export default defineComponent({
     const tableData = reactive({
       list: [],
       total: 0,
-      selectedIds: props.goods ? [props.goods.id] : [],
-      selectedIdGoods: computed(() => {
-        return tableData.list.find(item => item.id === tableData.selectedIds[0]) || props.goods
-      }),
+      selectedId: props.id || '',
+      selectedRowChange(data) {
+        tableData.selectedId = data.id
+      },
       getList: async () => {
-        const {list, total} = await $api.goodsApi.platformLibrary.getList({
+        const {list, total} = await $api.operationApi.special.getList({
           page: page.index,
           pageSize: page.size,
-          name: search.form.name,
-          level_1: search.form.classify[0] || '',
-          level_2: search.form.classify[1] || '',
-          level_3: search.form.classify[2] || ''
+          name: search.form.name
         })
         tableData.list = list
         tableData.total = total
@@ -113,19 +99,18 @@ export default defineComponent({
     tableData.getList()
 
     const reset = () => {
-      tableData.selectedIds = props.goods ? [props.goods.id]: []
+      tableData.selectedId = props.id || ''
     }
 
     const save = () => {
-      if (tableData.selectedIdGoods) {
-        console.log(tableData.selectedIdGoods)
+      if (tableData.selectedId) {
         emit('confirm', {
-          type: 2,
-          value: tableData.selectedIdGoods
+          type: 3,
+          value: tableData.selectedId
         })
         closeDialog()
       } else {
-        ElMessage.error('请选择商品')
+        ElMessage.error('请选择专题')
       }
     }
 
@@ -142,18 +127,13 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.goods-selector {
+.special-subject-selector {
   height: 100%;
   padding-bottom: 10px;
 
   .search-header {
     padding-bottom: 10px;
     border-bottom: 1px solid #EEEEEE;
-  }
-
-  .goods-list {
-    height: calc(100% - 29px - 26px - 20px);
-    overflow-y: auto;
   }
 
   .pagination-footer {

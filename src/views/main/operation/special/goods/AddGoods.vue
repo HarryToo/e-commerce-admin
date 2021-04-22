@@ -23,13 +23,17 @@
         </el-space>
       </el-form>
       <template #right>
-        <el-button class="custom" size="small" :disabled="!tableData.selectionIds.length" @click="tableData.add">添加所选
+        <el-button class="custom" size="small" :disabled="!tableData.selectedIds.length" @click="tableData.add">添加所选
         </el-button>
       </template>
     </table-options-header>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
       <div class="goods-list" :style="{height: $getTableHeight() + 'px'}">
-        <square-goods-item choosable v-for="item in tableData.list" :key="item.id" :goods="item" @change="tableData.chooseChange"></square-goods-item>
+        <select-group v-model="tableData.selectedIds" :list="tableData.list">
+          <template #default="scope">
+            <square-goods-item :goods="scope.item"></square-goods-item>
+          </template>
+        </select-group>
       </div>
       <table-pagination-footer :page-index="page.index" :page-size="page.size" :total="tableData.total"
                                @size-change="page.sizeChange" @index-change="page.indexChange">
@@ -43,12 +47,14 @@ import {defineComponent, ref, reactive, computed} from 'vue'
 import {useStore} from 'vuex'
 import {useRoute} from 'vue-router'
 import {ElMessage} from 'element-plus'
+import SelectGroup from '@/components/common/SelectGroup'
 import SquareGoodsItem from '@/components/goods/SquareGoodsItem'
 import $api from '@/api'
 
 export default defineComponent({
   name: "AddGoods",
   components: {
+    SelectGroup,
     SquareGoodsItem
   },
   setup() {
@@ -121,15 +127,7 @@ export default defineComponent({
     const tableData = reactive({
       list: [],
       total: 0,
-      selectionIds: [],
-      chooseChange({goods, checked}) {
-        const id = goods.id
-        if (checked) {
-          tableData.selectionIds.push(id)
-        } else {
-          tableData.selectionIds.splice(tableData.selectionIds.indexOf(id), 1)
-        }
-      },
+      selectedIds: [],
       getList: async () => {
         const {list, total} = await $api.goodsApi.platformLibrary.getList({
           specialId: route.query.specialId,
@@ -146,11 +144,11 @@ export default defineComponent({
       },
       add: async () => {
         const {code} = await $api.operationApi.special.add({
-          id: tableData.selectionIds
+          id: tableData.selectedIds
         })
         if (code === 200) {
-          ElMessage.success(`已添加${tableData.selectionIds.length}项商品`)
-          tableData.selectionIds = []
+          ElMessage.success(`已添加${tableData.selectedIds.length}项商品`)
+          tableData.selectedIds = []
           tableData.getList()
         }
       }

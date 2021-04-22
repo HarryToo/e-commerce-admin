@@ -31,8 +31,8 @@ function arr2Tree(list, pid = 0) {
 export default defineComponent({
   name: "GoodsClassifyTreeSelector",
   props: {
-    // 需要回填的数据
-    data: {
+    // 需要回填的数据（分类数据 {ids, tree}）
+    classify: {
       type: Object,
       default() {
         return null
@@ -41,15 +41,14 @@ export default defineComponent({
   },
   emits: ['confirm'],
   setup(props, {emit}) {
+    const closeDialog = inject('closeDialog')
     const store = useStore()
     const tree = ref()
-    const tabIndex = inject('tabIndex')
-    const closeDialog = inject('closeDialog')
     const classifyOptions = computed(() => store.getters['goods/classifyTree'])
 
     const reset = () => {
-      if (props.data && props.data.ids.length) {
-        tree.value.setCheckedKeys(props.data.ids)
+      if (props.classify && props.classify.ids && props.classify.ids.length) {
+        tree.value.setCheckedKeys(props.classify.ids)
       } else {
         tree.value.setCheckedKeys([])
       }
@@ -62,19 +61,17 @@ export default defineComponent({
       const checkedNodes = tree.value.getCheckedNodes()
       const halfCheckedNodes = tree.value.getHalfCheckedNodes()
       const checkedTree = arr2Tree([...checkedNodes, ...halfCheckedNodes])
-      if (tabIndex.value === '1') {
-        if (checkedIds.length && checkedTree.length) {
-          emit('confirm', {
-            type: 1,
-            value: {
-              ids: checkedIds,
-              tree: checkedTree
-            }
-          })
-          closeDialog()
-        } else {
-          ElMessage.error('请选择分类')
-        }
+      if (checkedIds.length && checkedTree.length) {
+        emit('confirm', {
+          type: 1,
+          value: {
+            ids: checkedIds,
+            tree: checkedTree
+          }
+        })
+        closeDialog()
+      } else {
+        ElMessage.error('请选择分类')
       }
     }
 
