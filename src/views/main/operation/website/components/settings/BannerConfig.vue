@@ -82,7 +82,6 @@ export default defineComponent({
     }
 
     const setLink = (data) => {
-      console.log(data)
       formDataList[currOperationIndex.value].link = data
     }
 

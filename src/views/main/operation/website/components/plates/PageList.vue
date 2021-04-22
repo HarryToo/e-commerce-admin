@@ -32,7 +32,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .page-list {
-  width: calc((100% - 20px) * 0.15);
+  width: calc((100% - 20px - 765px) * 0.3333);
   height: 100%;
   margin-right: 10px;
   padding: 16px 20px 20px;

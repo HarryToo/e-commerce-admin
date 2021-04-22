@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import {defineComponent, ref, inject} from 'vue'
+import {defineComponent, inject} from 'vue'
 import LogoConfig from '../settings/LogoConfig'
 import ClassifyConfig from '../settings/ClassifyConfig'
 import BannerConfig from '../settings/BannerConfig'
@@ -44,7 +44,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .page-edit {
-  width: calc((100% - 20px) * 0.35);
+  width: calc((100% - 20px - 765px) * 0.6666);
 
   .top {
     height: 38px;

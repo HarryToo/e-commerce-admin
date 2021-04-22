@@ -16,19 +16,24 @@
         <img src="/images/operation/website/banner.png" alt="" class="selectable position banner"
              :class="{selected: modelValue === 2}" title="轮播图"
              @click="$emit('update:modelValue', 2)">
-        <div class="rearrange-area">
-          <img src="/images/operation/website/floor_1.jpg" alt="" class="selectable floor_item"
-               :class="{selected: modelValue === 3}" title="发现好货"
-               @click="$emit('update:modelValue', 3)">
-          <img src="/images/operation/website/floor_2.jpg" alt="" class="selectable floor_item"
-               :class="{selected: modelValue === 4}" title="特色货源"
-               @click="$emit('update:modelValue', 4)">
-          <img src="/images/operation/website/floor_3.jpg" alt="" class="selectable floor_item"
-               :class="{selected: modelValue === 5}" title="楼层（风格一）"
-               @click="$emit('update:modelValue', 5)">
-          <img src="/images/operation/website/floor_4.jpg" alt="" class="selectable floor_item"
-               :class="{selected: modelValue === 6}" title="楼层（风格二）"
-               @click="$emit('update:modelValue', 6)">
+        <!--可活动楼层区域-->
+        <div class="rearrange-list">
+          <div class="rearrange-item" v-for="(item, index) in floorList" :key="index">
+            <img :src="floorTypes[item.type - 1].previewImg" alt="" class="selectable floor_item"
+                 :class="{selected: modelValue === 3}" :title="floorTypes[item.type - 1].title"
+                 @click="$emit('update:modelValue', 3)">
+            <div class="operate-group">
+              <!--4中楼层类型均可排序-->
+              <i class="el-icon-top" title="上移一层" v-if="index > 0" @click="moveUpFloorLevel(index)"></i>
+              <!--可新增楼层类型为3/4板块-->
+              <i class="el-icon-plus" :title="`新增“${floorTypes[item.type - 1].title}”板块`"
+                 v-if="item.type === 3 || item.type === 4" @click="addFloorItem(index, item.type)"></i>
+              <!--可删除楼层类型为3/4板块（单此类型板块数须大于1）-->
+              <i class="el-icon-close" title="删除此板块"
+                 v-if="(item.type === 3 || item.type === 4) && deletableFloorNums[item.type - 1] > 1"
+                 @click="delFloorItem(index, item.type)"></i>
+            </div>
+          </div>
         </div>
         <img src="/images/operation/website/floor_5.jpg" alt="" class="selectable floor_item"
              :class="{selected: modelValue === 7}" title="为您推荐"
@@ -40,7 +45,33 @@
 </template>
 
 <script>
-import {defineComponent, inject, ref} from 'vue'
+import {computed, defineComponent, inject, ref} from 'vue'
+import {useStore} from 'vuex'
+import massWebsite from "@/store/modules/decoration/massWebsite";
+
+// 可活动楼层区域类型
+const floorTypes = [
+  {
+    type: 1,
+    previewImg: '/images/operation/website/floor_1.jpg',
+    title: '发现好货'
+  },
+  {
+    type: 2,
+    previewImg: '/images/operation/website/floor_2.jpg',
+    title: '特色货源'
+  },
+  {
+    type: 3,
+    previewImg: '/images/operation/website/floor_3.jpg',
+    title: '楼层（风格一）'
+  },
+  {
+    type: 4,
+    previewImg: '/images/operation/website/floor_4.jpg',
+    title: '楼层（风格二）'
+  }
+]
 
 export default defineComponent({
   name: "PagePreview",
@@ -53,12 +84,80 @@ export default defineComponent({
   },
   emits: ['update:modelValue'],
   setup() {
+    const store = useStore()
     const pageIndex = inject('pageIndex')
     const moduleIndex = ref(0)
+    // 可活动楼层区域数据
+    const floorList = ref(store.state.decoration.massWebsite.homePage.floor || [
+      {
+        type: 1,
+        cover: {
+          img: '',
+          url: ''
+        },
+        goodsIds: []
+      },
+      {
+        type: 2,
+        cover: {
+          img: '',
+          url: ''
+        },
+        goodsIds: []
+      },
+      {
+        type: 3,
+        cover: {
+          img: '',
+          url: ''
+        },
+        goodsIds: []
+      },
+      {
+        type: 4,
+        cover: {
+          img: '',
+          url: ''
+        },
+        goodsIds: []
+      }
+    ])
+
+    // 统计各楼层类型板块的总数
+    const deletableFloorNums = computed(() => {
+      const initialNums = floorList.value.map(() => 0)
+      return floorList.value.reduce((totals, item) => {
+        totals[item.type - 1]++
+        return totals
+      }, initialNums)
+    })
+
+    // 上移一层
+    const moveUpFloorLevel = (index) => {
+      if (index > 0) {
+        const delArr = floorList.value.splice(index, 1)
+        floorList.value.splice(index - 1, 0, delArr[0])
+      }
+    }
+    // 新增楼层板块
+    const addFloorItem = (index, type) => {
+      floorList.value.splice(index + 1, 0, floorTypes[type - 1])
+    }
+    // 删除楼层板块
+    const delFloorItem = (index, type) => {
+      const currFloorTypeNum = floorList.value
+      floorList.value.splice(index, 1)
+    }
 
     return {
       pageIndex,
-      moduleIndex
+      moduleIndex,
+      floorList,
+      floorTypes,
+      deletableFloorNums,
+      moveUpFloorLevel,
+      addFloorItem,
+      delFloorItem
     }
   }
 })
@@ -83,7 +182,8 @@ export default defineComponent({
 </style>
 <style scoped lang="scss">
 .preview {
-  width: calc((100% - 20px) * 0.5);
+  // 预览布局样式依赖此固定宽度
+  width: 765px;
   height: 100%;
   margin-right: 10px;
   padding: 16px 20px 20px;
@@ -143,20 +243,60 @@ export default defineComponent({
       .logo {
         top: 0;
         left: 17.2%;
-        width: 16.1%;
+        width: 116px;
       }
 
       .classify {
-        top: 3.4%;
-        left: 18.5%;
+        top: 44px;
+        left: 134px;
         z-index: 2;
-        width: 14.9%;
+        width: 106px;
       }
 
       .banner {
-        top: 5.2%;
+        top: 66px;
         left: 0;
         width: 100%;
+      }
+
+      .rearrange-list {
+        .rearrange-item {
+          position: relative;
+
+          .operate-group {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            z-index: 1;
+            transform: translateY(-50%);
+            cursor: pointer;
+            opacity: 0.2;
+            transition: 0.2s;
+
+            i {
+              display: block;
+              width: 20px;
+              height: 20px;
+              text-align: center;
+              line-height: 20px;
+              margin: 10px 0;
+              font-size: 12px;
+              color: #FFFFFF;
+              background-color: #333333;
+              border-radius: 50%;
+
+              &:hover {
+                background-color: #F9612E;
+              }
+            }
+          }
+
+          &:hover {
+            .operate-group {
+              opacity: 1;
+            }
+          }
+        }
       }
     }
   }

@@ -29,13 +29,39 @@ export default {
             floor: [
                 {
                     type: 1,
-                    sort: 1,
+                    cover: {
+                        img: '',
+                        url: ''
+                    },
+                    goodsIds: []
+                },
+                {
+                    type: 2,
+                    cover: {
+                        img: '',
+                        url: ''
+                    },
+                    goodsIds: []
+                },
+                {
+                    type: 3,
+                    cover: {
+                        img: '',
+                        url: ''
+                    },
+                    goodsIds: []
+                },
+                {
+                    type: 4,
                     cover: {
                         img: '',
                         url: ''
                     },
                     goodsIds: []
                 }
+            ],
+            recommend: [
+
             ]
         }
     },
