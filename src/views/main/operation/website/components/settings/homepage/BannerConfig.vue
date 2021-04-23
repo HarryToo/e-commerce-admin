@@ -37,10 +37,10 @@
 </template>
 
 <script>
-import {defineComponent, provide, reactive, ref, watch} from 'vue'
+import {computed, defineComponent, provide, ref, watch} from 'vue'
 import {useStore} from 'vuex'
 import FileUpload from '@/components/common/FileUpload'
-import ConfigDialogInner from '../../../components/config-dialog-inner'
+import ConfigDialogInner from '../../../../components/config-dialog-inner'
 
 const maxLength = 5
 
@@ -55,19 +55,10 @@ export default defineComponent({
     const configDialogVisible = ref(false)
     const currOperationIndex = ref(0)
 
-    const formDataList = reactive(store.state.decoration.massWebsite.homePage.banner || [
-      {
-        img: '',
-        timePeriod: [],
-        link: {
-          type: 1,
-          value: ''
-        }
-      }
-    ])
+    const formDataList = computed(() => store.state.decoration.massWebsite.homePage.banner)
 
     const addItem = () => {
-      formDataList.push({
+      formDataList.value.push({
         img: '',
         timePeriod: [],
         link: {
@@ -78,11 +69,11 @@ export default defineComponent({
     }
 
     const deleteItem = (index) => {
-      formDataList.splice(index, 1)
+      formDataList.value.splice(index, 1)
     }
 
     const setLink = (data) => {
-      formDataList[currOperationIndex.value].link = data
+      formDataList.value[currOperationIndex.value].link = data
     }
 
     watch(formDataList, (dataList) => {

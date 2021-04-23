@@ -29,9 +29,9 @@
 </template>
 
 <script>
-import {defineComponent, provide, reactive, ref, watch} from 'vue'
+import {computed, defineComponent, provide, ref, watch} from 'vue'
 import {useStore} from 'vuex'
-import ConfigDialogInner from '../../../components/config-dialog-inner'
+import ConfigDialogInner from '../../../../components/config-dialog-inner'
 
 const maxLength = 12
 
@@ -45,18 +45,10 @@ export default defineComponent({
     const configDialogVisible = ref(false)
     const currOperationIndex = ref(0)
 
-    const formDataList = reactive(store.state.decoration.massWebsite.homePage.classify || [
-      {
-        name: '',
-        classify: {
-          ids: [],
-          tree: []
-        }
-      }
-    ])
+    const formDataList = computed(() => store.state.decoration.massWebsite.homePage.classify)
 
     const addItem = () => {
-      formDataList.push({
+      formDataList.value.push({
         name: '',
         classify: {
           ids: [],
@@ -66,11 +58,11 @@ export default defineComponent({
     }
 
     const deleteItem = (index) => {
-      formDataList.splice(index, 1)
+      formDataList.value.splice(index, 1)
     }
 
     const setClassify = ({value}) => {
-      formDataList[currOperationIndex.value].classify = value
+      formDataList.value[currOperationIndex.value].classify = value
     }
 
     watch(formDataList, (dataList) => {

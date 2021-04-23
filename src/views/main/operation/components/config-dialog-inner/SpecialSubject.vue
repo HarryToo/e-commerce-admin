@@ -47,6 +47,7 @@ export default defineComponent({
       default: ''
     }
   },
+  emits: ['confirm'],
   setup(props, {emit}) {
     const closeDialog = inject('closeDialog')
 

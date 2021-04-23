@@ -46,13 +46,12 @@ export default defineComponent({
   },
   props: {
     // 需要回填的数据（商品数据）
-    goods: {
-      type: Object,
-      default() {
-        return {}
-      }
+    goodsId: {
+      type: [String, Number],
+      default: ''
     }
   },
+  emits: ['confirm', 'confirmGoods'],
   setup(props, {emit}) {
     const closeDialog = inject('closeDialog')
 
@@ -93,10 +92,8 @@ export default defineComponent({
     const tableData = reactive({
       list: [],
       total: 0,
-      selectedIds: props.goods ? [props.goods.id] : [],
-      selectedIdGoods: computed(() => {
-        return tableData.list.find(item => item.id === tableData.selectedIds[0]) || props.goods
-      }),
+      selectedIds: props.goodsId ? [props.goodsId] : [],
+      selectedGoods: computed(() => tableData.list.find(item => item.id === tableData.selectedIds[0])),
       getList: async () => {
         const {list, total} = await $api.goodsApi.platformLibrary.getList({
           page: page.index,
@@ -113,16 +110,17 @@ export default defineComponent({
     tableData.getList()
 
     const reset = () => {
-      tableData.selectedIds = props.goods ? [props.goods.id]: []
+      tableData.selectedIds = props.goodsId ? [props.goodsId] : []
     }
 
     const save = () => {
-      if (tableData.selectedIdGoods) {
-        console.log(tableData.selectedIdGoods)
+      if (tableData.selectedIds.length) {
         emit('confirm', {
           type: 2,
-          value: tableData.selectedIdGoods
+          value: tableData.selectedIds[0]
         })
+        // 抛出选择的商品（只用于选择后回显）
+        emit('confirmGoods', tableData.selectedGoods)
         closeDialog()
       } else {
         ElMessage.error('请选择商品')

@@ -47,7 +47,6 @@
 <script>
 import {computed, defineComponent, inject, ref, watch} from 'vue'
 import {useStore} from 'vuex'
-import massWebsite from "@/store/modules/decoration/massWebsite";
 
 // 可活动楼层区域类型
 const floorTypes = [
@@ -93,40 +92,7 @@ export default defineComponent({
     const pageIndex = inject('pageIndex')
     const moduleIndex = ref(0)
     // 可活动楼层区域数据
-    const floorList = ref(store.state.decoration.massWebsite.homePage.floor || [
-      {
-        type: 1,
-        cover: {
-          img: '',
-          url: ''
-        },
-        goodsIds: []
-      },
-      {
-        type: 2,
-        cover: {
-          img: '',
-          url: ''
-        },
-        goodsIds: []
-      },
-      {
-        type: 3,
-        cover: {
-          img: '',
-          url: ''
-        },
-        goodsIds: []
-      },
-      {
-        type: 4,
-        cover: {
-          img: '',
-          url: ''
-        },
-        goodsIds: []
-      }
-    ])
+    const floorList = computed(() => store.state.decoration.massWebsite.homePage.floor)
 
     // 统计各楼层类型板块的总数
     const deletableFloorNums = computed(() => {
@@ -146,6 +112,10 @@ export default defineComponent({
         if (props.floorIndex === index) {
           emit('update:floorIndex', index - 1)
         }
+        // 若当前选中的板块是第一个，而移动的是第二个
+        if (props.floorIndex === 0 && index === 1) {
+          emit('update:floorIndex', 1)
+        }
       }
     }
     // 新增楼层板块
@@ -161,6 +131,8 @@ export default defineComponent({
     // 变动保存
     watch(floorList, (list) => {
       store.commit('decoration/massWebsite/saveFloorConfig', list)
+      console.log('网站装修本地数据变动：')
+      console.log(store.state.decoration.massWebsite.homePage)
     }, {deep: true})
 
     return {

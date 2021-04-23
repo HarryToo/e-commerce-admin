@@ -8,9 +8,9 @@
 
 <script>
 import {defineComponent, ref, provide, watch} from 'vue'
-import PageList from './components/plates/PageList'
-import PagePreview from './components/plates/PagePreview'
-import PageSetting from './components/plates/PageSetting'
+import PageList from './components/view/PageList'
+import PagePreview from './components/view/PagePreview'
+import PageSetting from './components/view/PageSetting'
 
 export default defineComponent({
   name: "Mass",

@@ -90,8 +90,6 @@ export default defineComponent({
           const {code} = await $api.orderApi[apiModules[type]].batchDeliverGoods(params)
           if (code === 200) {
             ElMessage.success('发货成功')
-            const eventNames = ['refresh_drop_shipping_order', 'refresh_exchange_order']
-            window.dispatchEvent(new Event(eventNames[type]))
             router.back()
           }
         }

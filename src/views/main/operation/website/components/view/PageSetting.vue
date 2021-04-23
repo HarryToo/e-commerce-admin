@@ -7,10 +7,11 @@
     </div>
     <div class="bottom">
       <div class="bottom-content">
-        <div class="tabs-content-item">
-          <logo-config v-show="pageIndex === 0 && moduleIndex === 0"></logo-config>
-          <classify-config v-show="pageIndex === 0 && moduleIndex === 1"></classify-config>
-          <banner-config v-show="pageIndex === 0 && moduleIndex === 2"></banner-config>
+        <div v-show="pageIndex === 0">
+          <logo-config v-show="moduleIndex === 0"></logo-config>
+          <classify-config v-show="moduleIndex === 1"></classify-config>
+          <banner-config v-show="moduleIndex === 2"></banner-config>
+          <component :is="floorComponent" v-show="moduleIndex === 3"></component>
         </div>
       </div>
     </div>
@@ -18,25 +19,42 @@
 </template>
 
 <script>
-import {defineComponent, inject} from 'vue'
-import LogoConfig from '../settings/LogoConfig'
-import ClassifyConfig from '../settings/ClassifyConfig'
-import BannerConfig from '../settings/BannerConfig'
+import {computed, defineComponent, inject} from 'vue'
+import {useStore} from 'vuex'
+import LogoConfig from '../settings/homepage/LogoConfig'
+import ClassifyConfig from '../settings/homepage/ClassifyConfig'
+import BannerConfig from '../settings/homepage/BannerConfig'
+import FloorStyle1 from '../settings/homepage/floor/FloorStyle1'
 
 export default defineComponent({
   name: "PageSetting",
   components: {
     LogoConfig,
     ClassifyConfig,
-    BannerConfig
+    BannerConfig,
+    FloorStyle1
   },
   setup() {
+    const store = useStore()
+    // 选中的页面序号
     const pageIndex = inject('pageIndex')
+    // 页面上选中的模块（0:logo,1:分类,2:banner,3:可活动楼层区域,4:推荐商品列表）
     const moduleIndex = inject('moduleIndex')
+    // 可活动楼层板块序号
+    const floorIndex = inject('floorIndex')
+
+    // 选中楼层板块类型对应的配置栏组件名
+    const floorComponent = computed(() => {
+      const compNameArr = ['floor-style1', 'floor-style2', 'floor-style3', 'floor-style4']
+      const type = store.state.decoration.massWebsite.homePage.floor[floorIndex.value].type
+      return compNameArr[type - 1]
+    })
 
     return {
       pageIndex,
-      moduleIndex
+      moduleIndex,
+      floorIndex,
+      floorComponent
     }
   }
 })
@@ -76,12 +94,6 @@ export default defineComponent({
     .bottom-content {
       height: 100%;
       overflow-y: auto;
-
-      .tabs-content-item {
-        .tips {
-          color: #999999;
-        }
-      }
     }
   }
 }

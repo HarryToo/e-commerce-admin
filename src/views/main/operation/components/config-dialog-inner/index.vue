@@ -9,8 +9,8 @@
       </el-tab-pane>
       <el-tab-pane name="2" label="跳转商品" :disabled="!usableTab.includes(2)">
         <div class="tab-pane-cont">
-          <goods :goods="tabIndex === '2' && type === 2 ? data : null" ref="goodsRef"
-                 @confirm="$emit('confirm', $event)"></goods>
+          <goods :goods="tabIndex === '2' && type === 2 ? data : ''" ref="goodsRef"
+                 @confirm="$emit('confirm', $event)" @confirm-goods="$emit('confirmGoods', $event)"></goods>
         </div>
       </el-tab-pane>
       <el-tab-pane name="3" label="跳转专题" :disabled="!usableTab.includes(3)">
@@ -59,7 +59,7 @@ export default defineComponent({
     // 当前值类型
     type: {
       type: [String, Number],
-      default: 1
+      default: ''
     },
     // 需要回填的数据
     data: {
@@ -69,11 +69,12 @@ export default defineComponent({
       }
     }
   },
-  emits: ['update:modelValue', 'confirm'],
-  setup(props, {emit}) {
+  emits: ['confirm', 'confirmGoods'],
+  setup(props) {
     const closeDialog = inject('closeDialog')
     // tabIndex没传的情况下，默认为可选择的tab中第一个
     const tabIndex = ref(props.type === '' ? props.usableTab[0].toString() : props.type.toString())
+    console.log(tabIndex.value)
     const goodsClassifyRef = ref()
     const goodsRef = ref()
     const specialSubjectRef = ref()

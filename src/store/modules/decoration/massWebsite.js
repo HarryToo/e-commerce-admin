@@ -29,34 +29,46 @@ export default {
             floor: [
                 {
                     type: 1,
-                    cover: {
-                        img: '',
-                        url: ''
+                    homepageImage: '',
+                    homepageImageLink: {
+                        type: 1,
+                        value: ''
                     },
+                    innerPageBanner: '',
+                    goodsPresetType: 1,
                     goodsIds: []
                 },
                 {
                     type: 2,
-                    cover: {
-                        img: '',
-                        url: ''
+                    homepageImage: '',
+                    homepageImageLink: {
+                        type: 1,
+                        value: ''
                     },
+                    innerPageBanner: '',
+                    goodsPresetType: 1,
                     goodsIds: []
                 },
                 {
                     type: 3,
-                    cover: {
-                        img: '',
-                        url: ''
+                    homepageImage: '',
+                    homepageImageLink: {
+                        type: 1,
+                        value: ''
                     },
+                    innerPageBanner: '',
+                    goodsPresetType: 1,
                     goodsIds: []
                 },
                 {
                     type: 4,
-                    cover: {
-                        img: '',
-                        url: ''
+                    homepageImage: '',
+                    homepageImageLink: {
+                        type: 1,
+                        value: ''
                     },
+                    innerPageBanner: '',
+                    goodsPresetType: 1,
                     goodsIds: []
                 }
             ],
@@ -77,9 +89,9 @@ export default {
         saveBannerConfig(state, data) {
             state.homePage.banner = data
         },
-        // 保存首页-可活动楼层区域配置
-        saveFloorConfig(state, data) {
-            state.homePage.floor = data
+        // 保存首页-可活动楼层区域板块配置
+        saveFloorConfig(state, {index, data}) {
+            state.homePage.floor[index] = data
         },
         // 保存首页-为你推荐商品列表配置
         saveRecommendConfig(state, data) {
