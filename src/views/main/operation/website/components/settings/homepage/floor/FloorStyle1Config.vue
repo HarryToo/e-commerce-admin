@@ -63,16 +63,16 @@
 <script>
 import {computed, defineComponent, inject, provide, ref, watch} from 'vue'
 import {useStore} from 'vuex'
+import {ElMessage} from "element-plus"
 import FileUpload from '@/components/common/FileUpload'
 import GoodsInfoItem from '../../../../../components/GoodsInfoItem'
 import ConfigDialogInner from '../../../../../components/config-dialog-inner'
 import $api from '@/api'
-import {ElMessage} from "element-plus";
 
 const maxLength = 10
 
 export default defineComponent({
-  name: "FloorStyle1.vue",
+  name: "FloorStyle1Config",
   components: {
     FileUpload,
     GoodsInfoItem,

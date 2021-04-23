@@ -16,14 +16,77 @@ export default {
                 },
                 {
                     type: 2,
-                    homepageImage: '',
-                    homepageImageLink: {
-                        type: 1,
-                        value: ''
-                    },
-                    innerPageBanner: '',
-                    goodsPresetType: 1,
-                    goodsIds: []
+                    title: '',
+                    plates: [
+                        {
+                            homepageImage: '',
+                            homepageImageLink: {
+                                type: 1,
+                                value: ''
+                            },
+                            innerPageBanner: '',
+                            goodsList: [
+                                {
+                                    image: '',
+                                    link: {
+                                        type: 1,
+                                        value: ''
+                                    },
+                                    innerPageBanner: ''
+                                },
+                                {
+                                    image: '',
+                                    link: {
+                                        type: 1,
+                                        value: ''
+                                    },
+                                    innerPageBanner: ''
+                                },
+                                {
+                                    image: '',
+                                    link: {
+                                        type: 1,
+                                        value: ''
+                                    },
+                                    innerPageBanner: ''
+                                }
+                            ]
+                        },
+                        {
+                            homepageImage: '',
+                            homepageImageLink: {
+                                type: 1,
+                                value: ''
+                            },
+                            innerPageBanner: '',
+                            goodsList: [
+                                {
+                                    image: '',
+                                    link: {
+                                        type: 1,
+                                        value: ''
+                                    },
+                                    innerPageBanner: ''
+                                },
+                                {
+                                    image: '',
+                                    link: {
+                                        type: 1,
+                                        value: ''
+                                    },
+                                    innerPageBanner: ''
+                                },
+                                {
+                                    image: '',
+                                    link: {
+                                        type: 1,
+                                        value: ''
+                                    },
+                                    innerPageBanner: ''
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
                     type: 3,

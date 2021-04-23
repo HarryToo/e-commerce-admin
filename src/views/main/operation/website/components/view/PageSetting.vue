@@ -26,7 +26,8 @@ import {useStore} from 'vuex'
 import LogoConfig from '../settings/homepage/LogoConfig'
 import ClassifyConfig from '../settings/homepage/ClassifyConfig'
 import BannerConfig from '../settings/homepage/BannerConfig'
-import FloorStyle1 from '../settings/homepage/floor/FloorStyle1'
+import FloorStyle1Config from '../settings/homepage/floor/FloorStyle1Config'
+import FloorStyle2Config from '../settings/homepage/floor/FloorStyle2Config'
 
 export default defineComponent({
   name: "PageSetting",
@@ -34,7 +35,8 @@ export default defineComponent({
     LogoConfig,
     ClassifyConfig,
     BannerConfig,
-    FloorStyle1
+    FloorStyle1Config,
+    FloorStyle2Config
   },
   setup() {
     const store = useStore()
@@ -47,7 +49,7 @@ export default defineComponent({
 
     // 选中楼层板块类型对应的配置栏组件名
     const floorComponent = computed(() => {
-      const compNameArr = ['floor-style1', 'floor-style2', 'floor-style3', 'floor-style4']
+      const compNameArr = ['floor-style1-config', 'floor-style2-config', 'floor-style3-config', 'floor-style4-config']
       const type = store.state.decoration.massWebsite.homePage.floor[floorIndex.value].type
       return compNameArr[type - 1]
     })
