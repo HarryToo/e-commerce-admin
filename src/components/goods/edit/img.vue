@@ -5,6 +5,41 @@
 			<div class="shopImg-r1-w0">商品图片</div>
 			<div class="shopImg-r1-w1">
 				<div class="shopImg-r1-w1-r0">
+					<el-button type="danger" @click='delAllImage' size="small">批量删除</el-button>
+					<el-button type="danger" @click='shopImg.showViewer = true' size="small">预览</el-button>
+					<el-checkbox v-model="shopImg.checkAll" @change="ToCheckAll">全选</el-checkbox>
+				</div>
+				<div class="shopImg-r1-w1-r1">图片格式：JPG, JPEG, PNG; 单张图片大小不能超过1M；图片建议尺寸：800x800；可拖拽移动图片；
+				</div>
+				<div class="shopImg-r1-w1-r2">
+					<draggable  class='dragBox'
+						:options="{group:'people',animation:150,ghostClass:'sortable-ghost',chosenClass:'chosenClass',scroll:true,scrollSensitivity:200}"
+						v-model="shopImg.ValData" @change="change">
+						<template #item="{ element, index }">
+							<div class="ShopListImg">
+								<el-checkbox v-model="element.IsCheck" label=" "
+									@change="changeCheckState(element.IsCheck,index)"></el-checkbox>
+								<img :src="element.img" alt="">
+								<div class="ShopListFt">
+									<div @click='showChangeinput(index)'>替换</div>
+									<div @click='delImg(index)'>删除</div>
+									<input class="el-upload__input" type="file" name="file" @change="ChangeFile" ref="changeimage" accept="">
+								</div>
+							</div>
+						</template>
+					</draggable>
+				<div class="ShopListImg" slot="footer" @click='showfileinput'>
+									<img src="http://dummyimage.com/150x150/F9612E" alt="" class="Add-ShopListImg">
+									<div class="ShopListFt">添加新图片</div>
+							</div>
+					<input class="el-upload__input" type="file" name="file" @change="addfile" ref="image" accept="">
+				</div>
+			</div>
+		</div>
+		<div class="shopImg-r1">
+			<div class="shopImg-r1-w0">商品图片</div>
+			<div class="shopImg-r1-w1">
+				<div class="shopImg-r1-w1-r0">
 					<el-button type="danger" @click='delAllImage'>批量删除</el-button>
 					<el-button type="danger" @click='shopImg.showViewer = true'>预览</el-button>
 					<el-checkbox v-model="shopImg.checkAll" @change="ToCheckAll">全选</el-checkbox>
@@ -37,7 +72,7 @@
 			</div>
 		</div>
 		<!-- 预览图片 -->
-		<el-image-viewer v-if="shopImg.showViewer" :on-close="()=>{shopImg.showViewer=false}"
+		<el-image-viewer v-if="shopImg.showViewer"  @close="closeViewer"
 			:url-list="shopImg.srcList" />
 	</div>
 							
@@ -47,7 +82,7 @@
 	import {defineComponent, ref, toRefs, watch} from 'vue' 
 	import draggable from "vuedraggable";
 	export default defineComponent({
-	  name: "img",
+	  name: "img",    
 	  props: [
 		  'goods_sku_image',
 		  'goods_image'],
@@ -103,6 +138,9 @@
 
 	  },
 	  methods:{
+		  closeViewer(){
+			  this.shopImg.showViewer = false
+		  },
 			//商品主图
 			delAllImage() {
 				var that = this

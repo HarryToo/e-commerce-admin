@@ -5,7 +5,7 @@
 			<el-menu :default-active="defaultChose" @select="handleSelect">
 				<el-menu-item v-for="(val,idx) in GoodList" :index="val.id">
 					<div class="ListBox">
-						<img :src="val.goods_image[0]" alt="" class="ListImg">
+						<img :src="val.goods_image[0].img" alt="" class="ListImg">
 						<div class="ListDetal">
 							<div class="ListD0">{{val.goods_name}}</div>
 							<div class="ListD1">来源分类：
@@ -116,10 +116,9 @@
 
 		.EditBox {
 			width: 100%;
-			height: 655px;
 			overflow-y: scroll;
 			border: 1px solid #eeeeee;
-
+			height: calc(100vh - 230px);
 			.el-menu-item * {
 				vertical-align: baseline;
 			}
@@ -150,12 +149,13 @@
 						width: 80px;
 						height: 80px;
 						background-color: #A4DA89;
+						border-radius: 4px;
 					}
 
 					.ListDetal {
 						// width: 250px!important;
 						padding-left: 10px;
-
+						width: calc(100% - 80px);
 						.ListD0 {
 							color: #101010;
 							font-size: 14px;

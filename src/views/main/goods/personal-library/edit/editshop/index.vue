@@ -1,7 +1,5 @@
 <template>
-	<!-- {{editData}} -->
 	<div class="editshop" :ID='AliveData'>
-		<slot name='basicSlot'></slot>
 		<div class="editshopTitle">编辑商品</div>
 		<div class="editshopBox">
 			<el-tabs v-model="activeName" @tab-click="handleClick">
@@ -56,65 +54,12 @@
 				</el-tab-pane>
 			</el-tabs>
 		</div>
-		<!-- 预览图片 -->
-		<el-image-viewer v-if="shopImg.showViewer" :on-close="()=>{shopImg.showViewer=false}" :url-list="shopImg.srcList" />
-					<!-- 批量设置库存 -->
-					<el-dialog title="批量设置库存：" v-model="price.StockDialog.state" >
-						<div class="DiaLog">
-							<el-radio v-model="price.StockDialog.radio" label="1">
-								<div>库存统一设置为</div><el-input v-model="price.StockDialog.input1" :disabled="price.StockDialog.radio != 1" placeholder="请输入内容"></el-input>
-							</el-radio>
-							<el-radio v-model="price.StockDialog.radio" label="2">
-								<div>原库存基础上增加</div><el-input v-model="price.StockDialog.input2" :disabled="price.StockDialog.radio != 2" placeholder="请输入内容"></el-input>
-							</el-radio>
-							<el-radio v-model="price.StockDialog.radio" label="3">
-								<div>原库存基础上减少</div><el-input v-model="price.StockDialog.input3" :disabled="price.StockDialog.radio != 3" placeholder="请输入内容"></el-input>
-							</el-radio>
-						</div>
-						<template #footer>
-							<span class="dialog-footer">
-								<el-button type="primary" @click="modfiyAllStock">确 定</el-button>
-							</span>
-						</template>
-					</el-dialog>
-					<!-- 批量设置销售价 -->
-					<el-dialog title="批量设置销售价：" v-model="price.PriceDialog.state">
-						<div class="DiaLog">
-							<el-radio v-model="price.PriceDialog.radioTp" label="1">
-								<div>同步来源价</div>
-							</el-radio>
-							<el-radio v-model="price.PriceDialog.radioTp" label="2">
-								<div>设置统一价</div><el-input v-model="price.PriceDialog.inputPrice" :disabled="price.PriceDialog.radioTp != 2" placeholder="请输入价格"></el-input>
-							</el-radio>
-							<el-radio v-model="price.PriceDialog.radioTp" label="3">
-								<div>使用公式</div>
-								<div class="PriceDialogCopt">
-									<div>
-										来源价* 
-										<el-input size="mini" v-model="price.PriceDialog.formula.percent" :disabled="price.PriceDialog.radioTp != 3"></el-input>%+
-										<el-input size="mini" v-model="price.PriceDialog.formula.add" :disabled="price.PriceDialog.radioTp != 3"></el-input> - 
-										<el-input size="mini" v-model="price.PriceDialog.formula.subtract" :disabled="price.PriceDialog.radioTp != 3">></el-input>
-									</div>
-									<div style="display: flex; align-items: center; margin-top: 1rem;">
-										<div>价格取整&nbsp;&nbsp;&nbsp;</div>
-										<el-radio v-model="price.PriceDialog.rounding" label="1" :disabled="price.PriceDialog.radioTp != 3">四舍五入</el-radio>
-										<el-radio v-model="price.PriceDialog.rounding" label="2" :disabled="price.PriceDialog.radioTp != 3">向上取整</el-radio>
-										<el-radio v-model="price.PriceDialog.rounding" label="3" :disabled="price.PriceDialog.radioTp != 3">向下取整</el-radio>
-									</div>
-									<div style="display: flex; align-items: center;margin-top: 1rem;">
-										<div>保留小数&nbsp;&nbsp;&nbsp;</div>
-										<el-radio v-model="price.PriceDialog.retain" label="1" :disabled="price.PriceDialog.radioTp != 3">保留1位小数</el-radio>
-										<el-radio v-model="price.PriceDialog.retain" label="2" :disabled="price.PriceDialog.radioTp != 3">保留2位小数</el-radio>
-									</div>
-								</div>
-							</el-radio>
-						</div>
-						<template #footer>
-							<span class="dialog-footer">
-								<el-button type="primary" @click="PriceChange">确 定</el-button>
-							</span>
-						</template>
-					</el-dialog>	
+	<div class="btmBotton">
+		  <el-button type="primary">取消</el-button>
+		  <el-button type="danger">预览</el-button>
+		  <el-button type="danger">保存</el-button>
+		  <el-button type="danger">发布</el-button>
+	</div>
 	</div>
 </template>
 
@@ -599,16 +544,18 @@
 
 <style scoped lang="scss">
 	.editshop {
+		height: calc(100vh - 230px);
 		.editshopTitle {
 			color: #101010;
 			font-size: 16px;
 			font-weight: 600;
 			padding-bottom: 10px;
+			
 		}
 
 		.editshopBox {
 			::v-deep .el-tabs__content {
-				height: 585px;
+				height: calc(100vh - 420px);
 				overflow-y: scroll;
 			}
 
@@ -707,7 +654,33 @@
 				}
 			}
 		}
-
+		.btmBotton{
+			height: 100px;
+			width: 100%;
+			margin-top: 20px;
+			display: flex;
+			align-items: center;
+			box-shadow: 0 0 3px rgba(0,0,0,0.2);
+			justify-content: center;
+			.el-button{
+				width: 150px;
+			}
+			.el-button--danger{
+				background-color: #fff;
+				color: #101010;
+				border: 1px solid #F9612E;
+				background-color:  #F9612E;
+				color: #fff;
+				box-shadow: 3px 3px 5px rgba(0,0,0,0.4);
+			}
+			.el-button--primary{
+				background-color: #fff;
+				color: #101010;
+				border: 1px solid rgba(0,0,0,0.1);
+				background-color:  rgba(0,0,0,0.1);
+				box-shadow: 3px 3px 5px rgba(0,0,0,0.4);
+			}
+		}
 		::v-deep .el-dialog {
 			margin: 0 auto;
 			margin-top: 18rem;

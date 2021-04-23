@@ -10,7 +10,7 @@
 			
 			</el-table-column>
 	
-			<el-table-column label="商品信息"  width="480">
+			<el-table-column label="商品信息"  width="520">
 				<template #default="scope">
 					<wide-goods-item :goods="scope.row.info"></wide-goods-item>
 				</template>
@@ -25,7 +25,7 @@
 				</template>
 			</el-table-column>
 
-			<el-table-column label="总库存" width="150" align="center">
+			<el-table-column label="总库存" width="250" align="center">
 				<template #default="scope">
 					<div class="GoodStock">
 						<span>{{scope.row.stockNum}}</span>
@@ -33,14 +33,14 @@
 				</template>
 			</el-table-column>
 
-			<el-table-column label="采集时间/状态" width="180" show-overflow-tooltip align="center">
+			<el-table-column label="采集时间/状态" width="250" show-overflow-tooltip align="center">
 				<template #default="scope">
 					<div class="GoodState">
 						<div>
 							<div v-if="scope.row.status == 0" style="color:#1CB903;">采集成功</div>
 							<div v-if="scope.row.status == 1" style="color:#1679FB;">正在采集</div>
 							<div v-if="scope.row.status == 2" style="color:#FF3A30;">
-								采集失败<span>:{{scope.row.status}}</span></div>
+								采集失败<span> : {{scope.row.stateReason}}</span></div>
 						</div>
 						<div class="" v-if="scope.row.status != 1">
 							<div>2020.12.28 10:51:18</div>
@@ -49,7 +49,7 @@
 				</template>
 			</el-table-column>
 
-			<el-table-column prop="PeoPle" label="采集人" width="110" align="center">
+			<el-table-column prop="PeoPle" label="采集人" width="250" align="center">
 				<template #default="scope">
 					<div class="GoodPeoPle">
 						<span>{{scope.row.PeoPle}}</span>
@@ -71,11 +71,11 @@
 
 		</el-table>
 		<div class="footerBox">
-			<div class="footerBtm" v-show="selectId">
-				<el-button @click='BatchRetryShop()' :disabled="!selectId[0]">批量重试</el-button>
-				<el-button @click='BatchDeleteShop()' :disabled="!selectId[0]">批量删除</el-button>
+			<div class="footerBtm" v-show="selectId" style="padding-left: 10px;">
+				<el-button @click='BatchRetryShop()' :disabled="!selectId[0]" type="danger" size="small">批量重试</el-button>
+				<el-button @click='BatchDeleteShop()' :disabled="!selectId[0]" type="danger" size="small">批量删除</el-button>
 				<el-button @click="$router.push({path: '/main/goodsList/PersonalCollectionLibrary/edit',query: {specialId:selectId,Cpage:page.currentPage,Spage:page.PageSize}})"
-				:disabled="!selectId[0]">批量编辑</el-button>
+				:disabled="!selectId[0]" type="danger" size="small">批量编辑</el-button>
 			</div>
 			<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage"
 				:page-sizes="page.PageSizeS" :page-size="page.PageSize" layout="total, sizes, prev, pager, next, jumper" 
@@ -138,9 +138,9 @@
 							        });
 							 return false
 						}
-						that.TabData.forEach(function(itemI, indexI) {							
+						that.TabData.list.forEach(function(itemI, indexI) {							
 							if (item.id === itemI.id) {
-								that.TabData.splice(indexI, 1)		
+								that.TabData.list.splice(indexI, 1)		
 							}
 					
 						})
@@ -173,9 +173,9 @@
 							//         });
 							 return false
 						}
-						that.TabData.forEach(function(itemI, indexI) {							
+						that.TabData.list.forEach(function(itemI, indexI) {							
 							if (item.id === itemI.id) {
-								that.TabData[indexI].collectionState = '0'
+								that.TabData.list[indexI].collectionState = '0'
 							}
 					
 						})
@@ -190,12 +190,14 @@
 			},
 			//删除当前商品
 			DeleteShop(index) {
+				
 				this.$confirm('删除后，将无法恢复该商品记录，请谨慎删除！', '确认要删除这件商品吗？', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
 					type: 'warning'
 				}).then(() => {
-					this.TabData.splice(index, 1);
+					console.log(this.TabData)
+					this.TabData.list.splice(index, 1);
 				})
 			},
 			RetryShop(index) {
@@ -204,7 +206,9 @@
 					cancelButtonText: '取消',
 					type: 'warning'
 				}).then(() => {
-					this.TabData[index].collectionState = '0';
+					console.log(this.TabData.list[index])
+					this.TabData.list[index].status = '1';
+					console.log(this.TabData.list[index])
 					this.$message({
 					          message: '正在采集',
 					          type: 'success'
@@ -278,6 +282,9 @@
 			justify-content: space-between;
 			.footerBtm{
 				margin-top: 30px;
+				.el-button{
+					// background-color: #F9612E;
+				}
 			}
 		}
 	}	

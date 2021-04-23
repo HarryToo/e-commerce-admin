@@ -28,7 +28,7 @@
 								</div>
 							</template>
 						</draggable>
-						<el-button class="sku-r2-w1-add" @click='sku.dialogAddAttr = true;sku.liveSku = idx'>+添加属性值
+						<el-button class="sku-r2-w1-add" @click='sku.liveSku = idx;sku.dialogAddAttr = true'>+添加属性值
 						</el-button>
 					</div>
 				</div>
@@ -53,7 +53,7 @@
 								</div>
 							</template>
 						</draggable>
-						<el-button class="sku-r2-w1-add" @click='sku.dialogAddAttr = true;sku.liveSku = idx'>+添加属性值
+						<el-button class="sku-r2-w1-add" @click='sku.liveSku = 0;sku.dialogAddAttr = true'>+添加属性值
 						</el-button>
 					</div>
 				</div>

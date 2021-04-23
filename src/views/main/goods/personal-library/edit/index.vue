@@ -1,18 +1,15 @@
 <template>
   <div class="Edit">
 	  
-	  <div class="Edit-cld0">
+	  <div class="Edit-cld0" :style="{height:$getTableHeight()}">
 		  <editList :GoodList="GoodData?GoodData:''" @changeEdit='BusEditData'></editList>
 	  </div>
 	  <div class="Edit-cld1">
-			<editshop :GoodList="GoodData?GoodData:''" :LiveId="CgId?CgId:''">
+			<editshop :GoodList="GoodData?GoodData:''" :LiveId="CgId?CgId:''" style='height: calc(100vh - 200px);'>
 				<!-- <baisc slot='basicSlot'></baisc> -->
 				<!-- <h1 slot='basicSlot'>12312312</h1> -->
 			</editshop>
 	  </div>
-	  <div class="Edit-cld2">
-		  <editfooter></editfooter>
-	  </div> 
   </div>
 </template>
 
@@ -20,7 +17,6 @@
 import {defineComponent} from 'vue'
 import editList from "./editList"
 import editshop from "./editshop/index"
-import editfooter from "./editfooter"
 
 import baisc from "@/components/goods/edit/baisc.vue"
 import $api from "@/api"
@@ -33,7 +29,6 @@ export default defineComponent({
   components: {
     editList,
 	editshop,
-	editfooter,
 	baisc,
   },
   data(){
@@ -86,9 +81,11 @@ export default defineComponent({
 	padding-top: 30px;
 	.Edit-cld0{
 		width: 24.39%;
+		height: 100vh;
 	}
 	.Edit-cld1{
-		width: 70%;
+		width: 73%;
+		height: calc(100vh - 230px);
 	}
 	.Edit-cld2{
 		width: 100%;

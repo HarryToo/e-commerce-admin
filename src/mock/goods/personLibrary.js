@@ -50,7 +50,8 @@ $mock.get('/goods/PersonLbShopListData',({url}) =>{
 	        stockNum: '@integer(500, 1000)',
 	        shopNum: '@integer(500, 1000)',
 	        purchaseNum: '@integer(100, 500)',
-	        status: '@integer(0, 2)'
+	        status: '@integer(0, 2)',
+			stateReason:'@cword(2,5)',
 	    }
 	]
 	return $mock.mock(data)

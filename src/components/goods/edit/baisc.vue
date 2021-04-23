@@ -83,6 +83,7 @@
 		  PersonEditClassData() {
 		  	var that = this
 		  	$api.goodsApi.classify.getList().then((data) => {
+				console.log(data.list)
 		  		that.shopSelcet = data.list
 		  	})
 		  },

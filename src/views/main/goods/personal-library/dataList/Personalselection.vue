@@ -2,15 +2,15 @@
 	<div class="ScreenCondition">
 		<div class="Title">来源平台</div>
 		<div>
-			<el-select v-model="platformSourceSelectVal" placeholder="全部">
-				<el-option v-for="item in platformSourceSelect" :key="item.value" :label="item.label"
+			<el-select v-model="platformSourceSelectVal" placeholder="全部" size='small'>
+				<el-option v-for="item in platformSourceSelect" :key="item.value" :label="item.label" 
 					:value="item.value" :disabled="item.disabled">
 				</el-option>
 			</el-select>
 		</div>
 		<div class="Title">采集状态</div>
 		<div>
-			<el-select v-model="platformCollectionStatuSelectVal" placeholder="请选择">
+			<el-select v-model="platformCollectionStatuSelectVal" placeholder="请选择" size='small'>
 				<el-option v-for="item in platformCollectionStatuSelect" :key="item.value" :label="item.label"
 					:value="item.value" :disabled="item.disabled">
 				</el-option>
@@ -18,19 +18,19 @@
 		</div>
 		<div class="Title">商品标题</div>
 		<div>
-			<el-input v-model="platformShopNameScreen" placeholder="请输入商品标题"></el-input>
+			<el-input v-model="platformShopNameScreen" placeholder="请输入商品标题" size='small'></el-input>
 		</div>
 		<div class="Title">
 			来源ID
 		</div>
 		<div>
-			<el-input v-model="platformShopIdScreen" placeholder="请输入商品标题"></el-input>
+			<el-input v-model="platformShopIdScreen" placeholder="请输入商品标题" size='small'></el-input>
 		</div>
 		<div>
-			<el-button type="danger" @click='SelectData()'>查询</el-button>
+			<el-button type="danger" @click='SelectData()' size='small'>查询</el-button>
 		</div>
 		<div>
-			<el-button type='primary'>清空选项</el-button>
+			<el-button type='primary' size='small'>清空选项</el-button>
 		</div>
 	
 	</div>
@@ -100,7 +100,7 @@
 		border-bottom: 1px solid #eeeeee;
 		display: flex;
 		align-items: center;
-		font-size: 12px;
+		font-size: 14px;
 		color: #101010;
 	}
 
