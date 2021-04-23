@@ -11,7 +11,7 @@
           </el-form-item>
           <el-form-item label="链接设置">
             <el-button class="custom" @click="currOperationIndex = index;configDialogVisible = true">
-              {{ formData.link.value ? `已设置${['分类', '商品', '专题', '自定义链接'][formData.link.type - 1]}` : '设置' }}
+              {{ formData.link.value ? `已设置${['分类', '商品', '专题', '自定义链接'][formData.link.type - 1]}` : '未设置' }}
             </el-button>
           </el-form-item>
           <el-form-item label="启用时段">
@@ -72,8 +72,8 @@ export default defineComponent({
       formDataList.value.splice(index, 1)
     }
 
-    const setLink = (data) => {
-      formDataList.value[currOperationIndex.value].link = data
+    const setLink = ({type, value}) => {
+      formDataList.value[currOperationIndex.value].link = {type, value}
     }
 
     watch(formDataList, (dataList) => {

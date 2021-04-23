@@ -10,7 +10,7 @@
       <el-form-item label="链接设置">
         <el-button class="custom" @click="imgDialogVisible = true">
           {{
-            formData.homepageImageLink.value ? `已设置${['分类', '商品', '专题', '自定义链接'][formData.homepageImageLink.type - 1]}` : '设置'
+            formData.homepageImageLink.value ? `已设置${['分类', '商品', '专题', '自定义链接'][formData.homepageImageLink.type - 1]}` : '未设置'
           }}
         </el-button>
       </el-form-item>
@@ -22,7 +22,7 @@
       </el-form-item>
       <el-form-item label="首页商品显示">
         <el-radio-group v-model="formData.goodsPresetType">
-          <el-radio :label="1">手动设置商品</el-radio>
+          <el-radio :label="1">手动设置</el-radio>
           <el-radio :label="2">默认首发时间</el-radio>
           <el-radio :label="3">默认销量最高</el-radio>
         </el-radio-group>
@@ -32,7 +32,7 @@
       <div class="goods-info" v-if="formData.goodsPresetType === 1">
         <div class="goods-list" v-if="goodsList.length">
           <div class="goods-item-wrapper" v-for="(goods, index) in goodsList" :key="goods.id">
-            <goods-info-item></goods-info-item>
+            <goods-info-item :goods="goods"></goods-info-item>
             <i class="el-icon-error" title="删除此项" @click="deleteGoods(index)"></i>
           </div>
         </div>
@@ -55,18 +55,19 @@
     <!--商品配置弹窗-->
     <el-dialog v-model="goodsDialogVisible" title="内容数据配置" width="950px" custom-class="custom"
                :close-on-click-modal="false">
-      <config-dialog-inner :usable-tab="[2]" @confirm="addGoods"
-                           @confirm-goods="goodsList.push($event)"></config-dialog-inner>
+      <config-dialog-inner :usable-tab="[2]" @confirm="addGoods"></config-dialog-inner>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import {defineComponent, inject, provide, reactive, ref, watch} from 'vue'
+import {computed, defineComponent, inject, provide, ref, watch} from 'vue'
 import {useStore} from 'vuex'
 import FileUpload from '@/components/common/FileUpload'
 import GoodsInfoItem from '../../../../../components/GoodsInfoItem'
 import ConfigDialogInner from '../../../../../components/config-dialog-inner'
+import $api from '@/api'
+import {ElMessage} from "element-plus";
 
 const maxLength = 10
 
@@ -87,40 +88,47 @@ export default defineComponent({
     const goodsDialogVisible = ref(false)
     const currOperationIndex = ref(0)
 
-    const formData = reactive(store.state.decoration.massWebsite.homePage.floor[floorIndex.value] || {
-      type: 1,
-      homepageImage: '',
-      homepageImageLink: {
-        type: 1,
-        value: ''
-      },
-      innerPageBanner: '',
-      goodsPresetType: 1,
-      goodsIds: []
-    })
-
+    const formData = computed(() => store.state.decoration.massWebsite.homePage.floor[floorIndex.value])
     const goodsList = ref([])
-    const getGoodsList = async () => {
-
+    const getGoodsList = async (ids) => {
+      const {list} = await $api.goodsApi.platformLibrary.batchGetInfo({
+        ids: JSON.stringify(ids)
+      })
+      goodsList.value = list
+    }
+    // 批量获取已添加的商品信息（用作展示）
+    if (formData.value.goodsIds.length) {
+      getGoodsList(formData.value.goodsIds)
     }
 
-    const setHomepageImageLink = (data) => {
-      formData.homepageImageLink = data
+    const setHomepageImageLink = ({type, value}) => {
+      formData.value.homepageImageLink = {type, value}
     }
 
     const deleteGoods = (index) => {
-      formData.goodsIds.splice(index, 1)
+      formData.value.goodsIds.splice(index, 1)
       goodsList.value.splice(index, 1)
     }
 
-    const addGoods = (data) => {
-      formData.goodsIds.push(data.value)
+    const addGoods = ({value: id, goods}) => {
+      if (formData.value.goodsIds.includes(id)) {
+        ElMessage.warning('该商品已存在于列表，本次操作已忽略')
+      } else {
+        formData.value.goodsIds.push(id)
+        goodsList.value.push({
+          id: goods.id,
+          cover: goods.info.cover,
+          name: goods.info.name,
+          price: goods.minPrice,
+          stockNum: goods.stockNum
+        })
+      }
     }
 
     watch(formData, (dataList) => {
       store.commit('decoration/massWebsite/saveFloorConfig', {
         index: floorIndex.value,
-        data: formData
+        data: formData.value
       })
     }, {deep: true})
 

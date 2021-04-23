@@ -8,7 +8,7 @@
           </el-form-item>
           <el-form-item label="分类设置">
             <el-button class="custom" @click="currOperationIndex = index;configDialogVisible = true">
-              {{ formData.classify.ids.length ? '已设置' : '设置' }}
+              {{ formData.classify.ids.length ? '已设置' : '未设置' }}
             </el-button>
           </el-form-item>
         </el-form>

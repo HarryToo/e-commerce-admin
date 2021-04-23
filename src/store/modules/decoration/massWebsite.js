@@ -1,4 +1,4 @@
-import $api from "@/api"
+import dataTemplate from '@/store/modules/decoration/dataTemplate'
 
 // 网站装修-大众版
 export default {
@@ -26,52 +26,7 @@ export default {
                     }
                 }
             ],
-            floor: [
-                {
-                    type: 1,
-                    homepageImage: '',
-                    homepageImageLink: {
-                        type: 1,
-                        value: ''
-                    },
-                    innerPageBanner: '',
-                    goodsPresetType: 1,
-                    goodsIds: []
-                },
-                {
-                    type: 2,
-                    homepageImage: '',
-                    homepageImageLink: {
-                        type: 1,
-                        value: ''
-                    },
-                    innerPageBanner: '',
-                    goodsPresetType: 1,
-                    goodsIds: []
-                },
-                {
-                    type: 3,
-                    homepageImage: '',
-                    homepageImageLink: {
-                        type: 1,
-                        value: ''
-                    },
-                    innerPageBanner: '',
-                    goodsPresetType: 1,
-                    goodsIds: []
-                },
-                {
-                    type: 4,
-                    homepageImage: '',
-                    homepageImageLink: {
-                        type: 1,
-                        value: ''
-                    },
-                    innerPageBanner: '',
-                    goodsPresetType: 1,
-                    goodsIds: []
-                }
-            ],
+            floor: dataTemplate.website.homepage.floor,
             recommend: []
         }
     },

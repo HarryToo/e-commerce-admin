@@ -47,6 +47,7 @@
 <script>
 import {computed, defineComponent, inject, ref, watch} from 'vue'
 import {useStore} from 'vuex'
+import dataTemplate from '@/store/modules/decoration/dataTemplate'
 
 // 可活动楼层区域类型
 const floorTypes = [
@@ -112,19 +113,18 @@ export default defineComponent({
         if (props.floorIndex === index) {
           emit('update:floorIndex', index - 1)
         }
-        // 若当前选中的板块是第一个，而移动的是第二个
-        if (props.floorIndex === 0 && index === 1) {
-          emit('update:floorIndex', 1)
+        // 若移动的是当前选中的板块的下面一个
+        if (props.floorIndex === index - 1) {
+          emit('update:floorIndex', index)
         }
       }
     }
     // 新增楼层板块
     const addFloorItem = (index, type) => {
-      floorList.value.splice(index + 1, 0, floorTypes[type - 1])
+      floorList.value.splice(index + 1, 0, dataTemplate.website.homepage.floor[type - 1])
     }
     // 删除楼层板块
     const delFloorItem = (index, type) => {
-      const currFloorTypeNum = floorList.value
       floorList.value.splice(index, 1)
     }
 

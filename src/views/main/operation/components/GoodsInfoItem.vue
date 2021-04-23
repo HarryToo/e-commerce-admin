@@ -1,11 +1,11 @@
 <template>
   <div class="goods-info-item">
-    <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" fit="cover"></el-image>
+    <el-image :src="goods.cover" fit="cover"></el-image>
     <div class="info">
-      <div class="title text-cut-2">LATIT电动车新国标电动助力车迷你自电动车新国标电动助力车迷你自电动车新国标电动助力车</div>
+      <div class="title text-cut-2">{{goods.name}}</div>
       <div class="data">
-        <span class="price">￥1999.00</span>
-        <span class="stock">库存：1000</span>
+        <span class="price">￥{{ goods.price }}</span>
+        <span class="stock">库存：{{ goods.stockNum }}</span>
       </div>
     </div>
   </div>
