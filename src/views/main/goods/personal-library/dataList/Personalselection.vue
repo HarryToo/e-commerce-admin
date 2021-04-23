@@ -72,7 +72,7 @@
 		methods: {
 			getPersonLbSourcePlatformData(){
 				var that = this
-				 $api.goodsApi.personLibrary.getPersonLbSourcePlatformData().then((data) => {that.platformSourceSelect = data})
+				 $api.goodsApi.personLibrary.getPersonLbSourcePlatformData().then((data) => {that.platformSourceSelect = data.list})
 			},
 			SelectData() {
 				console.log("商品来源"+this.platformSourceSelectVal)

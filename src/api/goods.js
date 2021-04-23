@@ -7,6 +7,8 @@ export default {
         getPersonLbSourcePlatformData: (data) => $http.get('/goods/PersonLbSourcePlatformData', data),
         // 商品信息
         getPersonLbShopListData: (data) => $http.get('/goods/PersonLbShopListData', data),
+		//商品详细
+		getgoodDetailData: (data) => $http.get('/goods/goodDetailData', data),
     },
     // 平台商品库
     platformLibrary: {

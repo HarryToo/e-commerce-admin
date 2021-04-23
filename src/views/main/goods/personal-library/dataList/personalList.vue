@@ -1,34 +1,26 @@
 <template>
 	<div class="Library-List">
-		<el-table :data="TabData" style="width: 100%" @selection-change="selectAll" stripe ref="multipleTable"  :height="$getTableHeight()">
+		<el-table :data="TabData.list" style="width: 100%" @selection-change="selectAll" stripe ref="multipleTable"  :height="$getTableHeight()">
 
-			<el-table-column type="selection" width="110" align="center">
+			<el-table-column type="selection" width="50" align="center">
 
 			</el-table-column>
 
-			<el-table-column label="商品信息" width="760">
+			<el-table-column label="商品编号" prop="info.origin.id.name" width="110" >
+			
+			</el-table-column>
+	
+			<el-table-column label="商品信息"  width="480">
 				<template #default="scope">
-					<div class="GoodIf">
-						<img :src="scope.row.img" alt="" class="GIimg">
-						<div class="GIBox">
-							<div class="GI-0">{{scope.row.name}}</div>
-							<div class="GI-1">商品分类：{{scope.row.type}}</div>
-							<div class="GI-2">
-								<div class="GI-s0">来源平台：<a :href="scope.row.SorceLink" style="color: #F9612E;"
-										target="_blank">{{scope.row.Source}}</a></div>
-								<div class="GI-s1">来源ID：<a :href="scope.row.ShopSorceLink" style="color: #F9612E;"
-										target="_blank">{{scope.row.SorceId}}</a></div>
-							</div>
-						</div>
-					</div>
+					<wide-goods-item :goods="scope.row.info"></wide-goods-item>
 				</template>
 			</el-table-column>
 
-			<el-table-column label="来源价格" width="150" align="center">
+			<el-table-column label="来源价格" width="250" align="center">
 				<template #default="scope">
 					<div class="GoodPrice">
-						<span>{{scope.row.PriceMin}}</span>~
-						<span>{{scope.row.PriceMax}}</span>
+						<span>￥{{scope.row.minPrice}}</span>~
+						<span>￥{{scope.row.maxPrice}}</span>
 					</div>
 				</template>
 			</el-table-column>
@@ -36,7 +28,7 @@
 			<el-table-column label="总库存" width="150" align="center">
 				<template #default="scope">
 					<div class="GoodStock">
-						<span>{{scope.row.TotalStock}}</span>
+						<span>{{scope.row.stockNum}}</span>
 					</div>
 				</template>
 			</el-table-column>
@@ -45,31 +37,31 @@
 				<template #default="scope">
 					<div class="GoodState">
 						<div>
-							<div v-if="scope.row.collectionState == 0" style="color:#1CB903;">采集成功</div>
-							<div v-if="scope.row.collectionState == 1" style="color:#1679FB;">正在采集</div>
-							<div v-if="scope.row.collectionState == 2" style="color:#FF3A30;">
-								采集失败<span>:{{scope.row.failReason}}</span></div>
+							<div v-if="scope.row.status == 0" style="color:#1CB903;">采集成功</div>
+							<div v-if="scope.row.status == 1" style="color:#1679FB;">正在采集</div>
+							<div v-if="scope.row.status == 2" style="color:#FF3A30;">
+								采集失败<span>:{{scope.row.status}}</span></div>
 						</div>
-						<div class="" v-if="scope.row.collectionState != 1">
+						<div class="" v-if="scope.row.status != 1">
 							<div>2020.12.28 10:51:18</div>
 						</div>
 					</div>
 				</template>
 			</el-table-column>
 
-			<el-table-column prop="collectionPeoPle" label="采集人" width="110" align="center">
+			<el-table-column prop="PeoPle" label="采集人" width="110" align="center">
 				<template #default="scope">
 					<div class="GoodPeoPle">
-						<span>{{scope.row.collectionPeoPle}}</span>
+						<span>{{scope.row.PeoPle}}</span>
 					</div>
 				</template>
 			</el-table-column>
 
 			<el-table-column fixed="right" prop="collectionPeoPle" label="操作" width="150" align="center">
 				<template #default="scope" align="center">
-					<div v-if="scope.row.collectionState != 1" class="GoodOperation">
-						<div v-if="scope.row.collectionState == 2" @click='RetryShop(scope.$index)'>重试</div>
-						<div v-else @click="$router.push({path: '/main/goods/PersonalCollectionLibrary/edit', query: {specialId: [scope.row.id]}})">
+					<div v-if="scope.row.status != 1" class="GoodOperation">
+						<div v-if="scope.row.status == 2" @click='RetryShop(scope.$index)'>重试</div>
+						<div v-else @click="$router.push({path: '/main/goodsList/PersonalCollectionLibrary/edit', query: {specialId: [scope.row.id],Cpage:page.currentPage,Spage:page.PageSize}})"  v-permission="[$route, 'edit']">
 							编辑
 						</div>|
 						<div @click='DeleteShop(scope.$index)'>删除</div>
@@ -79,14 +71,15 @@
 
 		</el-table>
 		<div class="footerBox">
-			<div class="footerBtm">
-				<el-button @click='BatchRetryShop()'>批量重试</el-button>
-				<el-button @click='BatchDeleteShop()'>批量删除</el-button>
-				<el-button @click="$router.push({path: '/main/goods/PersonalCollectionLibrary/edit', query: {specialId: selectId}})">批量编辑</el-button>
+			<div class="footerBtm" v-show="selectId">
+				<el-button @click='BatchRetryShop()' :disabled="!selectId[0]">批量重试</el-button>
+				<el-button @click='BatchDeleteShop()' :disabled="!selectId[0]">批量删除</el-button>
+				<el-button @click="$router.push({path: '/main/goodsList/PersonalCollectionLibrary/edit',query: {specialId:selectId,Cpage:page.currentPage,Spage:page.PageSize}})"
+				:disabled="!selectId[0]">批量编辑</el-button>
 			</div>
-			<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-				:page-sizes="[2, 4, 6, 8]" :page-size="2" layout="total, sizes, prev, pager, next, jumper"
-				:total="TabData.length">
+			<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage"
+				:page-sizes="page.PageSizeS" :page-size="page.PageSize" layout="total, sizes, prev, pager, next, jumper" 
+				:total="TabData.total">
 			</el-pagination>
 		</div>
 	</div>
@@ -97,21 +90,25 @@
 	import {
 		defineComponent
 	} from 'vue'
-	import edit from "../edit/index"
+	import WideGoodsItem from "@/components/goods/WideGoodsItem.vue"
 	import $api from "@/api"
 
 	export default defineComponent({
 		name: "personalList",
 		components: {
-		  edit,
+		  // edit,
+		  WideGoodsItem,
 		},
 		data() {
 			return {
-				shopListHeight:window.innerHeight - 350,
 				TabData: [],
 				multipleSelection: [],
 				selectId:[],
-				currentPage:1,
+				page:{
+					PageSizeS:[10,20,30],
+					currentPage:1,
+					PageSize:10,
+				},
 			}
 		},
 		mounted() {
@@ -119,6 +116,8 @@
 			this.getPersonLbShopListData()
 		},
 		methods: {
+
+
 			//批量删除
 			BatchDeleteShop() {
 				var that = this
@@ -214,8 +213,12 @@
 			},
 			getPersonLbShopListData() {
 				var that = this
-				$api.goodsApi.personLibrary.getPersonLbShopListData().then((data) => {
+				$api.goodsApi.personLibrary.getPersonLbShopListData({
+				  page: that.page.currentPage,
+				  pageSize: that.page.PageSize,
+				}).then((data) => {
 					that.TabData = data;
+					console.log(that.TabData)
 				})
 			},
 			selectAll(val) {
@@ -227,10 +230,12 @@
 				})
 			},
 			handleSizeChange(val) {
-				console.log(val+'handleSizeChange');
+				this.page.PageSize = val
+				this.getPersonLbShopListData()
 			},
 			handleCurrentChange(val) {
-				console.log(val);
+				this.page.currentPage = val
+				this.getPersonLbShopListData()
 			}
 		},
 	})
@@ -238,57 +243,10 @@
 
 <style scoped lang="scss">
 	.Library-List {
-		.GoodIf {
-			display: flex;
-			align-items: center;
-
-			.GIimg {
-				width: 80px;
-				background-color: #a6a6a6;
-			}
-
-			.GIBox {
-				padding-left: 10px;
-
-				.GI-0 {
-					display: -webkit-box;
-					-webkit-box-orient: vertical;
-					-webkit-line-clamp: 2;
-					overflow: hidden;
-					color: #101010;
-					font-size: 14px;
-					line-height: 20px;
-					height: 40px;
-					font-family: SourceHanSansSC-regular;
-				}
-
-				.GI-1 {
-					color: #9d9c9c;
-					font-size: 12px;
-					font-family: SourceHanSansSC-regular;
-				}
-
-				.GI-2 {
-					display: flex;
-
-					.GI-s0,
-					.GI-s1 {
-						color: #9D9C9C;
-						font-size: 12px;
-						font-family: Microsoft Yahei;
-					}
-
-					.GI-s1 {
-						margin-left: 10px;
-					}
-				}
-			}
-		}
-
 		.GoodPrice,
 		.GoodStock,
 		.GoodPeoPle {
-			color: #101010;
+			color: #555555;
 			font-size: 14px;
 			text-align: center;
 			font-family: SourceHanSansSC-regular;

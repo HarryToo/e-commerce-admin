@@ -17,7 +17,7 @@ export default [
             title: '个人采集库'
         },
         component: () => import('@/views/main/goods/personal-library/PersonalCollectionLibrary')
-    },
+    },	
     {
         path: 'goodsList/PersonalCollectionLibrary/edit',
         name: 'edit',
