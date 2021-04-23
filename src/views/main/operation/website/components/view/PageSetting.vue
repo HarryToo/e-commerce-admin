@@ -11,7 +11,9 @@
           <logo-config v-show="moduleIndex === 0"></logo-config>
           <classify-config v-show="moduleIndex === 1"></classify-config>
           <banner-config v-show="moduleIndex === 2"></banner-config>
-          <component :is="floorComponent" v-show="moduleIndex === 3"></component>
+          <keep-alive>
+            <component :is="floorComponent" v-show="moduleIndex === 3"></component>
+          </keep-alive>
         </div>
       </div>
     </div>

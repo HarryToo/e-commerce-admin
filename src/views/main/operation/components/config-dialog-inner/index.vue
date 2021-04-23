@@ -10,7 +10,7 @@
       <el-tab-pane name="2" label="跳转商品" :disabled="!usableTab.includes(2)">
         <div class="tab-pane-cont">
           <goods :goods="tabIndex === '2' && type === 2 ? data : ''" ref="goodsRef"
-                 @confirm="$emit('confirm', $event)" @confirm-goods="$emit('confirmGoods', $event)"></goods>
+                 @confirm="$emit('confirm', $event)"></goods>
         </div>
       </el-tab-pane>
       <el-tab-pane name="3" label="跳转专题" :disabled="!usableTab.includes(3)">
@@ -69,12 +69,11 @@ export default defineComponent({
       }
     }
   },
-  emits: ['confirm', 'confirmGoods'],
+  emits: ['confirm'],
   setup(props) {
     const closeDialog = inject('closeDialog')
     // tabIndex没传的情况下，默认为可选择的tab中第一个
     const tabIndex = ref(props.type === '' ? props.usableTab[0].toString() : props.type.toString())
-    console.log(tabIndex.value)
     const goodsClassifyRef = ref()
     const goodsRef = ref()
     const specialSubjectRef = ref()

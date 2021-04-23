@@ -14,6 +14,8 @@ export default {
     platformLibrary: {
         // 商品列表
         getList: (data) => $http.get('/goods/platform/list', data),
+        // 批量获取商品信息
+        batchGetInfo: (data) => $http.get('/goods/platform/batchInfo', data),
     },
     // 商品分类
     classify: {

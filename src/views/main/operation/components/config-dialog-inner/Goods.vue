@@ -51,7 +51,7 @@ export default defineComponent({
       default: ''
     }
   },
-  emits: ['confirm', 'confirmGoods'],
+  emits: ['confirm'],
   setup(props, {emit}) {
     const closeDialog = inject('closeDialog')
 
@@ -117,10 +117,10 @@ export default defineComponent({
       if (tableData.selectedIds.length) {
         emit('confirm', {
           type: 2,
-          value: tableData.selectedIds[0]
+          value: tableData.selectedIds[0],
+          // 抛出选择的商品（只用于选择后回显）
+          goods: tableData.selectedGoods
         })
-        // 抛出选择的商品（只用于选择后回显）
-        emit('confirmGoods', tableData.selectedGoods)
         closeDialog()
       } else {
         ElMessage.error('请选择商品')

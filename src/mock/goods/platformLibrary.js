@@ -35,3 +35,20 @@ $mock.get('/goods/platform/list', ({url}) => {
     ]
     return $mock.mock(data)
 })
+// 批量获取商品信息
+$mock.get('/goods/platform/batchInfo', ({url}) => {
+    let {ids} = $mock.parseQuery(url)
+    ids = JSON.parse(ids)
+    const data = {}
+    return $mock.mock({
+        list: ids.map((id) => {
+            return {
+                id,
+                cover: '@image("90x90", "#F9612E")',
+                name: '@cword(30, 50)',
+                price: '@float(1000, 1500, 2, 2)',
+                stockNum: '@integer(500, 1000)'
+            }
+        })
+    })
+})
