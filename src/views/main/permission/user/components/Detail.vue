@@ -1,6 +1,6 @@
 <template>
   <div class="detail-dialog-cont">
-    <el-form ref="detailForm" label-position="top" :model="detail" :rules="rules">
+    <el-form ref="detailForm" size="small" label-position="top" :model="detail" :rules="rules">
       <h3>用户信息</h3>
       <el-row :gutter="30">
         <el-col :span="8">
@@ -45,8 +45,8 @@
         </el-col>
       </el-row>
       <div style="margin-top: 60px;text-align: right;" v-if="mode !== 'view'">
-        <el-button type="info" @click="closeDialog">取消</el-button>
-        <el-button class="custom" @click="submit">确定</el-button>
+        <el-button type="info" size="small" @click="closeDialog">取消</el-button>
+        <el-button class="custom" size="small" @click="submit">确定</el-button>
       </div>
     </el-form>
   </div>
@@ -60,7 +60,7 @@ import md5 from 'md5'
 export default defineComponent({
   name: "RoleDetail",
   props: {
-    // 模式：add编辑/view查看/edit编辑
+    // 模式：add添加/view查看/edit编辑
     mode: {
       type: String,
       default: 'add'
@@ -74,6 +74,7 @@ export default defineComponent({
   setup(props) {
     const {mode, id} = toRefs(props)
     const closeDialog = inject('closeDialog')
+    const getList = inject('getList')
     const detailForm = ref()
     const rules = {
       name: [{required: true, message: '请输入用户名称'}],
@@ -122,6 +123,7 @@ export default defineComponent({
         const {code} = await $api.permissionApi.user[mode.value](param)
         if (code === 200) {
           closeDialog()
+          getList()
         }
       }
     }

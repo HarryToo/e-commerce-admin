@@ -5,7 +5,7 @@
     </div>
     <div class="right">
       <slot name="right"></slot>
-      <el-button size="small" type="primary" @click="$router.back" v-if="back">返回</el-button>
+      <el-button size="small" @click="$router.back" v-if="back">返回</el-button>
     </div>
   </div>
 </template>
@@ -33,8 +33,14 @@ export default defineComponent({
   height: 80px;
   padding: 0 25px;
   display: flex;
+  flex-shrink: 0;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #EEEEEE;
+  overflow: auto hidden;
+
+  & > div {
+    flex-shrink: 0;
+  }
 }
 </style>

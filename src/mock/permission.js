@@ -67,6 +67,51 @@ $mock.get('/permission/byAccount', [
         ]
     },
     {
+        name: '订单管理',
+        path: 'order',
+        children: [
+            {
+                name: '代发下单',
+                path: 'order/dropShipping',
+                permission: ['view', 'edit', 'add', 'delete']
+            },
+            {
+                name: '批量发货',
+                path: 'order/dropShipping/batchDeliver'
+            },
+            {
+                name: '查看订单',
+                path: 'order/dropShipping/detail'
+            },
+            {
+                name: '退货订单',
+                path: 'order/returned',
+                permission: ['view', 'edit', 'add', 'delete']
+            },
+            {
+                name: '查看订单',
+                path: 'order/returned/detail'
+            },
+            {
+                name: '换货订单',
+                path: 'order/exchange',
+                permission: ['view', 'edit', 'add', 'delete']
+            },
+            {
+                name: '批量发货',
+                path: 'order/exchange/batchDeliver'
+            },
+            {
+                name: '查看订单',
+                path: 'order/exchange/detail'
+            },
+            {
+                name: '订单设置',
+                path: 'order/setting'
+            }
+        ]
+    },
+    {
         name: '供应商管理',
         path: 'supplier',
         permission: ['edit']
@@ -88,6 +133,11 @@ $mock.get('/permission/byAccount', [
             {
                 name: '添加商品',
                 path: 'operation/special/goods/add'
+            },
+            {
+                name: '网站装修',
+                path: 'operation/website',
+                permission: ['edit', 'add', 'delete']
             }
         ]
     },

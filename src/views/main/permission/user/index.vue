@@ -43,10 +43,9 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination small :current-page="page.index" :page-size="page.size" :page-sizes="[10, 15, 30, 50]"
-                     layout="total, sizes, prev, pager, next, jumper" :total="tableData.total" @size-change="page.sizeChange"
-                     @current-change="page.indexChange">
-      </el-pagination>
+      <table-pagination-footer :page-index="page.index" :page-size="page.size" :total="tableData.total"
+                               @size-change="page.sizeChange" @index-change="page.indexChange">
+      </table-pagination-footer>
     </div>
 
     <el-dialog custom-class="custom" :title="dialog.title" v-model="dialog.visible" :close-on-click-modal="false"
@@ -61,8 +60,6 @@ import {defineComponent, ref, reactive, provide, computed, toRef} from 'vue'
 import Detail from './components/Detail'
 import {ElMessageBox} from 'element-plus'
 import $api from '@/api'
-
-const moduleName = '用户'
 
 export default defineComponent({
   name: "UserList",
@@ -108,9 +105,9 @@ export default defineComponent({
       mode: 'add',
       title: computed(() => {
         const titles = {
-          add: `开通${moduleName}账号`,
-          view: `${moduleName}详情`,
-          edit: `编辑${moduleName}`
+          add: `开通用户账号`,
+          view: `用户详情`,
+          edit: `编辑用户`
         }
         return titles[dialog.mode]
       }),
@@ -172,7 +169,7 @@ export default defineComponent({
         dialog.open()
       },
       del(data) {
-        ElMessageBox.confirm(`删除后，${moduleName}不可再执行激活，请谨慎操作！`, `确认删除${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
+        ElMessageBox.confirm(`删除后，用户不可再执行激活，请谨慎操作！`, `确认删除用户“${data.name}”？`, {type: 'warning'}).then(async () => {
           const {code} = await $api.permissionApi.user.del({
             id: data.id
           })
@@ -192,6 +189,7 @@ export default defineComponent({
     provide('departmentList', toRef(departmentData, 'list'))
     provide('roleList', toRef(roleData, 'list'))
     provide('closeDialog', dialog.close)
+    provide('getList', tableData.getList)
 
     return {
       searchForm,

@@ -5,8 +5,8 @@
         {{ item.name }}
       </el-radio-button>
     </el-radio-group>
-    <el-date-picker v-model="dateInterval" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期"
-                    size="small" style="width: 240px;margin-left: 10px;">
+    <el-date-picker v-model="dateInterval" :disabled-date="disabledDate" type="daterange" start-placeholder="开始日期"
+                    end-placeholder="结束日期" size="small" style="width: 240px;margin-left: 10px;">
     </el-date-picker>
   </div>
 </template>
@@ -64,10 +64,15 @@ export default defineComponent({
       }
     })
 
+    const disabledDate = (time) => {
+      return time.getTime() > Date.now() - 8.64e6
+    }
+
     return {
       screenOptions,
       screen,
-      dateInterval
+      dateInterval,
+      disabledDate
     }
   }
 })

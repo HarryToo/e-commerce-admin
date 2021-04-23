@@ -7,8 +7,8 @@
             <el-input v-model="search.form.name" placeholder="请输入机构名称"></el-input>
           </el-form-item>
           <el-form-item label="开通时间" prop="openTime" size="small" style="margin-bottom: 0;">
-            <el-date-picker v-model="search.form.openTime" type="daterange" start-placeholder="开始日期"
-                            end-placeholder="结束日期" style="width: 240px;"></el-date-picker>
+            <el-date-picker v-model="search.form.openTime" :disabled-date="search.disabledDate" type="daterange"
+                            start-placeholder="开始日期" end-placeholder="结束日期" style="width: 240px;"></el-date-picker>
           </el-form-item>
           <el-form-item size="small" style="margin-bottom: 0;">
             <el-button class="custom" @click="search.search">查询</el-button>
@@ -74,11 +74,9 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination small :current-page="page.index" :page-size="page.size" :page-sizes="[10, 15, 30, 50]"
-                     layout="total, sizes, prev, pager, next, jumper" :total="tableData.total"
-                     @size-change="page.sizeChange"
-                     @current-change="page.indexChange">
-      </el-pagination>
+      <table-pagination-footer :page-index="page.index" :page-size="page.size" :total="tableData.total"
+                               @size-change="page.sizeChange" @index-change="page.indexChange">
+      </table-pagination-footer>
     </div>
 
     <el-dialog custom-class="custom" :title="dialog.title" v-model="dialog.visible" :close-on-click-modal="false"
@@ -93,8 +91,6 @@ import {defineComponent, ref, reactive, computed, provide, toRef} from 'vue'
 import Detail from './components/Detail'
 import {ElMessageBox} from 'element-plus'
 import $api from '@/api'
-
-const moduleName = '机构'
 
 export default defineComponent({
   name: "OrganizationList",
@@ -116,6 +112,9 @@ export default defineComponent({
           endTime: search.form.openTime[1] || ''
         }
       }),
+      disabledDate(time) {
+        return time.getTime() > Date.now() - 8.64e6
+      },
       search() {
         page.index = 1
         tableData.getList()
@@ -146,9 +145,9 @@ export default defineComponent({
       mode: 'add',
       title: computed(() => {
         const titles = {
-          add: `开通${moduleName}账号`,
-          view: `${moduleName}详情`,
-          edit: `编辑${moduleName}`
+          add: `开通机构账号`,
+          view: `机构详情`,
+          edit: `编辑机构`
         }
         return titles[dialog.mode]
       }),
@@ -203,7 +202,7 @@ export default defineComponent({
         dialog.open()
       },
       del(data) {
-        ElMessageBox.confirm(`删除后，${moduleName}不可再执行激活，请谨慎操作！`, `确认删除${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
+        ElMessageBox.confirm(`删除后，机构不可再执行激活，请谨慎操作！`, `确认删除机构“${data.name}”？`, {type: 'warning'}).then(async () => {
           const {code} = await $api.customerApi.organization.del({
             id: data.id
           })
@@ -223,7 +222,7 @@ export default defineComponent({
         }
       },
       disable(data) {
-        ElMessageBox.confirm(`禁用后，${moduleName}不可再登录，请谨慎操作！`, `确认禁用${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
+        ElMessageBox.confirm(`禁用后，机构不可再登录，请谨慎操作！`, `确认禁用机构“${data.name}”？`, {type: 'warning'}).then(async () => {
           const {code} = await $api.customerApi.organization.disable({
             id: data.id
           })

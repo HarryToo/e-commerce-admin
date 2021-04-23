@@ -1,4 +1,9 @@
 import $mock from '@/utils/mock'
+import './dropShipping'
+import './returned'
+import './exchange'
+import './setting'
+import './returnReason'
 
 // 订单统计图表数据
 $mock.get('/order/statisticsChartData', {

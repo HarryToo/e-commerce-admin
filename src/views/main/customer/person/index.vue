@@ -24,8 +24,8 @@
             </el-select>
           </el-form-item>
           <el-form-item label="入驻时间" prop="joinTime" size="small" style="margin-bottom: 0;">
-            <el-date-picker v-model="search.form.joinTime" type="daterange" start-placeholder="开始日期"
-                            end-placeholder="结束日期" style="width: 220px;"></el-date-picker>
+            <el-date-picker v-model="search.form.joinTime" :disabled-date="search.disabledDate" type="daterange"
+                            start-placeholder="开始日期" end-placeholder="结束日期" style="width: 220px;"></el-date-picker>
           </el-form-item>
           <el-form-item size="small" style="margin-bottom: 0;margin-top: 30px;">
             <el-button class="custom" @click="search.search">查询</el-button>
@@ -89,11 +89,9 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination small :current-page="page.index" :page-size="page.size" :page-sizes="[10, 15, 30, 50]"
-                     layout="total, sizes, prev, pager, next, jumper" :total="tableData.total"
-                     @size-change="page.sizeChange"
-                     @current-change="page.indexChange">
-      </el-pagination>
+      <table-pagination-footer :page-index="page.index" :page-size="page.size" :total="tableData.total"
+                               @size-change="page.sizeChange" @index-change="page.indexChange">
+      </table-pagination-footer>
     </div>
   </div>
 </template>
@@ -103,8 +101,6 @@ import {defineComponent, ref, reactive, computed, onMounted, onActivated} from '
 import {useRoute} from 'vue-router'
 import {ElMessageBox, ElMessage} from 'element-plus'
 import $api from '@/api'
-
-const moduleName = '个人'
 
 export default defineComponent({
   name: "PersonList",
@@ -131,6 +127,9 @@ export default defineComponent({
           endTime: search.form.joinTime[1] || ''
         }
       }),
+      disabledDate(time) {
+        return time.getTime() > Date.now() - 8.64e6
+      },
       search() {
         page.index = 1
         tableData.getList()
@@ -191,7 +190,7 @@ export default defineComponent({
         }
       },
       disable(data) {
-        ElMessageBox.confirm(`冻结后，${moduleName}不可再登录，请谨慎操作！`, `确认冻结${moduleName}“${data.account}”？`, {type: 'warning'}).then(async () => {
+        ElMessageBox.confirm(`冻结后，个人不可再登录，请谨慎操作！`, `确认冻结个人“${data.account}”？`, {type: 'warning'}).then(async () => {
           const {code} = await $api.customerApi.person.disable({
             id: data.id
           })

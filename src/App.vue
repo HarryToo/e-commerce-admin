@@ -18,9 +18,9 @@ export default defineComponent({
 
 <style lang="scss">
 $orange: #F9612E;
-$activeOrange: #FF3E00;
+$activeOrange: #F13B02;
 
-*:not([class^=el-]), body.el-popup-parent--hidden {
+*:not([class^=el-]), body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -28,6 +28,7 @@ $activeOrange: #FF3E00;
 
 body {
   font-size: 14px;
+  color: #333333;
   overflow: hidden;
 
   #app {
@@ -40,6 +41,26 @@ body {
       background-color: #FFFFFF;
       border-radius: 4px;
     }
+  }
+}
+
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/*定义滚动条轨道*/
+::-webkit-scrollbar-track {
+}
+
+/*定义滑块*/
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(249, 97, 46, 0.15);
+
+  &:hover {
+    background-color: rgba(249, 97, 46, 0.4);
   }
 }
 

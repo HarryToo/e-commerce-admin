@@ -1,5 +1,6 @@
 import collectorRoutes from './collector'
 import goodsRoutes from './goods'
+import orderRoutes from './order'
 import operationRoutes from './operation'
 import setMealRoutes from './setMeal'
 import customerRoutes from './customer'
@@ -18,6 +19,7 @@ const dynamicRoutes = [
     },
     ...collectorRoutes,
     ...goodsRoutes,
+    ...orderRoutes,
     {
         path: 'supplier',
         name: 'Supplier',

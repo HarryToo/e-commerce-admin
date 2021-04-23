@@ -33,7 +33,7 @@ http.interceptors.request.use(function (config) {
 http.interceptors.response.use(function (response) {
     // 对响应数据做点什么
     let reqData
-    if (response.config.method === 'get') {
+    if (response.config.method === 'get' || response.config.method === 'delete') {
         reqData = response.config.params
     } else {
         reqData = typeof response.config.data === 'string' ? JSON.parse(response.config.data) : response.config.data

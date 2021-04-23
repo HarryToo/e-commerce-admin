@@ -1,97 +1,167 @@
 import $mock from '@/utils/mock'
 
-// 分类树
+// 分类列表
 $mock.get('/goods/classify/list', {
     list: [
         {
-            value: 'zhinan',
-            label: '指南',
-            children: [
-                {
-                    value: 'shejiyuanze',
-                    label: '设计原则',
-                    children: [{
-                        value: 'yizhi',
-                        label: '一致',
-                    }, {
-                        value: 'fankui',
-                        label: '反馈'
-                    }, {
-                        value: 'xiaolv',
-                        label: '效率'
-                    }, {
-                        value: 'kekong',
-                        label: '可控'
-                    }]
-                },
-                {
-                    value: 'daohang',
-                    label: '导航',
-                    children: [{
-                        value: 'cexiangdaohang',
-                        label: '侧向导航'
-                    }, {
-                        value: 'dingbudaohang',
-                        label: '顶部导航'
-                    }]
-                }]
+            id: 1,
+            pid: 0,
+            name: '服装',
+            updateTime: '@datetime()',
+            goodsNum: '@integer(100, 1000)',
+            status: '@integer(0, 1)',
+            updater: '@cword(2, 3)',
+            deep: 1
         },
         {
-            value: 'zujian',
-            label: '组件',
-            children: [{
-                value: 'basic',
-                label: 'Basic',
-                children: [{
-                    value: 'layout',
-                    label: 'Layout 布局'
-                }, {
-                    value: 'color',
-                    label: 'Color 色彩'
-                }, {
-                    value: 'typography',
-                    label: 'Typography 字体'
-                }, {
-                    value: 'icon',
-                    label: 'Icon 图标'
-                }, {
-                    value: 'button',
-                    label: 'Button 按钮'
-                }]
-            }, {
-                value: 'form',
-                label: 'Form',
-                children: [{
-                    value: 'radio',
-                    label: 'Radio 单选框'
-                }, {
-                    value: 'checkbox',
-                    label: 'Checkbox 多选框'
-                }, {
-                    value: 'input',
-                    label: 'Input 输入框'
-                }, {
-                    value: 'input-number',
-                    label: 'InputNumber 计数器'
-                }, {
-                    value: 'select',
-                    label: 'Select 选择器'
-                }]
-            }]
+            id: 2,
+            pid: 1,
+            name: '上装',
+            updateTime: '@datetime()',
+            goodsNum: '@integer(100, 1000)',
+            status: '@integer(0, 1)',
+            updater: '@cword(2, 3)',
+            deep: 2
         },
         {
-            value: 'ziyuan',
-            label: '资源',
-            children: [{
-                value: 'axure',
-                label: 'Axure Components'
-            }, {
-                value: 'sketch',
-                label: 'Sketch Templates'
-            }, {
-                value: 'jiaohu',
-                label: '组件交互文档'
-            }]
+            id: 3,
+            pid: 1,
+            name: '下装',
+            updateTime: '@datetime()',
+            goodsNum: '@integer(100, 1000)',
+            status: '@integer(0, 1)',
+            updater: '@cword(2, 3)',
+            deep: 2
+        },
+        {
+            id: 4,
+            pid: 2,
+            name: '外套',
+            updateTime: '@datetime()',
+            goodsNum: '@integer(100, 1000)',
+            status: '@integer(0, 1)',
+            updater: '@cword(2, 3)',
+            deep: 3
+        },
+        {
+            id: 5,
+            pid: 2,
+            name: '衬衫',
+            updateTime: '@datetime()',
+            goodsNum: 0,
+            status: '@integer(0, 1)',
+            updater: '@cword(2, 3)',
+            deep: 3
+        },
+        {
+            id: 6,
+            pid: 3,
+            name: '长裤',
+            updateTime: '@datetime()',
+            goodsNum: '@integer(100, 1000)',
+            status: '@integer(0, 1)',
+            updater: '@cword(2, 3)',
+            deep: 3
+        },
+        {
+            id: 7,
+            pid: 3,
+            name: '裙子',
+            updateTime: '@datetime()',
+            goodsNum: '@integer(100, 1000)',
+            status: '@integer(0, 1)',
+            updater: '@cword(2, 3)',
+            deep: 3
+        },
+        {
+            id: 8,
+            pid: 0,
+            name: '数码',
+            updateTime: '@datetime()',
+            goodsNum: '@integer(100, 1000)',
+            status: '@integer(0, 1)',
+            updater: '@cword(2, 3)',
+            deep: 1
+        },
+        {
+            id: 9,
+            pid: 8,
+            name: '手机',
+            updateTime: '@datetime()',
+            goodsNum: '@integer(100, 1000)',
+            status: '@integer(0, 1)',
+            updater: '@cword(2, 3)',
+            deep: 2
+        },
+        {
+            id: 10,
+            pid: 8,
+            name: '电脑',
+            updateTime: '@datetime()',
+            goodsNum: '@integer(100, 1000)',
+            status: '@integer(0, 1)',
+            updater: '@cword(2, 3)',
+            deep: 2
+        },
+        {
+            id: 11,
+            pid: 9,
+            name: '小米',
+            updateTime: '@datetime()',
+            goodsNum: '@integer(100, 1000)',
+            status: '@integer(0, 1)',
+            updater: '@cword(2, 3)',
+            deep: 3
+        },
+        {
+            id: 12,
+            pid: 9,
+            name: '苹果',
+            updateTime: '@datetime()',
+            goodsNum: '@integer(100, 1000)',
+            status: '@integer(0, 1)',
+            updater: '@cword(2, 3)',
+            deep: 3
+        },
+        {
+            id: 13,
+            pid: 10,
+            name: '联想',
+            updateTime: '@datetime()',
+            goodsNum: '@integer(100, 1000)',
+            status: '@integer(0, 1)',
+            updater: '@cword(2, 3)',
+            deep: 3
+        },
+        {
+            id: 14,
+            pid: 10,
+            name: '戴尔',
+            updateTime: '@datetime()',
+            goodsNum: '@integer(100, 1000)',
+            status: '@integer(0, 1)',
+            updater: '@cword(2, 3)',
+            deep: 3
         }
     ]
+})
+// 新增分类
+$mock.post('/goods/classify/add', {
+    code: 200
+})
+// 编辑分类
+$mock.post('/goods/classify/edit', {
+    code: 200
+})
+// 禁用分类
+$mock.post('/goods/classify/disable', {
+    code: 200
+})
+// 启用分类
+$mock.post('/goods/classify/enable', {
+    code: 200
+})
+// 删除分类
+$mock.del('/goods/classify/del', {
+    code: 200
 })

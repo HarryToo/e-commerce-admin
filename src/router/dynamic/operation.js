@@ -34,5 +34,14 @@ export default [
             title: '添加商品'
         },
         component: AddGoods
+    },
+    {
+        path: 'operation/website',
+        name: 'WebSitDecoration',
+        meta: {
+            title: '网站装修',
+            noBg: true
+        },
+        component: () => import('@/views/main/operation/website')
     }
 ]

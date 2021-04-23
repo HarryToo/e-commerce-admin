@@ -13,9 +13,6 @@
         </el-space>
       </el-form>
       <template #right>
-        <el-button type="danger" size="small" :disabled="!tableData.selectionIds.length"
-                   v-permission="[$route, 'delete']" @click="tableData.batchRemove">批量移除
-        </el-button>
         <el-button class="custom" size="small" v-permission="[$route, 'add']"
                    @click="$router.push({path: '/main/operation/special/goods/add', query: {specialId: $route.query.specialId}})">
           添加商品
@@ -57,10 +54,13 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination small :current-page="page.index" :page-size="page.size" :page-sizes="[10, 15, 30, 50]"
-                     layout="total, sizes, prev, pager, next, jumper" :total="tableData.total" class="custom"
-                     @size-change="page.sizeChange" @current-change="page.indexChange">
-      </el-pagination>
+      <table-pagination-footer :page-index="page.index" :page-size="page.size" :total="tableData.total"
+                               @size-change="page.sizeChange" @index-change="page.indexChange">
+
+        <el-button type="danger" size="small" :disabled="!tableData.selectionIds.length"
+                   v-permission="[$route, 'delete']" @click="tableData.batchRemove">批量移除
+        </el-button>
+      </table-pagination-footer>
     </div>
   </div>
 </template>
@@ -72,8 +72,6 @@ import {ElMessage, ElMessageBox} from 'element-plus'
 import WideGoodsItem from '@/components/goods/WideGoodsItem'
 import $api from '@/api'
 
-const moduleName = '商品'
-
 export default defineComponent({
   name: "SpecialGoodsList",
   components: {
@@ -82,8 +80,6 @@ export default defineComponent({
   setup() {
     const route = useRoute()
     const searchForm = ref()
-
-    const exportLoading = ref(false)
 
     const search = reactive({
       form: {
@@ -155,13 +151,13 @@ export default defineComponent({
         }
       },
       remove: (data) => {
-        ElMessageBox.confirm(`移除后，当前专题库将不再显示该${moduleName}，请谨慎操作！`, `确认移除编号“${data.number}”${moduleName}？`, {type: 'warning'}).then(() => {
+        ElMessageBox.confirm(`移除后，当前专题库将不再显示该商品，请谨慎操作！`, `确认移除编号“${data.number}”商品？`, {type: 'warning'}).then(() => {
           tableData.removeHandler([data.id])
         }).catch(err => {
         })
       },
       batchRemove() {
-        ElMessageBox.confirm(`移除后，当前专题库将不再显示所选${moduleName}，请谨慎操作！`, `确认移除所选${moduleName}？`, {type: 'warning'}).then(() => {
+        ElMessageBox.confirm(`移除后，当前专题库将不再显示所选商品，请谨慎操作！`, `确认移除所选商品？`, {type: 'warning'}).then(() => {
           tableData.removeHandler(tableData.selectionIds)
         }).catch(err => {
         })
@@ -172,7 +168,6 @@ export default defineComponent({
 
     return {
       searchForm,
-      exportLoading,
       search,
       page,
       tableData

@@ -1,5 +1,17 @@
 import XLSX from "xlsx"
 
+// 防抖
+export function debounce(fn, delay = 200) {
+    let timer;
+    return function () {
+        if (timer) {
+            clearTimeout(timer);
+            timer = null;
+        }
+        timer = setTimeout(fn, delay);
+    }
+}
+
 // 将一个sheet转成最终的excel文件的blob对象，然后利用URL.createObjectURL下载
 function sheet2blob(sheet, sheetName) {
     sheetName = sheetName || 'sheet1';
@@ -51,3 +63,17 @@ export function exportExcel(aoa, fileName) {
     const blob = sheet2blob(sheet)
     createDownload(blob, fileName + '.xlsx')
 }
+
+// 常用正则
+const Regex = {
+    phone: /^1[3-9]\d{9}$/,
+    url: /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/
+}
+// 自动生成对应校验函数，如：checkPhone(value)
+Object.keys(Regex).forEach((key) => {
+    Regex['check' + key.substring(0, 1).toUpperCase() + key.slice(1)] = function (value) {
+        return Regex[key].test(value)
+    }
+})
+
+export const reg = Regex

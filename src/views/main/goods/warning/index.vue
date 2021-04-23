@@ -1,26 +1,7 @@
 <template>
   <div style="height: 100%;display: flex;flex-direction: column;">
     <table-options-header>
-      <el-form :model="search.form" ref="searchForm" inline>
-        <el-space size="medium">
-          <el-form-item label="商品名称" prop="name" size="small" style="margin-bottom: 0;">
-            <el-input v-model="search.form.name" placeholder="请输入商品名称"></el-input>
-          </el-form-item>
-          <el-form-item size="small" style="margin-bottom: 0;">
-            <el-button class="custom" @click="search.search">查询</el-button>
-            <el-button @click="search.reset">清空条件</el-button>
-          </el-form-item>
-        </el-space>
-      </el-form>
-      <template #right>
-        <el-button type="danger" size="small" :disabled="!tableData.selectionIds.length"
-                   v-permission="[$route, 'delete']" @click="tableData.batchRemove">批量移除
-        </el-button>
-        <el-button class="custom" size="small" v-permission="[$route, 'add']"
-                   @click="$router.push({path: '/main/operation/special/goods/add', query: {specialId: $route.query.specialId}})">
-          添加商品
-        </el-button>
-      </template>
+      <el-button class="custom" size="small" @click="dialog.visible = true">预警设置</el-button>
     </table-options-header>
     <div style="flex-grow: 1;padding: 25px;display: flex;flex-direction: column;justify-content: space-between;">
       <el-table :data="tableData.list" stripe :height="$getTableHeight()" @selection-change="tableData.selectionChange">
@@ -31,75 +12,63 @@
             <wide-goods-item :goods="scope.row.info"></wide-goods-item>
           </template>
         </el-table-column>
-        <el-table-column prop="minPrice" label="销售价格" width="250">
+        <el-table-column prop="minPrice" label="销售价格" width="220">
           <template #default="scope">
             <span>￥{{ scope.row.minPrice }}~{{ scope.row.maxPrice }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="stockNum" label="总库存"></el-table-column>
-        <el-table-column prop="shopNum" label="被铺货数/被采购数">
+        <el-table-column prop="stockNum" label="总库存" width="120"></el-table-column>
+        <el-table-column prop="shopNum" label="预警原因">
           <template #default="scope">
-            <span>{{ scope.row.shopNum }}/{{ scope.row.purchaseNum }}</span>
+            <span style="color: #FF3A30">{{ scope.row.warningReason }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态" width="100">
+        <el-table-column prop="addTime" label="状态/入库时间" width="200" align="center">
           <template #default="scope">
-            <span style="color: #1CB903;" v-if="scope.row.status">上架中</span>
-            <span style="color: #FF3A30;" v-else>已下架</span>
+            <div style="color: #1CB903;" v-if="scope.row.status">上架中</div>
+            <div style="color: #FF3A30;" v-else>已下架</div>
+            <div>{{ scope.row.addTime }}</div>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
+        <el-table-column fixed="right" label="操作" width="170">
           <template #default="scope">
             <el-button @click="" type="text" size="small">查看</el-button>
-            <el-button @click="tableData.remove(scope.row)" type="text" size="small" v-permission="[$route, 'delete']">
-              移除
+            <el-button @click="" type="text" size="small">编辑</el-button>
+            <el-button @click="tableData.putaway(scope.row)" type="text" size="small">上架</el-button>
+            <el-button @click="tableData.del(scope.row)" type="text" size="small" v-permission="[$route, 'delete']">
+              删除
             </el-button>
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination small :current-page="page.index" :page-size="page.size" :page-sizes="[10, 15, 30, 50]"
-                     layout="total, sizes, prev, pager, next, jumper" :total="tableData.total" class="custom"
-                     @size-change="page.sizeChange" @current-change="page.indexChange">
-      </el-pagination>
+      <table-pagination-footer :page-index="page.index" :page-size="page.size" :total="tableData.total"
+                               @size-change="page.sizeChange" @index-change="page.indexChange">
+        <el-button type="danger" size="small" :disabled="!tableData.selectionIds.length"
+                   v-permission="[$route, 'delete']" @click="tableData.batchDelete">批量删除
+        </el-button>
+      </table-pagination-footer>
     </div>
+
+    <el-dialog title="预警设置" width="500px" v-model="dialog.visible" custom-class="custom" :close-on-click-modal="false">
+      <setting></setting>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {defineComponent, ref, reactive} from 'vue'
-import {useRoute} from 'vue-router'
-import {ElMessage, ElMessageBox} from 'element-plus'
+import {defineComponent, reactive, provide} from 'vue'
+import {ElMessageBox} from 'element-plus'
 import WideGoodsItem from '@/components/goods/WideGoodsItem'
+import Setting from './components/Setting'
 import $api from '@/api'
 
-const moduleName = '商品'
-
 export default defineComponent({
-  name: "SpecialGoodsList",
+  name: "GoodsWarning",
   components: {
-    WideGoodsItem
+    WideGoodsItem,
+    Setting
   },
   setup() {
-    const route = useRoute()
-    const searchForm = ref()
-
-    const exportLoading = ref(false)
-
-    const search = reactive({
-      form: {
-        name: ''
-      },
-      search() {
-        page.index = 1
-        tableData.getList()
-      },
-      reset() {
-        searchForm.value.resetFields()
-        page.index = 1
-        tableData.getList()
-      }
-    })
-
     const page = reactive({
       index: 1,
       size: 10,
@@ -113,6 +82,13 @@ export default defineComponent({
       }
     })
 
+    const dialog = reactive({
+      visible: false,
+      close() {
+        dialog.visible = false
+      }
+    })
+
     const tableData = reactive({
       list: [],
       total: 0,
@@ -121,32 +97,14 @@ export default defineComponent({
         tableData.selectionIds = selection.map((item) => item.id)
       },
       getList: async () => {
-        const {list, total} = await $api.operationApi.special.getGoodsList({
-          specialId: route.query.specialId,
+        const {list, total} = await $api.goodsApi.warning.getList({
           page: page.index,
-          pageSize: page.size,
-          ...search.form
+          pageSize: page.size
         })
         tableData.list = list
         tableData.total = total
       },
-      add: async (data) => {
-        if (!tableData.form.name) {
-          return ElMessage.error(`请输入${data ? '子专题' : '专题'}名称`)
-        }
-        const param = {
-          name: tableData.form.name
-        }
-        if (data) {
-          param.id = data.id
-        }
-        const {code} = await $api.operationApi.special.add(param)
-        if (code === 200) {
-          tableData.form.name = ''
-          tableData.getList()
-        }
-      },
-      removeHandler: async (ids) => {
+      putaway: async (ids) => {
         const {code} = await $api.operationApi.special.removeGoods({
           id: ids
         })
@@ -154,15 +112,23 @@ export default defineComponent({
           tableData.getList()
         }
       },
-      remove: (data) => {
-        ElMessageBox.confirm(`移除后，当前专题库将不再显示该${moduleName}，请谨慎操作！`, `确认移除编号“${data.number}”${moduleName}？`, {type: 'warning'}).then(() => {
-          tableData.removeHandler([data.id])
+      delHandler: async (ids) => {
+        // const {code} = await $api.operationApi.special.removeGoods({
+        //   id: ids
+        // })
+        // if (code === 200) {
+        //   tableData.getList()
+        // }
+      },
+      del: (data) => {
+        ElMessageBox.confirm(`删除后，将无法恢复该商品，请谨慎删除！`, `确认删除编号“${data.number}”商品？`, {type: 'warning'}).then(() => {
+          tableData.delHandler([data.id])
         }).catch(err => {
         })
       },
-      batchRemove() {
-        ElMessageBox.confirm(`移除后，当前专题库将不再显示所选${moduleName}，请谨慎操作！`, `确认移除所选${moduleName}？`, {type: 'warning'}).then(() => {
-          tableData.removeHandler(tableData.selectionIds)
+      batchDelete() {
+        ElMessageBox.confirm(`删除后，将无法恢复所选商品记录，请谨慎删除！`, `确认删除所选商品？`, {type: 'warning'}).then(() => {
+          tableData.delHandler(tableData.selectionIds)
         }).catch(err => {
         })
       }
@@ -170,11 +136,11 @@ export default defineComponent({
 
     tableData.getList()
 
+    provide('closeDialog', dialog.close)
+
     return {
-      searchForm,
-      exportLoading,
-      search,
       page,
+      dialog,
       tableData
     }
   }

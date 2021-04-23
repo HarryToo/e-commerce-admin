@@ -20,10 +20,9 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination small :current-page="page.index" :page-size="page.size" :page-sizes="[10, 15, 30, 50]"
-                     layout="total, sizes, prev, pager, next, jumper" :total="tableData.total"
-                     @size-change="page.sizeChange" @current-change="page.indexChange">
-      </el-pagination>
+      <table-pagination-footer :page-index="page.index" :page-size="page.size" :total="tableData.total"
+                               @size-change="page.sizeChange" @index-change="page.indexChange">
+      </table-pagination-footer>
     </div>
 
     <el-dialog custom-class="custom" :title="dialog.title" v-model="dialog.visible" :close-on-click-modal="false"
@@ -38,8 +37,6 @@ import {defineComponent, reactive, provide, computed} from 'vue'
 import Detail from './components/Detail'
 import {ElMessageBox} from 'element-plus'
 import $api from '@/api'
-
-const moduleName = '角色'
 
 export default defineComponent({
   name: "RoleList",
@@ -66,9 +63,9 @@ export default defineComponent({
       mode: 'add',
       title: computed(() => {
         const titles = {
-          add: `添加${moduleName}`,
-          view: `${moduleName}详情`,
-          edit: `编辑${moduleName}`
+          add: `添加角色`,
+          view: `角色详情`,
+          edit: `编辑角色`
         }
         return titles[dialog.mode]
       }),
@@ -107,7 +104,7 @@ export default defineComponent({
         dialog.open()
       },
       del(data) {
-        ElMessageBox.confirm(`确认删除${moduleName}“${data.name}”？`, {type: 'warning'}).then(async () => {
+        ElMessageBox.confirm(`确认删除角色“${data.name}”？`, {type: 'warning'}).then(async () => {
           const {code} = await $api.permissionApi.role.del({
             id: data.id
           })
@@ -123,6 +120,7 @@ export default defineComponent({
     tableData.getList()
 
     provide('closeDialog', dialog.close)
+    provide('getList', tableData.getList)
 
     return {
       page,
