@@ -3,7 +3,7 @@
     <div>
       <el-form :model="formData" size="small" label-position="right" label-width="96px">
         <el-form-item label="楼层标题">
-          <el-input v-model.lazy="formData.title" placeholder="请输入楼层标题"></el-input>
+          <el-input v-model.lazy="formData.title" clearable placeholder="请输入楼层标题"></el-input>
         </el-form-item>
         <div class="plate-list">
           <div class="plate-item" v-for="(plate, plateIndex) in formData.plates" :key="plateIndex">

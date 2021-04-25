@@ -11,6 +11,7 @@
           <logo-config v-show="moduleIndex === 0"></logo-config>
           <classify-config v-show="moduleIndex === 1"></classify-config>
           <banner-config v-show="moduleIndex === 2"></banner-config>
+          <!--楼层区域动态组件-->
           <keep-alive>
             <component :is="floorComponent" v-show="moduleIndex === 3"></component>
           </keep-alive>
@@ -49,7 +50,7 @@ export default defineComponent({
     // 可活动楼层板块序号
     const floorIndex = inject('floorIndex')
 
-    // 选中楼层板块类型对应的配置栏组件名
+    // 动态获取选中楼层板块类型对应的配置栏组件名
     const floorComponent = computed(() => {
       const compNameArr = ['floor-style1-config', 'floor-style2-config', 'floor-style3-config', 'floor-style4-config']
       const type = store.state.decoration.massWebsite.homePage.floor[floorIndex.value].type

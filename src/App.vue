@@ -117,7 +117,7 @@ h3 {
 }
 
 // 自定义表格操作菜单文字颜色
-.el-table .el-button--text, .el-table .el-button--text:focus {
+.el-table .el-button--text {
   color: $orange;
 
   &:hover {
@@ -128,6 +128,9 @@ h3 {
   &:active {
     color: $activeOrange;
   }
+}
+.el-table .el-button--text:focus {
+  color: $orange;
 }
 
 // 表格分页器居右

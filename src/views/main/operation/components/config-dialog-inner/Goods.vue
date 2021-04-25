@@ -33,7 +33,7 @@
 <script>
 import {computed, defineComponent, inject, reactive, ref, watch} from 'vue'
 import {useStore} from 'vuex'
-import {ElMessage} from 'element-plus'
+import {ElLoading, ElMessage} from 'element-plus'
 import $api from '@/api'
 import SelectGroup from '@/components/common/SelectGroup'
 import SquareGoodsItem from '@/components/goods/SquareGoodsItem'
@@ -101,7 +101,8 @@ export default defineComponent({
           name: search.form.name,
           level_1: search.form.classify[0] || '',
           level_2: search.form.classify[1] || '',
-          level_3: search.form.classify[2] || ''
+          level_3: search.form.classify[2] || '',
+          dialogLoading: true
         })
         tableData.list = list
         tableData.total = total

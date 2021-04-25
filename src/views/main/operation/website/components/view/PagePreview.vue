@@ -32,7 +32,7 @@
               <!--可删除楼层类型为3/4板块（单此类型板块数须大于1）-->
               <i class="el-icon-close" title="删除此板块"
                  v-if="(item.type === 3 || item.type === 4) && deletableFloorNums[item.type - 1] > 1"
-                 @click="delFloorItem(index, item.type)"></i>
+                 @click="delFloorItem(index)"></i>
             </div>
           </div>
         </div>
@@ -124,7 +124,7 @@ export default defineComponent({
       floorList.value.splice(index + 1, 0, new website.homepage.Floor()[type - 1])
     }
     // 删除楼层板块
-    const delFloorItem = (index, type) => {
+    const delFloorItem = (index) => {
       floorList.value.splice(index, 1)
     }
 

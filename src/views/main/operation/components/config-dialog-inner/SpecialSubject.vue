@@ -35,7 +35,7 @@
 
 <script>
 import {defineComponent, inject, reactive, ref, watch} from 'vue'
-import {ElMessage} from 'element-plus'
+import {ElLoading, ElMessage} from 'element-plus'
 import $api from '@/api'
 
 export default defineComponent({
@@ -91,7 +91,8 @@ export default defineComponent({
         const {list, total} = await $api.operationApi.special.getList({
           page: page.index,
           pageSize: page.size,
-          name: search.form.name
+          name: search.form.name,
+          dialogLoading: true
         })
         tableData.list = list
         tableData.total = total

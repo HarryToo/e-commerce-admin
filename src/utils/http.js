@@ -15,12 +15,30 @@ let loadingInstance
 
 // 添加请求拦截器
 http.interceptors.request.use(function (config) {
+    // loading覆盖区域处理
+    // 请求参数包含dialogLoading: true自动启用dialog弹窗内loading，默认为主内容窗体
+    const params = config.method === 'get' || config.method === 'delete' ? config.params : config.data
+    let loadingTarget = '.el-main'
+    if (params) {
+        const {
+            dialogLoading,
+            ...realParams
+        } = params
+        if (dialogLoading) {
+            loadingTarget = '.el-dialog__body'
+        }
+        if (config.method === 'get' || config.method === 'delete') {
+            config.params = realParams
+        } else {
+            config.data = realParams
+        }
+    }
     // 在发送请求之前做些什么
     if (loadingInstance) {
         loadingInstance.close()
     }
     loadingInstance = ElLoading.service({
-        target: '.el-main',
+        target: loadingTarget,
         text: '让我转一会儿'
     })
     return config;
