@@ -119,6 +119,7 @@ export const website = {
                     },
                     {
                         type: 4,
+                        title: '',
                         homepageImage: '',
                         homepageImageLink: {
                             type: 1,
@@ -126,7 +127,7 @@ export const website = {
                         },
                         innerPageBanner: '',
                         goodsPresetType: 1,
-                        goodsIds: []
+                        goodsIds: [1, 2, 3]
                     }
                 ]
             }

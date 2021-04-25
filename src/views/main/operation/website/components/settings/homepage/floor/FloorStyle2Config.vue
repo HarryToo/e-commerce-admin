@@ -106,9 +106,9 @@ export default defineComponent({
     const currOperationGoodsIndex = ref(0)
 
     const formData = ref(store.state.decoration.massWebsite.homePage.floor[floorIndex.value])
-    watch(floorIndex, (index) => {
-      if (store.state.decoration.massWebsite.homePage.floor[index].type === 2) {
-        formData.value = store.state.decoration.massWebsite.homePage.floor[index]
+    watch(floorIndex, (newFloorIndex) => {
+      if (store.state.decoration.massWebsite.homePage.floor[newFloorIndex].type === 2) {
+        formData.value = store.state.decoration.massWebsite.homePage.floor[newFloorIndex]
       }
     })
     // 设置首页入口图片链接

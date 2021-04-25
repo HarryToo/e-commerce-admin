@@ -107,9 +107,18 @@ export default defineComponent({
     const currOperationGoodsIndex = ref(0)
 
     const formData = ref(store.state.decoration.massWebsite.homePage.floor[floorIndex.value])
-    watch(floorIndex, (index) => {
-      if (store.state.decoration.massWebsite.homePage.floor[index].type === 3) {
-        formData.value = store.state.decoration.massWebsite.homePage.floor[index]
+    // 记录上次访问本类型板块序号，若本次访问不同楼层但类型为3则说明前后共享此类型组件，需要刷新数据
+    let prevFloorIndex = floorIndex.value
+    watch(floorIndex, (newFloorIndex) => {
+      if (store.state.decoration.massWebsite.homePage.floor[newFloorIndex].type === 3 && newFloorIndex !== prevFloorIndex) {
+        prevFloorIndex = newFloorIndex
+        formData.value = store.state.decoration.massWebsite.homePage.floor[newFloorIndex]
+        // 批量获取已添加的商品信息（用作展示）
+        formData.value.plates.forEach((plate, plateIndex) => {
+          if (plate.goodsIds.length) {
+            getGoodsLists(plate.goodsIds, plateIndex)
+          }
+        })
       }
     })
     const goodsLists = ref([[], []])

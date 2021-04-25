@@ -47,6 +47,7 @@
 <script>
 import {computed, defineComponent, inject, ref, watch} from 'vue'
 import {useStore} from 'vuex'
+import {ElMessage, ElMessageBox} from "element-plus"
 import {website} from '@/store/modules/decoration/dataTemplate'
 
 // 可活动楼层区域类型
@@ -81,7 +82,7 @@ export default defineComponent({
       type: Number,
       default: 0
     },
-    // 可活动楼层区域数据类型编号
+    // 可活动楼层区域板块序号
     floorIndex: {
       type: Number,
       default: 0
@@ -117,15 +118,31 @@ export default defineComponent({
         if (props.floorIndex === index - 1) {
           emit('update:floorIndex', index)
         }
+        ElMessage.success('移动成功')
       }
     }
     // 新增楼层板块
     const addFloorItem = (index, type) => {
       floorList.value.splice(index + 1, 0, new website.homepage.Floor()[type - 1])
+      ElMessageBox.confirm('新增成功，是否立即配置新板块的数据?', {type: 'success'}).then(() => {
+        if (moduleIndex.value !== 3) {
+          emit('update:modelValue', 3)
+        }
+        emit('update:floorIndex', index + 1)
+      }).catch(() => {
+      })
     }
     // 删除楼层板块
     const delFloorItem = (index) => {
-      floorList.value.splice(index, 1)
+      ElMessageBox.confirm('此操作将永久删除该板块及相应配置数据, 是否继续?', {type: 'warning'}).then(() => {
+        // 若删除的是当前选中的板块
+        if (props.floorIndex === index) {
+          emit('update:floorIndex', index > 0 ? index - 1 : index + 1)
+        }
+        floorList.value.splice(index, 1)
+        ElMessage.success('删除成功')
+      }).catch(() => {
+      })
     }
 
     // 变动保存

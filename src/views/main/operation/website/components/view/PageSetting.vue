@@ -30,6 +30,7 @@ import BannerConfig from '../settings/homepage/BannerConfig'
 import FloorStyle1Config from '../settings/homepage/floor/FloorStyle1Config'
 import FloorStyle2Config from '../settings/homepage/floor/FloorStyle2Config'
 import FloorStyle3Config from '../settings/homepage/floor/FloorStyle3Config'
+import FloorStyle4Config from '../settings/homepage/floor/FloorStyle4Config'
 
 export default defineComponent({
   name: "PageSetting",
@@ -39,7 +40,8 @@ export default defineComponent({
     BannerConfig,
     FloorStyle1Config,
     FloorStyle2Config,
-    FloorStyle3Config
+    FloorStyle3Config,
+    FloorStyle4Config
   },
   setup() {
     const store = useStore()
@@ -53,8 +55,8 @@ export default defineComponent({
     // 动态获取选中楼层板块类型对应的配置栏组件名
     const floorComponent = computed(() => {
       const compNameArr = ['floor-style1-config', 'floor-style2-config', 'floor-style3-config', 'floor-style4-config']
-      const type = store.state.decoration.massWebsite.homePage.floor[floorIndex.value].type
-      return compNameArr[type - 1]
+      const floorType = store.state.decoration.massWebsite.homePage.floor[floorIndex.value].type
+      return compNameArr[floorType - 1]
     })
 
     return {

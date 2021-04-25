@@ -1,10 +1,13 @@
 <template>
   <div>
     <el-form :model="formData" size="small" label-position="right" label-width="96px">
+      <el-form-item label="楼层标题">
+        <el-input v-model.lazy="formData.title" clearable placeholder="请输入楼层标题"></el-input>
+      </el-form-item>
       <el-form-item label="首页入口图片">
         <div style="display: flex;align-items: flex-end;">
           <file-upload v-model="formData.homepageImage"></file-upload>
-          <span style="margin-left: 15px;font-size: 12px;color: #F9612E;">尺寸建议：190*290</span>
+          <span style="margin-left: 15px;font-size: 12px;color: #F9612E;">尺寸建议：224*620</span>
         </div>
       </el-form-item>
       <el-form-item label="链接设置">
@@ -69,10 +72,10 @@ import GoodsInfoItem from '../../../../../components/GoodsInfoItem'
 import ConfigDialogInner from '../../../../../components/config-dialog-inner'
 import $api from '@/api'
 
-const maxLength = 10
+const maxLength = 8
 
 export default defineComponent({
-  name: "FloorStyle1Config",
+  name: "FloorStyle4Config",
   components: {
     FileUpload,
     GoodsInfoItem,
@@ -88,9 +91,16 @@ export default defineComponent({
     const goodsDialogVisible = ref(false)
 
     const formData = ref(store.state.decoration.massWebsite.homePage.floor[floorIndex.value])
+    // 记录上次访问本类型板块序号，若本次访问不同楼层但类型为4则说明前后共享此类型组件，需要刷新数据
+    let prevFloorIndex = floorIndex.value
     watch(floorIndex, (newFloorIndex) => {
-      if (store.state.decoration.massWebsite.homePage.floor[newFloorIndex].type === 1) {
+      if (store.state.decoration.massWebsite.homePage.floor[newFloorIndex].type === 4 && newFloorIndex !== prevFloorIndex) {
+        prevFloorIndex = newFloorIndex
         formData.value = store.state.decoration.massWebsite.homePage.floor[newFloorIndex]
+        // 批量获取已添加的商品信息（用作展示）
+        if (formData.value.goodsIds.length) {
+          getGoodsList(formData.value.goodsIds)
+        }
       }
     })
     const goodsList = ref([])
