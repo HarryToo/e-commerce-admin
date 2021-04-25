@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import {computed, defineComponent, inject, provide, ref, watch} from 'vue'
+import {defineComponent, inject, provide, ref, watch} from 'vue'
 import {useStore} from 'vuex'
 import {ElMessage} from "element-plus"
 import FileUpload from '@/components/common/FileUpload'
@@ -86,9 +86,13 @@ export default defineComponent({
     const imgDialogVisible = ref(false)
     // 商品配置弹窗控制
     const goodsDialogVisible = ref(false)
-    const currOperationIndex = ref(0)
 
-    const formData = computed(() => store.state.decoration.massWebsite.homePage.floor[floorIndex.value])
+    const formData = ref(store.state.decoration.massWebsite.homePage.floor[floorIndex.value])
+    watch(floorIndex, (index) => {
+      if (store.state.decoration.massWebsite.homePage.floor[index].type === 1) {
+        formData.value = store.state.decoration.massWebsite.homePage.floor[index]
+      }
+    })
     const goodsList = ref([])
     const getGoodsList = async (ids) => {
       const {list} = await $api.goodsApi.platformLibrary.batchGetInfo({
@@ -142,7 +146,6 @@ export default defineComponent({
       maxLength,
       imgDialogVisible,
       goodsDialogVisible,
-      currOperationIndex,
       formData,
       goodsList,
       setHomepageImageLink,

@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import {defineComponent, inject, reactive, ref} from 'vue'
+import {defineComponent, inject, reactive, ref, watch} from 'vue'
 import {ElMessage} from 'element-plus'
 import $api from '@/api'
 
@@ -98,6 +98,10 @@ export default defineComponent({
       }
     })
     tableData.getList()
+
+    watch(() => props.id, (id) => {
+      tableData.selectedId = id || ''
+    })
 
     const reset = () => {
       tableData.selectedId = props.id || ''

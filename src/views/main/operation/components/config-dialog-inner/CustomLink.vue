@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import {defineComponent, inject, onMounted, ref} from 'vue'
+import {defineComponent, inject, ref, watch} from 'vue'
 import {ElMessage} from "element-plus"
 import {reg} from "@/utils/tool"
 
@@ -20,6 +20,10 @@ export default defineComponent({
   setup(props, {emit}) {
     const customLink = ref(props.link || '')
     const closeDialog = inject('closeDialog')
+
+    watch(() => props.link, (link) => {
+      customLink.value = link
+    })
 
     const reset = () => {
       customLink.value = props.link

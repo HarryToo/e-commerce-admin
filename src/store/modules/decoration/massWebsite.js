@@ -1,4 +1,4 @@
-import dataTemplate from '@/store/modules/decoration/dataTemplate'
+import {website} from '@/store/modules/decoration/dataTemplate'
 
 // 网站装修-大众版
 export default {
@@ -26,7 +26,7 @@ export default {
                     }
                 }
             ],
-            floor: dataTemplate.website.homepage.floor,
+            floor: new website.homepage.Floor(),
             recommend: []
         }
     },

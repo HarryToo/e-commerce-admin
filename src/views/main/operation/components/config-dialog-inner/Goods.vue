@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import {computed, defineComponent, inject, reactive, ref} from 'vue'
+import {computed, defineComponent, inject, reactive, ref, watch} from 'vue'
 import {useStore} from 'vuex'
 import {ElMessage} from 'element-plus'
 import $api from '@/api'
@@ -108,6 +108,10 @@ export default defineComponent({
       }
     })
     tableData.getList()
+
+    watch(() => props.goodsId, (goodsId) => {
+      tableData.selectedIds = goodsId ? [goodsId] : []
+    })
 
     const reset = () => {
       tableData.selectedIds = props.goodsId ? [props.goodsId] : []

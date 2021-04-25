@@ -47,7 +47,7 @@
 <script>
 import {computed, defineComponent, inject, ref, watch} from 'vue'
 import {useStore} from 'vuex'
-import dataTemplate from '@/store/modules/decoration/dataTemplate'
+import {website} from '@/store/modules/decoration/dataTemplate'
 
 // 可活动楼层区域类型
 const floorTypes = [
@@ -121,7 +121,7 @@ export default defineComponent({
     }
     // 新增楼层板块
     const addFloorItem = (index, type) => {
-      floorList.value.splice(index + 1, 0, dataTemplate.website.homepage.floor[type - 1])
+      floorList.value.splice(index + 1, 0, new website.homepage.Floor()[type - 1])
     }
     // 删除楼层板块
     const delFloorItem = (index, type) => {

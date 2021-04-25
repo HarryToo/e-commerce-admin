@@ -9,7 +9,7 @@
       </el-tab-pane>
       <el-tab-pane name="2" label="跳转商品" :disabled="!usableTab.includes(2)">
         <div class="tab-pane-cont">
-          <goods :goods="tabIndex === '2' && type === 2 ? data : ''" ref="goodsRef"
+          <goods :goodsId="tabIndex === '2' && type === 2 ? data : ''" ref="goodsRef"
                  @confirm="$emit('confirm', $event)"></goods>
         </div>
       </el-tab-pane>
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import {defineComponent, ref, provide, inject} from 'vue'
+import {defineComponent, ref, provide, inject, watch} from 'vue'
 import GoodsClassify from './GoodsClassify'
 import Goods from './Goods'
 import SpecialSubject from './SpecialSubject'
@@ -78,6 +78,10 @@ export default defineComponent({
     const goodsRef = ref()
     const specialSubjectRef = ref()
     const customLinkRef = ref()
+
+    watch(props, () => {
+      tabIndex.value = props.type === '' ? props.usableTab[0].toString() : props.type.toString()
+    }, {deep: true})
 
     // 点击取消按当前已有值类型调用内部tab组件重置
     const cancel = () => {

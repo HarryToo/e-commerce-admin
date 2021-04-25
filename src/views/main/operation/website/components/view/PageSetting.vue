@@ -28,6 +28,7 @@ import ClassifyConfig from '../settings/homepage/ClassifyConfig'
 import BannerConfig from '../settings/homepage/BannerConfig'
 import FloorStyle1Config from '../settings/homepage/floor/FloorStyle1Config'
 import FloorStyle2Config from '../settings/homepage/floor/FloorStyle2Config'
+import FloorStyle3Config from '../settings/homepage/floor/FloorStyle3Config'
 
 export default defineComponent({
   name: "PageSetting",
@@ -36,7 +37,8 @@ export default defineComponent({
     ClassifyConfig,
     BannerConfig,
     FloorStyle1Config,
-    FloorStyle2Config
+    FloorStyle2Config,
+    FloorStyle3Config
   },
   setup() {
     const store = useStore()

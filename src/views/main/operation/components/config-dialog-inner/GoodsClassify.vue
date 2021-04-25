@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import {defineComponent, computed, ref, inject, onMounted} from 'vue'
+import {defineComponent, computed, ref, inject, onMounted, watch} from 'vue'
 import {useStore} from 'vuex'
 import {ElMessage} from "element-plus"
 
@@ -33,7 +33,7 @@ export default defineComponent({
   props: {
     // 需要回填的数据（分类数据 {ids, tree}）
     classify: {
-      type: Object,
+      type: [Object, String],
       default() {
         return null
       }
@@ -55,6 +55,7 @@ export default defineComponent({
     }
 
     onMounted(reset)
+    watch(props, reset, {deep: true})
 
     const save = () => {
       const checkedIds = tree.value.getCheckedKeys()
