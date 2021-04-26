@@ -141,10 +141,10 @@ export default defineComponent({
       }
     }
 
-    watch(formData, (dataList) => {
+    watch(formData, (data) => {
       store.commit('decoration/massWebsite/saveFloorConfig', {
         index: floorIndex.value,
-        data: formData.value
+        data
       })
     }, {deep: true})
 

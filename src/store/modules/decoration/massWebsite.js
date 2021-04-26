@@ -1,4 +1,4 @@
-import {website} from '@/store/modules/decoration/dataTemplate'
+import {website} from './dataTemplate'
 
 // 创建新id
 function createNewId(list) {
@@ -40,8 +40,24 @@ export default {
                 }
             ],
             floor: new website.homepage.Floor(),
-            recommend: []
-        }
+            baseGoodsList: {
+                title: '',
+                goodsPresetType: 1,
+                goodsIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+            }
+        },
+        // 专场频道
+        specialChannel: {
+            bannerImg: '',
+            goodsGroups: [
+                {
+                    title: '',
+                    goodsIds: []
+                }
+            ]
+        },
+        // 排行榜单
+        leaderboard: {}
     },
     getters: {
         // 统计各楼层类型板块的总数（做删除时限制）
@@ -55,29 +71,31 @@ export default {
         }
     },
     mutations: {
-        // 设置首页各模块配置数据
-        setHomepageConfigs(state, data) {
+        // 设置网站装修-大众版全部配置数据
+        setAllConfigs(state, data) {
             state = data
         },
-        // 保存首页-logo配置
+
+        // 首页部分
+        // 保存logo配置
         saveLogoConfig(state, data) {
             state.homePage.logo = data
         },
-        // 保存首页-分类导航配置
+        // 保存分类导航配置
         saveClassifyConfig(state, data) {
             state.homePage.classify = data
         },
-        // 保存首页-banner配置
+        // 保存banner配置
         saveBannerConfig(state, data) {
             state.homePage.banner = data
         },
-        // 首页-可活动楼层区域板块上移一层
+        // 可活动楼层区域板块上移一层
         moveUpFloorLevel(state, index) {
             const floorList = state.homePage.floor
             const delArr = floorList.splice(index, 1)
             floorList.splice(index - 1, 0, delArr[0])
         },
-        // 首页-新增楼层板块
+        // 新增楼层板块
         addFloorItem(state, {index, type}) {
             const floorList = state.homePage.floor
             const newFloorItem = new website.homepage.Floor()[type - 1]
@@ -85,17 +103,22 @@ export default {
             newFloorItem.id = createNewId(floorList)
             floorList.splice(index + 1, 0, newFloorItem)
         },
-        // 首页-删除楼层板块
+        // 删除楼层板块
         delFloorItem(state, index) {
             state.homePage.floor.splice(index, 1)
         },
-        // 保存首页-可活动楼层区域板块配置
+        // 保存可活动楼层区域板块配置
         saveFloorConfig(state, {index, data}) {
             state.homePage.floor[index] = data
         },
-        // 保存首页-为你推荐商品列表配置
-        saveRecommendConfig(state, data) {
-            state.homePage.recommend = data
+        // 保存底部商品列表配置
+        saveBaseGoodsListConfig(state, data) {
+            state.homePage.baseGoodsList = data
+        },
+
+        // 保存专场频道配置
+        saveSpecialChannelConfig(state, data) {
+            state.specialChannel = data
         }
     },
     actions: {}

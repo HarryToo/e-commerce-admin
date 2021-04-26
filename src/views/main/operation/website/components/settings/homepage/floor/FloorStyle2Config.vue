@@ -4,9 +4,9 @@
       <el-form-item label="楼层标题">
         <el-input v-model.lazy="formData.title" clearable placeholder="请输入楼层标题"></el-input>
       </el-form-item>
-      <div class="plate-list">
+      <div class="plate-list" id="plate-list-floor-2">
         <div class="plate-item" v-for="(plate, plateIndex) in formData.plates" :key="plateIndex">
-          <el-affix target=".plate-list" :offset="262">
+          <el-affix target="#plate-list-floor-2" :offset="262">
             <h4>{{ ['左', '右'][plateIndex] }}侧板块配置</h4>
           </el-affix>
           <div class="plate-header">
@@ -120,10 +120,10 @@ export default defineComponent({
       formData.value.plates[currOperationPlateIndex.value].goodsList[currOperationGoodsIndex.value].link = {type, value}
     }
 
-    watch(formData, (dataList) => {
+    watch(formData, (data) => {
       store.commit('decoration/massWebsite/saveFloorConfig', {
         index: floorIndex.value,
-        data: formData.value
+        data
       })
     }, {deep: true})
 

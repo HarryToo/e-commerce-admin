@@ -5,8 +5,9 @@
       <span class="tips">下图仅供展示页面模块信息，实际效果根据配置的数据可能不同</span>
     </div>
     <div class="preview-img-wrapper">
+      <!--首页-->
       <div class="preview-img home-page" v-show="pageIndex === 0">
-        <img src="/images/operation/website/static_top.jpg" alt="" class="static_top">
+        <img src="/images/operation/website/static_top.jpg" alt="" class="static">
         <img src="/images/operation/website/logo.png" alt="" class="selectable position logo"
              :class="{selected: modelValue === 0}" title="logo"
              @click="$emit('update:modelValue', 0)">
@@ -38,7 +39,11 @@
         </div>
         <img src="/images/operation/website/floor_5.jpg" alt="" class="selectable floor_item"
              :class="{selected: modelValue === 4}" title="为您推荐" @click="$emit('update:modelValue', 4)">
-        <img src="/images/operation/website/footer.png" alt="" class="footer">
+        <img src="/images/operation/website/footer.png" alt="" class="static">
+      </div>
+      <!--专场频道-->
+      <div class="preview-img" v-show="pageIndex === 1">
+        <img src="/images/operation/website/static_top.jpg" alt="" class="static">
       </div>
     </div>
   </div>
@@ -77,7 +82,7 @@ const floorTypes = [
 export default defineComponent({
   name: "PagePreview",
   props: {
-    // 页面上选中的模块（0:logo,1:分类,2:banner,3:可活动楼层区域,4:推荐商品列表）
+    // 页面上选中的模块（0:logo,1:分类,2:banner,3:可活动楼层区域,4:底部商品列表）
     modelValue: {
       type: Number,
       default: 0
@@ -142,8 +147,6 @@ export default defineComponent({
     // 变动保存
     watch(floorList, (list) => {
       store.commit('decoration/massWebsite/saveFloorConfig', list)
-      console.log('网站装修本地数据变动：')
-      console.log(store.state.decoration.massWebsite.homePage)
     }, {deep: true})
 
     return {
@@ -209,6 +212,11 @@ export default defineComponent({
     .preview-img {
       position: relative;
 
+      .static {
+        display: block;
+        width: 100%;
+      }
+
       .position {
         position: absolute;
         z-index: 1;
@@ -235,7 +243,7 @@ export default defineComponent({
     }
 
     .home-page {
-      .static_top, .floor_item, .footer {
+      .floor_item {
         display: block;
         width: 100%;
       }

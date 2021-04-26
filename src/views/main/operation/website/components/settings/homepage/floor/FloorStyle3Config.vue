@@ -5,9 +5,9 @@
         <el-form-item label="楼层标题">
           <el-input v-model.lazy="formData.title" clearable placeholder="请输入楼层标题"></el-input>
         </el-form-item>
-        <div class="plate-list">
+        <div class="plate-list" id="plate-list-floor-3">
           <div class="plate-item" v-for="(plate, plateIndex) in formData.plates" :key="plateIndex">
-            <el-affix target=".plate-list" :offset="262">
+            <el-affix target="#plate-list-floor-3" :offset="262">
               <h4>{{ ['上', '下'][plateIndex] }}半部分配置</h4>
             </el-affix>
             <div class="plate-header">
@@ -125,16 +125,18 @@ export default defineComponent({
     })
     const goodsLists = ref([[], []])
     const getGoodsLists = async (ids, plateIndex) => {
-      const {list} = await $api.goodsApi.platformLibrary.batchGetInfo({
-        ids: JSON.stringify(ids)
-      })
-      goodsLists.value[plateIndex] = list
+      if (ids && ids.length) {
+        const {list} = await $api.goodsApi.platformLibrary.batchGetInfo({
+          ids: JSON.stringify(ids)
+        })
+        goodsLists.value[plateIndex] = list
+      } else {
+        goodsLists.value[plateIndex] = []
+      }
     }
     // 批量获取已添加的商品信息（用作展示）
     formData.value.plates.forEach((plate, plateIndex) => {
-      if (plate.goodsIds.length) {
-        getGoodsLists(plate.goodsIds, plateIndex)
-      }
+      getGoodsLists(plate.goodsIds, plateIndex)
     })
 
     const setHomepageImageLink = ({type, value}) => {
@@ -161,10 +163,10 @@ export default defineComponent({
       }
     }
 
-    watch(formData, (dataList) => {
+    watch(formData, (data) => {
       store.commit('decoration/massWebsite/saveFloorConfig', {
         index: floorIndex.value,
-        data: formData.value
+        data
       })
     }, {deep: true})
 

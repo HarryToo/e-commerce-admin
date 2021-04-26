@@ -26,12 +26,15 @@ export default {
         Mock.mock(getUrl(url), 'delete', responseData)
     },
     parseQuery(url) {
-        const queryArr = url.split('?')[1].split('&')
         const param = {}
-        queryArr.forEach((item) => {
-            const mapArr = item.split('=')
-            param[mapArr[0]] = mapArr[1]
-        })
+        const searchArr = url.split('?')[1]
+        if (searchArr) {
+            const queryArr = searchArr.split('&')
+            queryArr.forEach((item) => {
+                const mapArr = item.split('=')
+                param[mapArr[0]] = mapArr[1]
+            })
+        }
         return param
     }
 }

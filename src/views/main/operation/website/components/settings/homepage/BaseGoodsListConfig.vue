@@ -1,24 +1,8 @@
 <template>
   <div>
     <el-form :model="formData" size="small" label-position="right" label-width="96px">
-      <el-form-item label="首页入口图片">
-        <div style="display: flex;align-items: flex-end;">
-          <file-upload v-model="formData.homepageImage" img-size="190*290"></file-upload>
-          <span style="margin-left: 15px;font-size: 12px;color: #F9612E;">尺寸建议：190*290</span>
-        </div>
-      </el-form-item>
-      <el-form-item label="链接设置">
-        <el-button class="custom" @click="imgDialogVisible = true">
-          {{
-            formData.homepageImageLink.value ? `已设置${['分类', '商品', '专题', '自定义链接'][formData.homepageImageLink.type - 1]}` : '未设置'
-          }}
-        </el-button>
-      </el-form-item>
-      <el-form-item label="内页banner">
-        <div style="display: flex;align-items: flex-end;">
-          <file-upload v-model="formData.innerPageBanner" img-size="1920*490"></file-upload>
-          <span style="margin-left: 15px;font-size: 12px;color: #F9612E;">尺寸建议：1920*490</span>
-        </div>
+      <el-form-item label="楼层标题">
+        <el-input v-model.lazy="formData.title" clearable placeholder="请输入楼层标题"></el-input>
       </el-form-item>
       <el-form-item label="首页商品显示">
         <el-radio-group v-model="formData.goodsPresetType">
@@ -30,14 +14,15 @@
     </el-form>
     <transition name="el-fade-in-linear" mode="out-in">
       <div class="goods-info" v-if="formData.goodsPresetType === 1">
-        <div class="goods-list" v-if="goodsList.length">
+        <div class="goods-list" @scroll="scrollLoadMore">
           <div class="goods-item-wrapper" v-for="(goods, index) in goodsList" :key="goods.id">
             <goods-info-item :goods="goods"></goods-info-item>
             <i class="el-icon-error" title="删除此项" @click="deleteGoods(index)"></i>
           </div>
+          <div class="load-tips">{{ goodsList.length < formData.goodsIds.length ? '加载中...' : '全部加载完毕' }}</div>
         </div>
         <el-button size="small" icon="el-icon-circle-plus" style="display: block;width: 100%;"
-                   :disabled="formData.goodsIds.length === maxLength" @click="goodsDialogVisible = true">
+                   :disabled="formData.goodsIds.length === maxLength" @click="dialogVisible = true">
           {{
             formData.goodsIds.length < maxLength ? `还可添加${maxLength - formData.goodsIds.length}个` : `已达到添加上限${maxLength}个`
           }}
@@ -45,15 +30,8 @@
       </div>
     </transition>
 
-    <!--首页入口图片链接配置弹窗-->
-    <el-dialog v-model="imgDialogVisible" title="内容数据配置" width="950px" custom-class="custom"
-               :close-on-click-modal="false">
-      <config-dialog-inner :type="formData.homepageImageLink.type"
-                           :data="formData.homepageImageLink.value"
-                           @confirm="setHomepageImageLink"></config-dialog-inner>
-    </el-dialog>
     <!--商品配置弹窗-->
-    <el-dialog v-model="goodsDialogVisible" title="内容数据配置" width="950px" custom-class="custom"
+    <el-dialog v-model="dialogVisible" title="内容数据配置" width="950px" custom-class="custom"
                :close-on-click-modal="false">
       <config-dialog-inner :usable-tab="[2]" @confirm="addGoods"></config-dialog-inner>
     </el-dialog>
@@ -61,18 +39,28 @@
 </template>
 
 <script>
-import {defineComponent, inject, provide, ref, watch} from 'vue'
+import {computed, defineComponent, onMounted, onUnmounted, provide, ref, watch} from 'vue'
 import {useStore} from 'vuex'
 import {ElMessage} from "element-plus"
 import FileUpload from '@/components/common/FileUpload'
-import GoodsInfoItem from '../../../../../components/GoodsInfoItem'
-import ConfigDialogInner from '../../../../../components/config-dialog-inner'
+import GoodsInfoItem from '../../../../components/GoodsInfoItem'
+import ConfigDialogInner from '../../../../components/config-dialog-inner'
 import $api from '@/api'
 
-const maxLength = 10
+const maxLength = 500
+
+// 将一维数组拆分为指定长度二维数组
+function group(array, subGroupLength) {
+  let index = 0;
+  let newArray = [];
+  while (index < array.length) {
+    newArray.push(array.slice(index, index += subGroupLength));
+  }
+  return newArray;
+}
 
 export default defineComponent({
-  name: "FloorStyle1Config",
+  name: "BaseGoodsListConfig",
   components: {
     FileUpload,
     GoodsInfoItem,
@@ -80,38 +68,36 @@ export default defineComponent({
   },
   setup() {
     const store = useStore()
-    // 可活动楼层板块序号
-    const floorIndex = inject('floorIndex')
-    // 首页入口图片链接配置弹窗控制
-    const imgDialogVisible = ref(false)
     // 商品配置弹窗控制
-    const goodsDialogVisible = ref(false)
+    const dialogVisible = ref(false)
 
-    const formData = ref(store.state.decoration.massWebsite.homePage.floor[floorIndex.value])
-    watch(floorIndex, (newFloorIndex) => {
-      if (store.state.decoration.massWebsite.homePage.floor[newFloorIndex].type === 1) {
-        formData.value = store.state.decoration.massWebsite.homePage.floor[newFloorIndex]
-      }
-    })
+    const formData = computed(() => store.state.decoration.massWebsite.homePage.baseGoodsList)
     const goodsList = ref([])
+    // 将id以10个一页分组
+    const idGroups = group(formData.value.goodsIds, 10)
+    let pageIndex = 1
+    // 批量获取已添加的商品信息（用作展示）
     const getGoodsList = async (ids) => {
       const {list} = await $api.goodsApi.platformLibrary.batchGetInfo({
         ids: JSON.stringify(ids)
       })
-      goodsList.value = list
+      goodsList.value = [...goodsList.value, ...list]
     }
-    // 批量获取已添加的商品信息（用作展示）
-    if (formData.value.goodsIds.length) {
-      getGoodsList(formData.value.goodsIds)
-    }
+    getGoodsList(idGroups[0])
 
-    const setHomepageImageLink = ({type, value}) => {
-      formData.value.homepageImageLink = {type, value}
+    // 滚动触底加载
+    const scrollLoadMore = (event) => {
+      if (goodsList.value.length < formData.value.goodsIds.length) {
+        if (event.target.scrollTop + event.target.clientHeight === event.target.scrollHeight) {
+          getGoodsList(idGroups[pageIndex++])
+        }
+      }
     }
 
     const deleteGoods = (index) => {
       formData.value.goodsIds.splice(index, 1)
       goodsList.value.splice(index, 1)
+      console.log(formData.value.goodsIds)
     }
 
     const addGoods = ({value: id, goods}) => {
@@ -130,25 +116,21 @@ export default defineComponent({
     }
 
     watch(formData, (data) => {
-      store.commit('decoration/massWebsite/saveFloorConfig', {
-        index: floorIndex.value,
-        data
-      })
+      store.commit('decoration/massWebsite/saveBaseGoodsListConfig', data)
     }, {deep: true})
 
     const closeDialog = () => {
-      imgDialogVisible.value = false
-      goodsDialogVisible.value = false
+      dialogVisible.value = false
     }
     provide('closeDialog', closeDialog)
 
     return {
       maxLength,
-      imgDialogVisible,
-      goodsDialogVisible,
+      dialogVisible,
       formData,
       goodsList,
-      setHomepageImageLink,
+      pageIndex,
+      scrollLoadMore,
       deleteGoods,
       addGoods
     }
@@ -159,9 +141,11 @@ export default defineComponent({
 <style scoped lang="scss">
 .goods-info {
   .goods-list {
+    height: calc(100vh - 456px);
     margin-bottom: 20px;
     border: 1px solid #EEEEEE;
     border-radius: 4px;
+    overflow-y: auto;
 
     .goods-item-wrapper {
       display: flex;
@@ -174,10 +158,6 @@ export default defineComponent({
 
       &:first-child {
         padding-top: 0;
-      }
-
-      &:last-child {
-        border-bottom: none;
       }
 
       .el-form {
@@ -193,6 +173,13 @@ export default defineComponent({
           color: #F56C6C;
         }
       }
+    }
+
+    .load-tips {
+      text-align: center;
+      line-height: 34px;
+      font-size: 12px;
+      color: #999999;
     }
   }
 }
