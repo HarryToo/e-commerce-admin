@@ -12,7 +12,7 @@
           <div class="plate-header">
             <el-form-item label="首页入口图片">
               <div style="display: flex;align-items: flex-end;">
-                <file-upload v-model="plate.homepageImage"></file-upload>
+                <file-upload v-model="plate.homepageImage" img-size="590*160"></file-upload>
                 <span style="margin-left: 15px;font-size: 12px;color: #F9612E;">尺寸建议：590*160</span>
               </div>
             </el-form-item>
@@ -25,7 +25,7 @@
             </el-form-item>
             <el-form-item label="内页banner">
               <div style="display: flex;align-items: flex-end;">
-                <file-upload v-model="plate.innerPageBanner"></file-upload>
+                <file-upload v-model="plate.innerPageBanner" img-size="1920*490"></file-upload>
                 <span style="margin-left: 15px;font-size: 12px;color: #F9612E;">尺寸建议：1920*490</span>
               </div>
             </el-form-item>
@@ -35,7 +35,7 @@
             <div class="goods-item" v-for="(goods, goodsIndex) in plate.goodsList" :key="goodsIndex">
               <el-form-item label="商品图片">
                 <div style="display: flex;align-items: flex-end;">
-                  <file-upload v-model="goods.image"></file-upload>
+                  <file-upload v-model="goods.image" img-size="150*150"></file-upload>
                   <span style="margin-left: 15px;font-size: 12px;color: #F9612E;">尺寸建议：150*150</span>
                 </div>
               </el-form-item>
@@ -49,7 +49,7 @@
               </el-form-item>
               <el-form-item label="内页banner">
                 <div style="display: flex;align-items: flex-end;">
-                  <file-upload v-model="goods.innerPageBanner"></file-upload>
+                  <file-upload v-model="goods.innerPageBanner" img-size="1920*490"></file-upload>
                   <span style="margin-left: 15px;font-size: 12px;color: #F9612E;">尺寸建议：1920*490</span>
                 </div>
               </el-form-item>

@@ -3,7 +3,7 @@
     <el-form :model="formData" size="small" label-position="right" label-width="96px">
       <el-form-item label="首页入口图片">
         <div style="display: flex;align-items: flex-end;">
-          <file-upload v-model="formData.homepageImage"></file-upload>
+          <file-upload v-model="formData.homepageImage" img-size="190*290"></file-upload>
           <span style="margin-left: 15px;font-size: 12px;color: #F9612E;">尺寸建议：190*290</span>
         </div>
       </el-form-item>
@@ -16,7 +16,7 @@
       </el-form-item>
       <el-form-item label="内页banner">
         <div style="display: flex;align-items: flex-end;">
-          <file-upload v-model="formData.innerPageBanner"></file-upload>
+          <file-upload v-model="formData.innerPageBanner" img-size="1920*490"></file-upload>
           <span style="margin-left: 15px;font-size: 12px;color: #F9612E;">尺寸建议：1920*490</span>
         </div>
       </el-form-item>

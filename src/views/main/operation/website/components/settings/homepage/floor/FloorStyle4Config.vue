@@ -6,7 +6,7 @@
       </el-form-item>
       <el-form-item label="首页入口图片">
         <div style="display: flex;align-items: flex-end;">
-          <file-upload v-model="formData.homepageImage"></file-upload>
+          <file-upload v-model="formData.homepageImage" img-size="224*620"></file-upload>
           <span style="margin-left: 15px;font-size: 12px;color: #F9612E;">尺寸建议：224*620</span>
         </div>
       </el-form-item>
@@ -19,7 +19,7 @@
       </el-form-item>
       <el-form-item label="内页banner">
         <div style="display: flex;align-items: flex-end;">
-          <file-upload v-model="formData.innerPageBanner"></file-upload>
+          <file-upload v-model="formData.innerPageBanner" img-size="1920*490"></file-upload>
           <span style="margin-left: 15px;font-size: 12px;color: #F9612E;">尺寸建议：1920*490</span>
         </div>
       </el-form-item>
