@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import {defineComponent, inject, provide, ref, watch} from 'vue'
+import {computed, defineComponent, inject, provide, ref, watch} from 'vue'
 import {useStore} from 'vuex'
 import {ElMessage} from "element-plus"
 import FileUpload from '@/components/common/FileUpload'
@@ -91,11 +91,13 @@ export default defineComponent({
     const goodsDialogVisible = ref(false)
 
     const formData = ref(store.state.decoration.massWebsite.homePage.floor[floorIndex.value])
-    // 记录上次访问本类型板块序号，若本次访问不同楼层但类型为4则说明前后共享此类型组件，需要刷新数据
-    let prevFloorIndex = floorIndex.value
-    watch(floorIndex, (newFloorIndex) => {
-      if (store.state.decoration.massWebsite.homePage.floor[newFloorIndex].type === 4 && newFloorIndex !== prevFloorIndex) {
-        prevFloorIndex = newFloorIndex
+    // 楼层类型为4但id变化则说明前后视图共享此类型组件，需要刷新数据
+    const floorItemId = computed(() => store.state.decoration.massWebsite.homePage.floor[floorIndex.value].id)
+    let prevId = floorItemId.value
+    watch([floorIndex, floorItemId], ([newFloorIndex, newFloorItemId]) => {
+      if (store.state.decoration.massWebsite.homePage.floor[newFloorIndex].type === 4 && newFloorItemId !== prevId) {
+        // console.log('******** 楼层类型 4 组件刷新 ********')
+        prevId = newFloorItemId
         formData.value = store.state.decoration.massWebsite.homePage.floor[newFloorIndex]
         // 批量获取已添加的商品信息（用作展示）
         if (formData.value.goodsIds.length) {

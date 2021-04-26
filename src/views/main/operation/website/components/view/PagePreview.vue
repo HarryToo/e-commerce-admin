@@ -18,7 +18,7 @@
              @click="$emit('update:modelValue', 2)">
         <!--可活动楼层区域-->
         <div class="rearrange-list">
-          <div class="rearrange-item" v-for="(item, index) in floorList" :key="index">
+          <div class="rearrange-item" v-for="(item, index) in floorList" :key="item.id">
             <img :src="floorTypes[item.type - 1].previewImg" alt="" class="selectable floor_item"
                  :class="{selected: modelValue === 3 && floorIndex === index}"
                  :title="floorTypes[item.type - 1].title"
@@ -95,35 +95,29 @@ export default defineComponent({
     const moduleIndex = ref(0)
     // 可活动楼层区域数据
     const floorList = computed(() => store.state.decoration.massWebsite.homePage.floor)
-
     // 统计各楼层类型板块的总数
-    const deletableFloorNums = computed(() => {
-      const initialNums = floorList.value.map(() => 0)
-      return floorList.value.reduce((totals, item) => {
-        totals[item.type - 1]++
-        return totals
-      }, initialNums)
-    })
+    const deletableFloorNums = computed(() => store.getters['decoration/massWebsite/floorNumsGroupByType'])
 
     // 上移一层
     const moveUpFloorLevel = (index) => {
-      if (index > 0) {
-        const delArr = floorList.value.splice(index, 1)
-        floorList.value.splice(index - 1, 0, delArr[0])
-        // 若移动的是当前选中的板块
-        if (props.floorIndex === index) {
-          emit('update:floorIndex', index - 1)
-        }
-        // 若移动的是当前选中的板块的下面一个
-        if (props.floorIndex === index - 1) {
-          emit('update:floorIndex', index)
-        }
-        ElMessage.success('移动成功')
+      store.commit('decoration/massWebsite/moveUpFloorLevel', index)
+      // 若移动的是当前选中的板块
+      if (props.floorIndex === index) {
+        emit('update:floorIndex', index - 1)
       }
+      // 若移动的是当前选中的板块的下面一个
+      if (props.floorIndex === index - 1) {
+        emit('update:floorIndex', index)
+      }
+      ElMessage.success('移动成功')
     }
-    // 新增楼层板块
+    // 新增楼层板块（往下）
     const addFloorItem = (index, type) => {
-      floorList.value.splice(index + 1, 0, new website.homepage.Floor()[type - 1])
+      store.commit('decoration/massWebsite/addFloorItem', {index, type})
+      // 若当前选中的板块在所增加板块下方
+      if (props.floorIndex > index) {
+        emit('update:floorIndex', props.floorIndex + 1)
+      }
       ElMessageBox.confirm('新增成功，是否立即配置新板块的数据?', {type: 'success'}).then(() => {
         if (moduleIndex.value !== 3) {
           emit('update:modelValue', 3)
@@ -135,11 +129,11 @@ export default defineComponent({
     // 删除楼层板块
     const delFloorItem = (index) => {
       ElMessageBox.confirm('此操作将永久删除该板块及相应配置数据, 是否继续?', {type: 'warning'}).then(() => {
-        // 若删除的是当前选中的板块
-        if (props.floorIndex === index) {
-          emit('update:floorIndex', index > 0 ? index - 1 : index + 1)
+        store.commit('decoration/massWebsite/delFloorItem', index)
+        // 若当前选中的板块在所删除板块下方
+        if (props.floorIndex > index) {
+          emit('update:floorIndex', props.floorIndex - 1)
         }
-        floorList.value.splice(index, 1)
         ElMessage.success('删除成功')
       }).catch(() => {
       })
