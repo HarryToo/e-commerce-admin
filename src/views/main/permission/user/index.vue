@@ -36,7 +36,7 @@
         <el-table-column prop="description" label="用户描述"></el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="scope">
-            <!--            <el-button @click="detail(scope.row)" type="text" size="small" v-permission="[$route, 'views']">详情-->
+            <!--            <el-button @click="detail(scope.row)" type="text" size="small" v-permission="[$route, 'view']">详情-->
             <!--            </el-button>-->
             <el-button @click="tableData.edit(scope.row)" type="text" size="small" v-permission="[$route, 'edit']">编辑</el-button>
             <el-button @click="tableData.del(scope.row)" type="text" size="small" v-permission="[$route, 'delete']">删除</el-button>
