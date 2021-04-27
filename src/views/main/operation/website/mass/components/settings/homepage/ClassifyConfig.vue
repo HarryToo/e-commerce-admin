@@ -2,36 +2,28 @@
   <div>
     <div class="form-list" v-show="formDataList.length">
       <div class="form-item" v-for="(formData, index) in formDataList" :key="index">
-        <el-form :model="formData" size="small" label-position="left" label-width="70px">
-          <el-form-item label="图片上传">
-            <div style="display: flex;align-items: flex-end;">
-              <file-upload v-model="formData.img" img-size="1920*490"></file-upload>
-              <span style="margin-left: 15px;font-size: 12px;color: #F9612E;">尺寸建议：1920*490</span>
-            </div>
+        <el-form :model="formData" size="small" label-position="left" label-width="68px">
+          <el-form-item label="分类名称">
+            <el-input v-model.trim="formData.name" clearable placeholder="请输入分类名称"></el-input>
           </el-form-item>
-          <el-form-item label="链接设置">
+          <el-form-item label="分类设置">
             <el-button class="custom" @click="currOperationIndex = index;configDialogVisible = true">
-              {{ formData.link.value ? `已设置${['分类', '商品', '专题', '自定义链接'][formData.link.type - 1]}` : '未设置' }}
+              {{ formData.classify.ids.length ? '已设置' : '未设置' }}
             </el-button>
-          </el-form-item>
-          <el-form-item label="启用时段">
-            <el-date-picker v-model="formData.timePeriod" type="datetimerange" start-placeholder="生效时间"
-                            end-placeholder="失效时间" style="width: 100%;">
-            </el-date-picker>
           </el-form-item>
         </el-form>
         <i class="el-icon-error" title="删除此项" v-if="formDataList.length > 1" @click="deleteItem(index)"></i>
       </div>
     </div>
-    <el-button size="small" icon="el-icon-circle-plus" style="display: block;width: 100%;"
+    <el-button size="small" icon="el-icon-circle-plus" class="custom" style="display: block;width: 100%;"
                :disabled="formDataList.length === maxLength" @click="addItem">
-      {{ formDataList.length < maxLength ? `还可添加${maxLength - formDataList.length}个` : `已达到添加上限${maxLength}个` }}
+      {{ formDataList.length < maxLength ? `还可添加${maxLength - formDataList.length}` : `已达到添加上限${maxLength}` }}个分类
     </el-button>
 
     <el-dialog v-model="configDialogVisible" title="内容数据配置" width="950px" custom-class="custom"
                :close-on-click-modal="false">
-      <config-dialog-inner :type="formDataList[currOperationIndex].link.type"
-                           :data="formDataList[currOperationIndex].link.value" @confirm="setLink"></config-dialog-inner>
+      <config-dialog-inner :usable-tab="[1]" :data="formDataList[currOperationIndex].classify"
+                           @confirm="setClassify"></config-dialog-inner>
     </el-dialog>
   </div>
 </template>
@@ -39,15 +31,13 @@
 <script>
 import {computed, defineComponent, provide, ref, watch} from 'vue'
 import {useStore} from 'vuex'
-import FileUpload from '@/components/common/FileUpload'
-import ConfigDialogInner from '../../../../components/config-dialog-inner'
+import ConfigDialogInner from '../../../../../components/config-dialog-inner'
 
-const maxLength = 5
+const maxLength = 12
 
 export default defineComponent({
-  name: "BannerConfig",
+  name: "ClassifyConfig",
   components: {
-    FileUpload,
     ConfigDialogInner
   },
   setup() {
@@ -55,15 +45,14 @@ export default defineComponent({
     const configDialogVisible = ref(false)
     const currOperationIndex = ref(0)
 
-    const formDataList = computed(() => store.state.decoration.massWebsite.homePage.banner)
+    const formDataList = computed(() => store.state.decoration.massWebsite.homepage.classify)
 
     const addItem = () => {
       formDataList.value.push({
-        img: '',
-        timePeriod: [],
-        link: {
-          type: 1,
-          value: ''
+        name: '',
+        classify: {
+          ids: [],
+          tree: []
         }
       })
     }
@@ -72,17 +61,18 @@ export default defineComponent({
       formDataList.value.splice(index, 1)
     }
 
-    const setLink = ({type, value}) => {
-      formDataList.value[currOperationIndex.value].link = {type, value}
+    const setClassify = ({value}) => {
+      formDataList.value[currOperationIndex.value].classify = value
     }
 
     watch(formDataList, (dataList) => {
-      store.commit('decoration/massWebsite/saveBannerConfig', dataList)
+      store.commit('decoration/massWebsite/saveClassifyConfig', dataList)
     }, {deep: true})
 
     const closeDialog = () => {
       configDialogVisible.value = false
     }
+
     provide('closeDialog', closeDialog)
 
     return {
@@ -92,7 +82,7 @@ export default defineComponent({
       currOperationIndex,
       addItem,
       deleteItem,
-      setLink
+      setClassify
     }
   }
 })

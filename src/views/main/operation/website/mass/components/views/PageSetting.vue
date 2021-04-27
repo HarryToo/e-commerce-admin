@@ -1,9 +1,9 @@
 <template>
   <div class="page-edit">
     <div class="top">
-      <div class="last-update-time text-cut-1">最后修改时间：2021-01-30 17:08:21</div>
-      <el-button size="small" type="primary">保存</el-button>
-      <el-button size="small" class="custom">发布</el-button>
+      <div class="last-update-time text-cut-1">最近保存时间：{{ $store.state.decoration.massWebsite.updateTime || '无' }}</div>
+      <el-button size="small" type="primary" @click="saveConfigs">保存</el-button>
+      <el-button size="small" class="custom" @click="publishConfigs">发布</el-button>
     </div>
     <div class="bottom">
       <div class="bottom-content">
@@ -19,7 +19,9 @@
           <base-goods-list-config v-show="moduleIndex === 4"></base-goods-list-config>
         </div>
         <!--专场频道-->
-        <leader-board-config v-show="pageIndex === 1"></leader-board-config>
+        <special-channel-config v-show="pageIndex === 1"></special-channel-config>
+        <!--排行榜单-->
+        <leader-board-config v-show="pageIndex === 2"></leader-board-config>
       </div>
     </div>
   </div>
@@ -28,6 +30,7 @@
 <script>
 import {computed, defineComponent, inject} from 'vue'
 import {useStore} from 'vuex'
+import {ElMessage, ElMessageBox} from 'element-plus'
 // 首页部分
 import LogoConfig from '../settings/homepage/LogoConfig'
 import ClassifyConfig from '../settings/homepage/ClassifyConfig'
@@ -38,6 +41,8 @@ import FloorStyle3Config from '../settings/homepage/floor/FloorStyle3Config'
 import FloorStyle4Config from '../settings/homepage/floor/FloorStyle4Config'
 import BaseGoodsListConfig from '../settings/homepage/BaseGoodsListConfig'
 // 专场频道
+import SpecialChannelConfig from '../settings/SpecialChannelConfig'
+// 排行榜单
 import LeaderBoardConfig from '../settings/LeaderBoardConfig'
 
 export default defineComponent({
@@ -51,6 +56,7 @@ export default defineComponent({
     FloorStyle3Config,
     FloorStyle4Config,
     BaseGoodsListConfig,
+    SpecialChannelConfig,
     LeaderBoardConfig
   },
   setup() {
@@ -65,15 +71,38 @@ export default defineComponent({
     // 动态获取选中楼层板块类型对应的配置栏组件名
     const floorComponent = computed(() => {
       const compNameArr = ['floor-style1-config', 'floor-style2-config', 'floor-style3-config', 'floor-style4-config']
-      const floorType = store.state.decoration.massWebsite.homePage.floor[floorIndex.value].type
+      const floorType = store.state.decoration.massWebsite.homepage.floor[floorIndex.value].type
       return compNameArr[floorType - 1]
     })
+
+    // 保存配置
+    const saveConfigs = () => {
+      ElMessageBox.confirm('请确保必要的配置完整且正确，确认保存？', '保存网站装修（大众版）配置', {type: 'info'}).then(async () => {
+        const {code} = await store.dispatch('decoration/massWebsite/saveAllConfigs')
+        if (code === 200) {
+          ElMessage.success('网站装修（大众版）配置保存成功')
+        }
+      }).catch(() => {
+      })
+    }
+    // 发布配置
+    const publishConfigs = async () => {
+      ElMessageBox.confirm('此操作将正式启用当前配置，请确保必要的配置完整且正确，确认发布？', '发布网站装修（大众版）配置', {type: 'warning'}).then(async () => {
+        const {code} = await store.dispatch('decoration/massWebsite/publishAllConfigs')
+        if (code === 200) {
+          ElMessage.success('网站装修（大众版）配置发布成功')
+        }
+      }).catch(() => {
+      })
+    }
 
     return {
       pageIndex,
       moduleIndex,
       floorIndex,
-      floorComponent
+      floorComponent,
+      saveConfigs,
+      publishConfigs
     }
   }
 })

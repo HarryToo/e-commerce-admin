@@ -24,8 +24,8 @@
         <el-button size="small" icon="el-icon-circle-plus" style="display: block;width: 100%;"
                    :disabled="formData.goodsIds.length === maxLength" @click="dialogVisible = true">
           {{
-            formData.goodsIds.length < maxLength ? `还可添加${maxLength - formData.goodsIds.length}个` : `已达到添加上限${maxLength}个`
-          }}
+            formData.goodsIds.length < maxLength ? `还可添加${maxLength - formData.goodsIds.length}` : `已达到添加上限${maxLength}`
+          }}个商品
         </el-button>
       </div>
     </transition>
@@ -43,8 +43,8 @@ import {computed, defineComponent, onMounted, onUnmounted, provide, ref, watch} 
 import {useStore} from 'vuex'
 import {ElMessage} from "element-plus"
 import FileUpload from '@/components/common/FileUpload'
-import GoodsInfoItem from '../../../../components/GoodsInfoItem'
-import ConfigDialogInner from '../../../../components/config-dialog-inner'
+import GoodsInfoItem from '../../../../../components/GoodsInfoItem'
+import ConfigDialogInner from '../../../../../components/config-dialog-inner'
 import $api from '@/api'
 
 const maxLength = 500
@@ -71,7 +71,7 @@ export default defineComponent({
     // 商品配置弹窗控制
     const dialogVisible = ref(false)
 
-    const formData = computed(() => store.state.decoration.massWebsite.homePage.baseGoodsList)
+    const formData = computed(() => store.state.decoration.organizationWebsite.homepage.baseGoodsList)
     const goodsList = ref([])
     // 将id以10个一页分组
     const idGroups = group(formData.value.goodsIds, 10)
@@ -116,7 +116,7 @@ export default defineComponent({
     }
 
     watch(formData, (data) => {
-      store.commit('decoration/massWebsite/saveBaseGoodsListConfig', data)
+      store.commit('decoration/organizationWebsite/saveBaseGoodsListConfig', data)
     }, {deep: true})
 
     const closeDialog = () => {

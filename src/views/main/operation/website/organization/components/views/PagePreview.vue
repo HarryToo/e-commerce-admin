@@ -2,7 +2,7 @@
   <div class="preview">
     <div class="header">
       <h3>编辑页面：</h3>
-      <span class="tips">下图仅供展示页面模块信息，实际效果根据配置的数据可能不同</span>
+      <span class="tips">下图仅供展示页面及模块信息，实际效果根据配置的数据可能不同</span>
     </div>
     <div class="preview-img-wrapper">
       <!--首页-->
@@ -45,6 +45,10 @@
       <div class="preview-img" v-show="pageIndex === 1">
         <img src="/images/operation/website/static_top.jpg" alt="" class="static">
       </div>
+      <!--排行榜单-->
+      <div class="preview-img" v-show="pageIndex === 2">
+        <img src="/images/operation/website/banner.png" alt="" class="static">
+      </div>
     </div>
   </div>
 </template>
@@ -53,7 +57,6 @@
 import {computed, defineComponent, inject, ref, watch} from 'vue'
 import {useStore} from 'vuex'
 import {ElMessage, ElMessageBox} from "element-plus"
-import {website} from '@/store/modules/decoration/dataTemplate'
 
 // 可活动楼层区域类型
 const floorTypes = [
@@ -96,16 +99,19 @@ export default defineComponent({
   emits: ['update:modelValue', 'update:floorIndex'],
   setup(props, {emit}) {
     const store = useStore()
+    // 选中的页面序号
     const pageIndex = inject('pageIndex')
+    // 页面上选中的模块（0:logo,1:分类,2:banner,3:可活动楼层区域,4:底部商品列表）
     const moduleIndex = ref(0)
+
     // 可活动楼层区域数据
-    const floorList = computed(() => store.state.decoration.massWebsite.homePage.floor)
+    const floorList = computed(() => store.state.decoration.organizationWebsite.homepage.floor)
     // 统计各楼层类型板块的总数
-    const deletableFloorNums = computed(() => store.getters['decoration/massWebsite/floorNumsGroupByType'])
+    const deletableFloorNums = computed(() => store.getters['decoration/organizationWebsite/floorNumsGroupByType'])
 
     // 上移一层
     const moveUpFloorLevel = (index) => {
-      store.commit('decoration/massWebsite/moveUpFloorLevel', index)
+      store.commit('decoration/organizationWebsite/moveUpFloorLevel', index)
       // 若移动的是当前选中的板块
       if (props.floorIndex === index) {
         emit('update:floorIndex', index - 1)
@@ -118,7 +124,7 @@ export default defineComponent({
     }
     // 新增楼层板块（往下）
     const addFloorItem = (index, type) => {
-      store.commit('decoration/massWebsite/addFloorItem', {index, type})
+      store.commit('decoration/organizationWebsite/addFloorItem', {index, type})
       // 若当前选中的板块在所增加板块下方
       if (props.floorIndex > index) {
         emit('update:floorIndex', props.floorIndex + 1)
@@ -134,7 +140,7 @@ export default defineComponent({
     // 删除楼层板块
     const delFloorItem = (index) => {
       ElMessageBox.confirm('此操作将永久删除该板块及相应配置数据, 是否继续?', {type: 'warning'}).then(() => {
-        store.commit('decoration/massWebsite/delFloorItem', index)
+        store.commit('decoration/organizationWebsite/delFloorItem', index)
         // 若当前选中的板块在所删除板块下方
         if (props.floorIndex > index) {
           emit('update:floorIndex', props.floorIndex - 1)
@@ -146,7 +152,7 @@ export default defineComponent({
 
     // 变动保存
     watch(floorList, (list) => {
-      store.commit('decoration/massWebsite/saveFloorConfig', list)
+      store.commit('decoration/organizationWebsite/saveFloorConfig', list)
     }, {deep: true})
 
     return {

@@ -1,5 +1,5 @@
 import {WebsiteConfigTemplate} from './configTemplate'
-import $api from '@/api'
+import $api from "@/api";
 import moment from 'moment'
 
 // 创建新id
@@ -15,7 +15,7 @@ function createNewId(list) {
     return newId || list.length + 1
 }
 
-// 网站装修-大众版
+// 网站装修-机构版
 export default {
     namespaced: true,
     state: new WebsiteConfigTemplate(),
@@ -31,7 +31,7 @@ export default {
         }
     },
     mutations: {
-        // 设置网站装修-大众版全部配置数据
+        // 设置网站装修-机构版全部配置数据
         setAllConfigs(state, data) {
             for (const key in state) {
                 state[key] = data[key]
@@ -40,7 +40,8 @@ export default {
 
         // 更新保存时间
         setUpdateTime(state) {
-            state.updateTime = moment().format('YYYY-MM-DD HH:mm:ss')
+            state.updateTime =
+                state.updateTime = moment().format('YYYY-MM-DD HH:mm:ss')
         },
 
         // 首页部分
@@ -61,7 +62,6 @@ export default {
             const floorList = state.homepage.floor
             const delArr = floorList.splice(index, 1)
             floorList.splice(index - 1, 0, delArr[0])
-            console.log(floorList)
         },
         // 新增楼层板块
         addFloorItem(state, {index, type}) {
@@ -95,22 +95,22 @@ export default {
         }
     },
     actions: {
-        // 获取网站装修-大众版全部配置数据
+        // 获取网站装修-机构版全部配置数据
         async loadAllConfigs({commit}) {
-            const configs = await $api.operationApi.website.mass.getConfigs()
+            const configs = await $api.operationApi.website.organization.getConfigs()
             commit('setAllConfigs', configs)
         },
-        // 保存网站装修-大众版全部配置数据
+        // 保存网站装修-机构版全部配置数据
         async saveAllConfigs({commit, state}) {
             commit('setUpdateTime')
-            return await $api.operationApi.website.mass.saveConfigs({
+            return await $api.operationApi.website.organization.saveConfigs({
                 configs: JSON.stringify(state)
             })
         },
-        // 发布网站装修-大众版全部配置数据
+        // 发布网站装修-机构版全部配置数据
         async publishAllConfigs({commit, state}) {
             commit('setUpdateTime')
-            return await $api.operationApi.website.mass.publishConfigs({
+            return await $api.operationApi.website.organization.publishConfigs({
                 configs: JSON.stringify(state)
             })
         }

@@ -8,11 +8,11 @@
             <span style="margin-left: 15px;font-size: 12px;color: #F9612E;">尺寸建议：1920*490</span>
           </div>
         </el-form-item>
-        <div class="group-list" id="special-channel-group-list">
+        <div class="group-list" id="organization-web-special-channel-group-list">
           <div class="group-item" v-for="(group, groupIndex) in formData.goodsGroups" :key="groupIndex">
-            <el-affix target="#special-channel-group-list" :offset="262">
+            <el-affix target="#organization-web-special-channel-group-list" :offset="262">
               <div class="group-title">
-                <h4>板块{{ groupIndex + 1 }}</h4>
+                <h4>{{ group.title || '未命名板块' + (groupIndex + 1) }}</h4>
                 <i class="el-icon-error" :title="`删除板块${groupIndex + 1}`"
                    @click="deleteGroup(groupIndex)"></i>
               </div>
@@ -54,12 +54,12 @@ import {defineComponent, provide, ref, watch} from 'vue'
 import {useStore} from 'vuex'
 import {ElMessage, ElMessageBox} from "element-plus"
 import FileUpload from '@/components/common/FileUpload'
-import GoodsInfoItem from '../../../components/GoodsInfoItem'
-import ConfigDialogInner from '../../../components/config-dialog-inner'
+import GoodsInfoItem from '../../../../components/GoodsInfoItem'
+import ConfigDialogInner from '../../../../components/config-dialog-inner'
 import $api from '@/api'
 
 export default defineComponent({
-  name: "LeaderBoardConfig",
+  name: "SpecialChannelConfig",
   components: {
     FileUpload,
     GoodsInfoItem,
@@ -74,7 +74,7 @@ export default defineComponent({
     // 当前操作的商品index
     const currOperationGoodsIndex = ref(0)
 
-    const formData = ref(store.state.decoration.massWebsite.specialChannel)
+    const formData = ref(store.state.decoration.organizationWebsite.specialChannel)
     const goodsLists = ref([[], []])
     const getGoodsLists = async (ids, groupIndex) => {
       if (ids && ids.length) {
@@ -92,7 +92,7 @@ export default defineComponent({
     })
 
     const deleteGroup = (groupIndex) => {
-      ElMessageBox.confirm(`此操作将永久删除“板块${groupIndex + 1}”及相应配置数据, 是否继续?`, {type: 'warning'}).then(() => {
+      ElMessageBox.confirm(`此操作将永久删除此板块及相应配置数据, 是否继续?`, {type: 'warning'}).then(() => {
         formData.value.goodsGroups.splice(groupIndex, 1)
       }).catch(() => {
       })
@@ -132,7 +132,7 @@ export default defineComponent({
     }, {deep: true})
 
     watch(formData, (data) => {
-      store.commit('decoration/massWebsite/saveSpecialChannelConfig', data)
+      store.commit('decoration/organizationWebsite/saveSpecialChannelConfig', data)
     }, {deep: true})
 
     const closeDialog = () => {
@@ -161,7 +161,7 @@ export default defineComponent({
     .group-title {
       display: flex;
       justify-content: space-between;
-      padding: 0 0 14px 10px;
+      padding-bottom: 14px;
       background: #FFFFFF;
       border-bottom: 1px solid #EEEEEE;
 

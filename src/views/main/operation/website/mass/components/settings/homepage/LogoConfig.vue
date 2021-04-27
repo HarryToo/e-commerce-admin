@@ -26,8 +26,8 @@ export default defineComponent({
       type: 1,
       logoUrl: ''
     })
-    if (store.state.decoration.massWebsite.homePage.logo) {
-      formData.value.logoUrl = store.state.decoration.massWebsite.homePage.logo
+    if (store.state.decoration.massWebsite.homepage.logo) {
+      formData.value.logoUrl = store.state.decoration.massWebsite.homepage.logo
     } else {
       formData.value.type = 2
     }
