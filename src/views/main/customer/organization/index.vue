@@ -55,7 +55,7 @@
         <el-table-column prop="openPeople" label="开通人"></el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="scope">
-            <!--            <el-button @click="tableData.detail(scope.row)" type="text" size="small" v-permission="[$route, 'views']"-->
+            <!--            <el-button @click="tableData.detail(scope.row)" type="text" size="small" v-permission="[$route, 'view']"-->
             <!--                       v-if="scope.row.status !== 0">详情-->
             <!--            </el-button>-->
             <el-button
