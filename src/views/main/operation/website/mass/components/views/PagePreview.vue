@@ -1,8 +1,8 @@
 <template>
   <div class="preview">
     <div class="header">
-      <h3>编辑页面：</h3>
-      <span class="tips">下图仅供展示页面模块信息，实际效果根据配置的数据可能不同</span>
+      <h3>页面概览：</h3>
+      <span class="tips">下图仅供展示页面及模块结构信息，实际效果根据配置的数据可能不同</span>
     </div>
     <div class="preview-img-wrapper">
       <!--首页-->
@@ -45,6 +45,10 @@
       <div class="preview-img" v-show="pageIndex === 1">
         <img src="/images/operation/website/static_top.jpg" alt="" class="static">
       </div>
+      <!--排行榜单-->
+      <div class="preview-img" v-show="pageIndex === 2">
+        <img src="/images/operation/website/banner.png" alt="" class="static">
+      </div>
     </div>
   </div>
 </template>
@@ -53,7 +57,6 @@
 import {computed, defineComponent, inject, ref, watch} from 'vue'
 import {useStore} from 'vuex'
 import {ElMessage, ElMessageBox} from "element-plus"
-import {website} from '@/store/modules/decoration/dataTemplate'
 
 // 可活动楼层区域类型
 const floorTypes = [
@@ -96,10 +99,13 @@ export default defineComponent({
   emits: ['update:modelValue', 'update:floorIndex'],
   setup(props, {emit}) {
     const store = useStore()
+    // 选中的页面序号
     const pageIndex = inject('pageIndex')
+    // 页面上选中的模块（0:logo,1:分类,2:banner,3:可活动楼层区域,4:底部商品列表）
     const moduleIndex = ref(0)
+
     // 可活动楼层区域数据
-    const floorList = computed(() => store.state.decoration.massWebsite.homePage.floor)
+    const floorList = computed(() => store.state.decoration.massWebsite.homepage.floor)
     // 统计各楼层类型板块的总数
     const deletableFloorNums = computed(() => store.getters['decoration/massWebsite/floorNumsGroupByType'])
 
@@ -295,6 +301,10 @@ export default defineComponent({
 
               &:hover {
                 background-color: #F9612E;
+
+                &.el-icon-close {
+                  background-color: #F56C6C;
+                }
               }
             }
           }

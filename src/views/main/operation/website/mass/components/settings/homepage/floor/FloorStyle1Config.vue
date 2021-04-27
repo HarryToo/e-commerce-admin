@@ -39,8 +39,8 @@
         <el-button size="small" icon="el-icon-circle-plus" style="display: block;width: 100%;"
                    :disabled="formData.goodsIds.length === maxLength" @click="goodsDialogVisible = true">
           {{
-            formData.goodsIds.length < maxLength ? `还可添加${maxLength - formData.goodsIds.length}个` : `已达到添加上限${maxLength}个`
-          }}
+            formData.goodsIds.length < maxLength ? `还可添加${maxLength - formData.goodsIds.length}` : `已达到添加上限${maxLength}`
+          }}个商品
         </el-button>
       </div>
     </transition>
@@ -65,8 +65,8 @@ import {defineComponent, inject, provide, ref, watch} from 'vue'
 import {useStore} from 'vuex'
 import {ElMessage} from "element-plus"
 import FileUpload from '@/components/common/FileUpload'
-import GoodsInfoItem from '../../../../../components/GoodsInfoItem'
-import ConfigDialogInner from '../../../../../components/config-dialog-inner'
+import GoodsInfoItem from '../../../../../../components/GoodsInfoItem'
+import ConfigDialogInner from '../../../../../../components/config-dialog-inner'
 import $api from '@/api'
 
 const maxLength = 10
@@ -87,10 +87,10 @@ export default defineComponent({
     // 商品配置弹窗控制
     const goodsDialogVisible = ref(false)
 
-    const formData = ref(store.state.decoration.massWebsite.homePage.floor[floorIndex.value])
+    const formData = ref(store.state.decoration.massWebsite.homepage.floor[floorIndex.value])
     watch(floorIndex, (newFloorIndex) => {
-      if (store.state.decoration.massWebsite.homePage.floor[newFloorIndex].type === 1) {
-        formData.value = store.state.decoration.massWebsite.homePage.floor[newFloorIndex]
+      if (store.state.decoration.massWebsite.homepage.floor[newFloorIndex].type === 1) {
+        formData.value = store.state.decoration.massWebsite.homepage.floor[newFloorIndex]
       }
     })
     const goodsList = ref([])

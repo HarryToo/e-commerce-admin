@@ -24,6 +24,25 @@ export default {
     },
     // 网站装修
     website: {
-
-    }
+        // 大众版
+        mass: {
+            // 获取配置
+            getConfigs: (data) => $http.get('/operation/website/mass/configs', data),
+            // 保存配置
+            saveConfigs: (data) => $http.post('/operation/website/mass/configs', data),
+            // 发布配置
+            publishConfigs: (data) => $http.post('/operation/website/mass/publishConfigs', data)
+        },
+        // 机构版
+        organization: {
+            // 获取配置
+            getConfigs: (data) => $http.get('/operation/website/organization/configs', data),
+            // 保存配置
+            saveConfigs: (data) => $http.post('/operation/website/organization/configs', data),
+            // 发布配置
+            publishConfigs: (data) => $http.post('/operation/website/organization/publishConfigs', data)
+        }
+    },
+    // APP装修
+    app: {}
 }

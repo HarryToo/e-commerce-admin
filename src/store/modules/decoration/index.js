@@ -1,4 +1,5 @@
 import massWebsite from "./massWebsite"
+import organizationWebsite from "./organizationWebsite"
 
 export default {
     namespaced: true,
@@ -6,6 +7,7 @@ export default {
     mutations: {},
     actions: {},
     modules: {
-        massWebsite
+        massWebsite,
+        organizationWebsite
     }
 }

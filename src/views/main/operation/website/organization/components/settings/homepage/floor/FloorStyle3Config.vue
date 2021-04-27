@@ -5,9 +5,9 @@
         <el-form-item label="楼层标题">
           <el-input v-model.lazy="formData.title" clearable placeholder="请输入楼层标题"></el-input>
         </el-form-item>
-        <div class="plate-list" id="plate-list-floor-3">
+        <div class="plate-list" id="organization-web-plate-list-floor-3">
           <div class="plate-item" v-for="(plate, plateIndex) in formData.plates" :key="plateIndex">
-            <el-affix target="#plate-list-floor-3" :offset="262">
+            <el-affix target="#organization-web-plate-list-floor-3" :offset="262">
               <h4>{{ ['上', '下'][plateIndex] }}半部分配置</h4>
             </el-affix>
             <div class="plate-header">
@@ -50,8 +50,8 @@
                            :disabled="plate.goodsIds.length === maxLength"
                            @click="currOperationPlateIndex = plateIndex;goodsDialogVisible = true">
                   {{
-                    plate.goodsIds.length < maxLength ? `还可添加${maxLength - plate.goodsIds.length}个` : `已达到添加上限${maxLength}个`
-                  }}
+                    plate.goodsIds.length < maxLength ? `还可添加${maxLength - plate.goodsIds.length}` : `已达到添加上限${maxLength}`
+                  }}个商品
                 </el-button>
               </div>
             </transition>
@@ -80,8 +80,8 @@ import {computed, defineComponent, inject, provide, ref, watch} from 'vue'
 import {useStore} from 'vuex'
 import {ElMessage} from "element-plus"
 import FileUpload from '@/components/common/FileUpload'
-import GoodsInfoItem from '../../../../../components/GoodsInfoItem'
-import ConfigDialogInner from '../../../../../components/config-dialog-inner'
+import GoodsInfoItem from '../../../../../../components/GoodsInfoItem'
+import ConfigDialogInner from '../../../../../../components/config-dialog-inner'
 import $api from '@/api'
 
 const maxLength = 4
@@ -106,15 +106,15 @@ export default defineComponent({
     // 当前操作的首页商品显示index
     const currOperationGoodsIndex = ref(0)
 
-    const formData = ref(store.state.decoration.massWebsite.homePage.floor[floorIndex.value])
+    const formData = ref(store.state.decoration.organizationWebsite.homepage.floor[floorIndex.value])
     // 楼层类型为3但id变化则说明前后视图共享此类型组件，需要刷新数据
-    const floorItemId = computed(() => store.state.decoration.massWebsite.homePage.floor[floorIndex.value].id)
+    const floorItemId = computed(() => store.state.decoration.organizationWebsite.homepage.floor[floorIndex.value].id)
     let prevId = floorItemId.value
     watch([floorIndex, floorItemId], ([newFloorIndex, newFloorItemId]) => {
-      if (store.state.decoration.massWebsite.homePage.floor[newFloorIndex].type === 3 && newFloorItemId !== prevId) {
+      if (store.state.decoration.organizationWebsite.homepage.floor[newFloorIndex].type === 3 && newFloorItemId !== prevId) {
         // console.log('******** 楼层类型 3 组件刷新 ********')
         prevId = newFloorItemId
-        formData.value = store.state.decoration.massWebsite.homePage.floor[newFloorIndex]
+        formData.value = store.state.decoration.organizationWebsite.homepage.floor[newFloorIndex]
         // 批量获取已添加的商品信息（用作展示）
         formData.value.plates.forEach((plate, plateIndex) => {
           if (plate.goodsIds.length) {
@@ -164,7 +164,7 @@ export default defineComponent({
     }
 
     watch(formData, (data) => {
-      store.commit('decoration/massWebsite/saveFloorConfig', {
+      store.commit('decoration/organizationWebsite/saveFloorConfig', {
         index: floorIndex.value,
         data
       })
@@ -196,7 +196,7 @@ export default defineComponent({
 .plate-list {
   .plate-item {
     h4 {
-      padding: 0 10px 14px;
+      padding-bottom: 14px;
       font-size: 15px;
       color: #F9612E;
       background: #FFFFFF;

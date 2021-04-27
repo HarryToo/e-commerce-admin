@@ -7,13 +7,13 @@
 </template>
 
 <script>
-import {defineComponent, ref, provide, watch} from 'vue'
-import PageList from './components/view/PageList'
-import PagePreview from './components/view/PagePreview'
-import PageSetting from './components/view/PageSetting'
+import {defineComponent, ref, provide} from 'vue'
+import PageList from './components/views/PageList'
+import PagePreview from './components/views/PagePreview'
+import PageSetting from './components/views/PageSetting'
 
 export default defineComponent({
-  name: "OrganizationWebsite",
+  name: "MassWebsite",
   components: {
     PageList,
     PagePreview,
@@ -30,10 +30,6 @@ export default defineComponent({
     provide('pageIndex', pageIndex)
     provide('moduleIndex', moduleIndex)
     provide('floorIndex', floorIndex)
-
-    watch(pageIndex, (index) => {
-      moduleIndex.value = 0
-    })
 
     return {
       pageIndex,

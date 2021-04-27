@@ -41,7 +41,7 @@ export default defineComponent({
         img.src = URL.createObjectURL(file)
         img.onload = () => {
           if (Number(width) !== img.width || Number(height) !== img.height) {
-            ElMessage.warning(`注意：当前图片尺寸为 ${img.width}*${img.height}，与建议尺寸不符`)
+            ElMessage.warning(`注意：当前图片尺寸为 ${img.width}*${img.height}，与建议尺寸不一致`)
             img = null
           }
         }

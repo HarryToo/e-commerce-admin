@@ -4,9 +4,9 @@
       <el-form-item label="楼层标题">
         <el-input v-model.lazy="formData.title" clearable placeholder="请输入楼层标题"></el-input>
       </el-form-item>
-      <div class="plate-list" id="plate-list-floor-2">
+      <div class="plate-list" id="mass-web-plate-list-floor-2">
         <div class="plate-item" v-for="(plate, plateIndex) in formData.plates" :key="plateIndex">
-          <el-affix target="#plate-list-floor-2" :offset="262">
+          <el-affix target="#mass-web-plate-list-floor-2" :offset="262">
             <h4>{{ ['左', '右'][plateIndex] }}侧板块配置</h4>
           </el-affix>
           <div class="plate-header">
@@ -80,8 +80,8 @@
 import {defineComponent, inject, provide, ref, watch} from 'vue'
 import {useStore} from 'vuex'
 import FileUpload from '@/components/common/FileUpload'
-import GoodsInfoItem from '../../../../../components/GoodsInfoItem'
-import ConfigDialogInner from '../../../../../components/config-dialog-inner'
+import GoodsInfoItem from '../../../../../../components/GoodsInfoItem'
+import ConfigDialogInner from '../../../../../../components/config-dialog-inner'
 
 const maxLength = 10
 
@@ -105,10 +105,10 @@ export default defineComponent({
     // 当前操作的首页商品显示index
     const currOperationGoodsIndex = ref(0)
 
-    const formData = ref(store.state.decoration.massWebsite.homePage.floor[floorIndex.value])
+    const formData = ref(store.state.decoration.massWebsite.homepage.floor[floorIndex.value])
     watch(floorIndex, (newFloorIndex) => {
-      if (store.state.decoration.massWebsite.homePage.floor[newFloorIndex].type === 2) {
-        formData.value = store.state.decoration.massWebsite.homePage.floor[newFloorIndex]
+      if (store.state.decoration.massWebsite.homepage.floor[newFloorIndex].type === 2) {
+        formData.value = store.state.decoration.massWebsite.homepage.floor[newFloorIndex]
       }
     })
     // 设置首页入口图片链接
@@ -151,7 +151,7 @@ export default defineComponent({
 .plate-list {
   .plate-item {
     h4 {
-      padding: 0 10px 14px;
+      padding-bottom: 14px;
       font-size: 15px;
       color: #F9612E;
       background: #FFFFFF;

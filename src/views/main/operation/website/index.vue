@@ -13,8 +13,9 @@
 
 <script>
 import {defineComponent, ref} from 'vue'
-import Mass from './Mass'
-import Organization from './Organization'
+import {useStore} from 'vuex'
+import Mass from './mass'
+import Organization from './organization'
 
 export default defineComponent({
   name: "WebSitDecoration",
@@ -23,7 +24,13 @@ export default defineComponent({
     Organization
   },
   setup() {
+    const store = useStore()
+    // 大众版/机构版
     const tabIndex = ref(0)
+
+    // 获取网站装修配置数据
+    store.dispatch('decoration/massWebsite/loadAllConfigs')
+    store.dispatch('decoration/organizationWebsite/loadAllConfigs')
 
     return {
       tabIndex
