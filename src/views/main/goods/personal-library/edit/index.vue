@@ -2,10 +2,11 @@
   <div class="Edit">
 	  
 	  <div class="Edit-cld0" :style="{height:$getTableHeight()}">
+		  {{dataShow}}
 		  <editList :GoodList="GoodData?GoodData:''" @changeEdit='BusEditData'></editList>
 	  </div>
 	  <div class="Edit-cld1">
-			<editshop :GoodList="GoodData?GoodData:''" :LiveId="CgId?CgId:''" style='height: calc(100vh - 200px);'>
+			<editshop :GoodList="GoodData?GoodData:''" :LiveId="CgId?CgId:0" style='height: calc(100vh - 200px);'>
 				<!-- <baisc slot='basicSlot'></baisc> -->
 				<!-- <h1 slot='basicSlot'>12312312</h1> -->
 			</editshop>
@@ -43,7 +44,7 @@ export default defineComponent({
   },
   methods:{
 	  BusEditData(e){
-			this.CgId = e
+			this.CgId = Number(e)
 	  },
 	  DataFor(){
 		  // if(typeof(this.$route.query.specialId) == 'string'){
@@ -67,6 +68,11 @@ export default defineComponent({
 		  }).then((data) => {
 			_this.GoodData.push(data.list)
 		  })	
+	  },
+  },
+  computed:{
+	  dataShow(){
+		  return this.GoodData;
 	  },
   },
 })

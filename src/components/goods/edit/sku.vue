@@ -1,16 +1,15 @@
 <template>
-	<div class="sku">
+	<div class="sku" v-if='spec'>
 		<div class="sku-r0">SKU属性</div>
 		<div class="sku-r1">
-
 			<div class="sku-r1-w1">
 				<div class="sku-r1-w0"><span>*</span>商品类型：</div>
-				<el-radio v-model="sku.SkuType" label="1" @change='TypeChange'>单SKU商品</el-radio>
-				<el-radio v-model="sku.SkuType" label="2" @change='TypeChange'>多SKU商品</el-radio>
+				<el-radio :value='type_id'  v-model="sku.SkuType" label="1" @change='TypeChange'>单SKU商品</el-radio>
+				<el-radio :value='type_id' v-model="sku.SkuType" label="2" @change='TypeChange'>多SKU商品</el-radio>
 			</div>
 			<el-button v-show='sku.SkuType == 2' type="danger" @click='addSku()'>添加SKU</el-button>
 		</div>
-		<div class="sku-r2" v-for="(val,idx) in sku.list" v-show='sku.SkuType == 2'>
+		<div class="sku-r2" v-for="(val,idx) in spec" v-show='sku.SkuType == 2'>
 			<div class="sku-r2-w0"><span>*</span>SKU属性：</div>
 			<div class="sku-r2-w1">
 				<div class="sku-r2-w1-box">
@@ -39,12 +38,12 @@
 			<div class="sku-r2-w0"><span>*</span>SKU属性：</div>
 			<div class="sku-r2-w1">
 				<div class="sku-r2-w1-box">
-					<el-input v-model="sku.list[0].name" placeholder="请输入内容" class="sku-r2-w1-r1"></el-input>
+					<el-input v-model="spec[0].name" placeholder="请输入内容" class="sku-r2-w1-r1"></el-input>
 					<div class="sku-r2-w1-r2">
 						<span>属性值</span><span>单属性最多50个属性值，多属性最多20个属性值，每个属性不超过20个字符，可拖动排序</span>
 					</div>
 					<div class="sku-r2-w1-list">
-						<draggable class="list-group" :list="sku.list[0].data" group="moveOne" @change="log" itemKey="name">
+						<draggable class="list-group" :list="spec[0].data" group="moveOne" @change="log" itemKey="name">
 							<template #item="{ element, index }">
 								<div class="list-group-item">
 									<div>{{ element.text }} {{element.id}}</div>
@@ -59,8 +58,6 @@
 				</div>
 			</div>
 		</div>
-		
-		
 		<el-dialog title="添加属性" v-model="sku.dialogAddAttr">
 			<el-input v-model="sku.AddAttrIpt" placeholder="请输入内容"></el-input>
 			<template #footer>
@@ -84,17 +81,21 @@
 	import draggable from "vuedraggable";
 	export default defineComponent({
 		name: "sku",
-		props: ['skuData'],
+		props: {
+			type_id:[Number,String],
+			spec:[String,Array],
+		},
 		components: {
 			draggable,
 		},
 		data() {
 			return {
 				sku: {
-					SkuType: '1',
+					SkuType: '',
 					dialogAddAttr: false,
 					AddAttrIpt: '',
 					liveSku: '',
+					spec:"",
 					list: [
 						{
 							name: 'sku_1',
@@ -140,29 +141,21 @@
 							],
 						},
 					],
-
 				}
-
 			}
 		},
 		mounted() {
-
 		},
 		methods: {
 			TypeChange(e) {
-				this.$emit('skuTypeChange', e)
+				console.log(e)
+				// this.$emit('skuTypeChange', e)
 			},
 			//sku
 
-			skuTypeChangeF(val) {
-				this.sku.SkuType = val
-				console.log(this.sku.SkuType)
-			},
-
-
 			delAttr(idxA, idxB) {
 				console.log(idxA, idxB)
-				this.sku.list[idxA].data.splice(idxB, 1)
+				this.spec[idxA].data.splice(idxB, 1)
 			},
 			addAttr() {
 				if (!this.sku.AddAttrIpt) {
@@ -173,7 +166,7 @@
 					return;
 				}
 				this.sku.dialogAddAttr = false;
-				this.sku.list[this.sku.liveSku].data.push({
+				this.spec[this.sku.liveSku].data.push({
 					id: 'test_1',
 					text: this.sku.AddAttrIpt
 				})
@@ -181,11 +174,11 @@
 			},
 			addSku() {
 
-				this.sku.list.push({
+				this.spec.push({
 					name: '',
 					data: []
 				})
-				console.log(this.sku.list)
+				console.log(this.spec)
 				this.$message({
 					message: '添加成功',
 					type: 'success'
@@ -196,6 +189,9 @@
 				window.console.log(evt.moved.element);
 			},
 
+		},
+		conputed:{
+			
 		},
 	})
 </script>

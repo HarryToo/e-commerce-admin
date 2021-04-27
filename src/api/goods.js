@@ -9,6 +9,8 @@ export default {
         getPersonLbShopListData: (data) => $http.get('/goods/PersonLbShopListData', data),
 		//商品详细
 		getgoodDetailData: (data) => $http.get('/goods/goodDetailData', data),
+		//商品分类
+		getListData: (data) => $http.get('/goods/ListData', data),
     },
     // 平台商品库
     platformLibrary: {

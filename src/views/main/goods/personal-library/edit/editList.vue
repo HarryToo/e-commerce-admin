@@ -5,7 +5,7 @@
 			<el-menu :default-active="defaultChose" @select="handleSelect">
 				<el-menu-item v-for="(val,idx) in GoodList" :index="val.id">
 					<div class="ListBox">
-						<img :src="val.goods_image[0].img" alt="" class="ListImg">
+						<img :src="val.goods_image[0]?val.goods_image[0].img:''" alt="" class="ListImg">
 						<div class="ListDetal">
 							<div class="ListD0">{{val.goods_name}}</div>
 							<div class="ListD1">来源分类：
@@ -84,7 +84,7 @@
 						if (typeof(that.EditId) == 'string') {
 							if (that.EditId == item.id) {
 								that.EditData.push(item)
-								that.defaultChose = that.EditData[0].id
+								that.defaultChose = Number(that.EditData[0].id)
 							}
 						} else if (typeof(that.EditId) == 'object') {
 							that.EditId.forEach(function(itemId) {

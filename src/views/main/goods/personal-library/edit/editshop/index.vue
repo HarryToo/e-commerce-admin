@@ -1,11 +1,12 @@
 <template>
-	<div class="editshop" :ID='AliveData'>
+	<div class="editshop" :id='AliveData'>
+		{{LiveId}}
 		<div class="editshopTitle">编辑商品</div>
 		<div class="editshopBox">
 			<el-tabs v-model="activeName" @tab-click="handleClick">
 				<el-tab-pane label="基本信息">
 					<baisc 
-					:gc_name_val='editData?editData.gc_name_val:""'
+					:gc_name_val='editData?editData.gc_name_val:[]'
 					:brand_name='editData?editData.brand_name:""'
 					:goods_name='editData?editData.goods_name:""'
 					:goods_describe='editData?editData.goods_describe:""'
@@ -14,19 +15,23 @@
 					<!-- <slot name='basicSlot'></slot> -->
 				</el-tab-pane>
 				<el-tab-pane label="SKU属性">
-					<sku :baisc='GoodList'></sku>
+					<sku 
+					:type_id='editData?editData.type_id:""'
+					:spec='editData?editData.spec:""'
+					></sku>
 				</el-tab-pane>
 				<el-tab-pane label="库存价格">
 					<price 
-					:goods_sku_image='editData?editData.goods_sku_image:""'
-					:goods_image='editData?editData.goods_image:""'
+					:goods_specification='editData?editData.goods_specification:[]'
 					@Modprice = 'modifyEdit'
 					></price>
 				</el-tab-pane>
 				<el-tab-pane label="商品主图">
-					<ShopImg 
-					
-					></ShopImg>	
+					<ShopImgSlot 
+					:goods_sku_image='editData?editData.goods_sku_image:""'
+					:goods_image='editData?editData.goods_image:""'
+					@ModShopImg = 'modifyEdit'
+					></ShopImgSlot>	
 				</el-tab-pane>
 				<el-tab-pane label="物流信息">
 					<logistics 
@@ -34,7 +39,7 @@
 					:parcel_length='editData?editData.parcel_length:""'
 					:parcel_width='editData?editData.parcel_width:""'
 					:parcel_high='editData?editData.parcel_high:""'
-					:is_postage='editData?editData.is_postage:""'
+					:is_postage='editData?editData.is_postage:1'
 					@ModLogistics='modifyEdit'
 					></logistics>
 				</el-tab-pane>
@@ -73,20 +78,23 @@
 	import $api from "@/api"
 	import baisc from "@/components/goods/edit/baisc.vue"
 	import sku from "@/components/goods/edit/sku.vue"
-	import ShopImg from "@/components/goods/edit/img.vue"
+	import ShopImgSlot from "@/components/goods/edit/shopimg.vue"
 	import price from "@/components/goods/edit/price.vue"
 	import logistics from "@/components/goods/edit/logistics.vue"
 	export default defineComponent({
 		props:{
 			GoodList:Object,
-			LiveId:Number,
+			LiveId:{
+				type:[Number],
+				default:0,
+			},
 			},
 		name: "UserList",
 		components: {	
 			draggable,
 			baisc,
 			sku,
-			ShopImg,
+			ShopImgSlot,
 			price,
 			logistics,
 		},
@@ -285,6 +293,7 @@
 				this.editData.source_id_url  = e
 			},
 			modifyEdit(value){
+				console.log(value)
 				this.editData[value.val] = value.e
 			},
 			PersonEditClassData() {

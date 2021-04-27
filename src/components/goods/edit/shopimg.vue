@@ -1,34 +1,34 @@
 <template>
-	<div class="shopImg" :ID='getGood'>
+	<div class="shopImg" :id='getGood'>
 		<div class="shopImg-r0">商品主图</div>
 		<div class="shopImg-r1">
 			<div class="shopImg-r1-w0">商品图片</div>
 			<div class="shopImg-r1-w1">
 				<div class="shopImg-r1-w1-r0">
-					<el-button type="danger" @click='delAllImage' size="small">批量删除</el-button>
-					<el-button type="danger" @click='shopImg.showViewer = true' size="small">预览</el-button>
-					<el-checkbox v-model="shopImg.checkAll" @change="ToCheckAll">全选</el-checkbox>
+					<el-button type="danger" @click="delAllImage('goods_image')" size="small">批量删除</el-button>
+					<el-button type="danger" @click="ShowPreview('goods_image')" size="small">预览</el-button>
+					<el-checkbox v-model="shopImg.goodImgCheckAll" @change="ToCheckAll('goods_image')">全选</el-checkbox>
 				</div>
 				<div class="shopImg-r1-w1-r1">图片格式：JPG, JPEG, PNG; 单张图片大小不能超过1M；图片建议尺寸：800x800；可拖拽移动图片；
 				</div>
 				<div class="shopImg-r1-w1-r2">
 					<draggable  class='dragBox'
 						:options="{group:'people',animation:150,ghostClass:'sortable-ghost',chosenClass:'chosenClass',scroll:true,scrollSensitivity:200}"
-						v-model="shopImg.ValData" @change="change">
-						<template #item="{ element, index }">
+						v-model="shopImg.goods_image" @change="GoodImgChange">
+						<template #item="{ element, index }" :itemKey="element.id">
 							<div class="ShopListImg">
 								<el-checkbox v-model="element.IsCheck" label=" "
-									@change="changeCheckState(element.IsCheck,index)"></el-checkbox>
+									@change="changeCheckState('goods_image',element.IsCheck,index)"></el-checkbox>
 								<img :src="element.img" alt="">
 								<div class="ShopListFt">
-									<div @click='showChangeinput(index)'>替换</div>
-									<div @click='delImg(index)'>删除</div>
-									<input class="el-upload__input" type="file" name="file" @change="ChangeFile" ref="changeimage" accept="">
+									<div @click="showChangeinput('goods_image',index)">替换</div>
+									<div @click="delImg('goods_image',index)">删除</div>
+									<input class="el-upload__input" type="file" name="file" @change="ChangeFile" ref="imgchange" accept="">
 								</div>
 							</div>
 						</template>
 					</draggable>
-				<div class="ShopListImg" slot="footer" @click='showfileinput'>
+				<div class="ShopListImg" slot="footer" @click="showfileinput('goods_image')">
 									<img src="http://dummyimage.com/150x150/F9612E" alt="" class="Add-ShopListImg">
 									<div class="ShopListFt">添加新图片</div>
 							</div>
@@ -36,34 +36,35 @@
 				</div>
 			</div>
 		</div>
+		
 		<div class="shopImg-r1">
 			<div class="shopImg-r1-w0">商品图片</div>
 			<div class="shopImg-r1-w1">
 				<div class="shopImg-r1-w1-r0">
-					<el-button type="danger" @click='delAllImage'>批量删除</el-button>
-					<el-button type="danger" @click='shopImg.showViewer = true'>预览</el-button>
-					<el-checkbox v-model="shopImg.checkAll" @change="ToCheckAll">全选</el-checkbox>
+					<el-button type="danger" size="small" @click="delAllImage('goods_sku_image')">批量删除</el-button>
+					<el-button type="danger" size="small" @click="ShowPreview('goods_sku_image')">预览</el-button>
+					<el-checkbox v-model="shopImg.skuImgCheckAll" @change="ToCheckAll('goods_sku_image')">全选</el-checkbox>
 				</div>
 				<div class="shopImg-r1-w1-r1">图片格式：JPG, JPEG, PNG; 单张图片大小不能超过1M；图片建议尺寸：800x800；可拖拽移动图片；
 				</div>
 				<div class="shopImg-r1-w1-r2">
 					<draggable  class='dragBox'
 						:options="{group:'people',animation:150,ghostClass:'sortable-ghost',chosenClass:'chosenClass',scroll:true,scrollSensitivity:200}"
-						v-model="shopImg.ValData" @change="change">
+						v-model="shopImg.goods_sku_image" @change="GoodSkuImgChange">
 						<template #item="{ element, index }">
 							<div class="ShopListImg">
 								<el-checkbox v-model="element.IsCheck" label=" "
-									@change="changeCheckState(element.IsCheck,index)"></el-checkbox>
+									@change="changeCheckState('goods_sku_image',element.IsCheck,index)"></el-checkbox>
 								<img :src="element.img" alt="">
 								<div class="ShopListFt">
-									<div @click='showChangeinput(index)'>替换</div>
-									<div @click='delImg(index)'>删除</div>
-									<input class="el-upload__input" type="file" name="file" @change="ChangeFile" ref="changeimage" accept="">
+									<div @click="showChangeinput('goods_sku_image',index)">替换</div>
+									<div @click="delImg('goods_sku_image',index)">删除</div>
+									<input class="el-upload__input" type="file" name="file" @change="ChangeFile" ref="imgchange" accept="">
 								</div>
 							</div>
 						</template>
 					</draggable>
-				<div class="ShopListImg" slot="footer" @click='showfileinput'>
+				<div class="ShopListImg" slot="footer" @click="showfileinput('goods_sku_image')">
 									<img src="http://dummyimage.com/150x150/F9612E" alt="" class="Add-ShopListImg">
 									<div class="ShopListFt">添加新图片</div>
 							</div>
@@ -71,6 +72,7 @@
 				</div>
 			</div>
 		</div>
+		
 		<!-- 预览图片 -->
 		<el-image-viewer v-if="shopImg.showViewer"  @close="closeViewer"
 			:url-list="shopImg.srcList" />
@@ -83,9 +85,10 @@
 	import draggable from "vuedraggable";
 	export default defineComponent({
 	  name: "img",    
-	  props: [
-		  'goods_sku_image',
-		  'goods_image'],
+	  props: {
+		  goods_sku_image:[Object,Array,String],
+		  goods_image:[Object,String],
+		  },
 	  components: {
 	  	draggable,
 	  },
@@ -94,42 +97,14 @@
 			  shopImg: {
 				  goods_image:[],
 				  goods_sku_image:[],
-			  	checkAll: false,
+			  	goodImgCheckAll: false,
+				skuImgCheckAll:false,
 			  	addImg: '',
-			  	changeIdx:'',
+			  	GoodChangeIdx:'',
+				SkuChangeIdx:'',
+				FileIput:'',
 			  	showViewer: false,
 			  	srcList: [],
-			  	ValData: [
-						{
-							img: 'http://dummyimage.com/150x150/F9612E',
-							IsCheck: false,
-						}, {
-							img: 'http://dummyimage.com/150x150/F9612E',
-							IsCheck: false,
-						}, {
-							img: 'http://dummyimage.com/150x150/F9612E',
-							IsCheck: false,
-						}, {
-							img: 'http://dummyimage.com/150x150/F9612E',
-							IsCheck: false,
-						}, {
-							img: 'http://dummyimage.com/150x150/F9612E',
-							IsCheck: false,
-						}, {
-							img: 'http://dummyimage.com/150x150/F9612E',
-							IsCheck: false,
-						}, {
-							img: 'http://dummyimage.com/150x150/F9612E',
-							IsCheck: false,
-						}, {
-							img: 'http://dummyimage.com/150x150/F9612E',
-							IsCheck: false,
-						}, {
-							img: 'http://dummyimage.com/150x150/F9612E',
-							IsCheck: false,
-						}, 
-				
-				],
 			  },
 			  
 		  }
@@ -138,25 +113,80 @@
 
 	  },
 	  methods:{
+		  ShowPreview(name){
+			  if(name == 'goods_image'){
+				  this.srcList = [];
+				  for(var i=0;i<this.shopImg.goods_image.length;i++){
+					  if(this.shopImg.goods_image[i].IsCheck){
+						  this.srcList.push(this.shopImg.goods_image[i].img)
+					  }
+				  }
+				  this.shopImg.showViewer = true
+			  }else if(name == 'goods_sku_image'){
+				  this.srcList = [];
+				  for(var i=0;i<this.shopImg.goods_sku_image.length;i++){
+				  					  if(this.shopImg.goods_sku_image[i].IsCheck){
+				  						  this.srcList.push(this.shopImg.goods_sku_image[i].img)
+				  					  }
+				  }
+				  this.shopImg.showViewer = true
+			  }
+		  },
+		  GoodSkuImgChange(){
+			  const obj = {
+			  		val:'goods_sku_image',
+			  		e:this.shopImg.goods_sku_image
+			  }
+			  this.$emit('ModShopImg',obj)
+		  },
+		  GoodImgChange(){
+			  const obj = {
+				  val:'goods_image',
+				  e:this.shopImg.goods_image
+			  }
+			  this.$emit('ModShopImg',obj)
+		  },
 		  closeViewer(){
 			  this.shopImg.showViewer = false
 		  },
 			//商品主图
-			delAllImage() {
+			delAllImage(val) {
 				var that = this
-				for (var i = that.shopImg.ValData.length; i > 0; i--) {
-					console.log(that.shopImg.ValData[i - 1].img)
-					if (that.shopImg.ValData[i - 1].IsCheck == true) {
-						that.shopImg.ValData.splice(i - 1, 1)
-						that.shopImg.srcList.splice(i - 1, 1)
+				if(val =='goods_image' ){
+					for (var i = that.shopImg.goods_image.length; i > 0; i--) {
+						console.log(that.shopImg.goods_image[i - 1].img)
+						if (that.shopImg.goods_image[i - 1].IsCheck == true) {
+							that.shopImg.goods_image.splice(i - 1, 1)
+							that.shopImg.srcList.splice(i - 1, 1)
+						}
 					}
+					this.GoodImgChange()
+				}else if(val =='goods_sku_image'){
+					for (var i = that.shopImg.goods_sku_image.length; i > 0; i--) {
+						console.log(that.shopImg.goods_sku_image[i - 1].img)
+						if (that.shopImg.goods_sku_image[i - 1].IsCheck == true) {
+							that.shopImg.goods_sku_image.splice(i - 1, 1)
+							that.shopImg.srcList.splice(i - 1, 1)
+						}
+					}
+					this.GoodSkuImgChange()
 				}
 			},
-			delImg(index) {
-				console.log(index)
-				this.shopImg.ValData.splice(index, 1)
+			delImg(val,index) {				
+				if(val == 'goods_image'){
+					this.shopImg.goods_image.splice(index, 1)
+					// this.GoodImgChange()
+				}else if(val == 'goods_sku_image'){
+					this.shopImg.goods_sku_image.splice(index, 1)
+					this.GoodImgChange()
+				}
 			},
-			showfileinput() {
+			showfileinput(name) {
+				if(name == 'goods_image'){
+					this.shopImg.FileIput = 'goods_image'
+				}else if(name == 'goods_sku_image'){
+					this.shopImg.FileIput = 'goods_sku_image'
+				}				
 				this.$refs.image.click();
 			},
 			addfile(e) {
@@ -185,19 +215,34 @@
 
 				reader.onload = (data) => {
 					that.shopImg.addImg = data.target.result; // 图片赋值
-					console.log(that.addImg)
-					that.shopImg.ValData.push({
+					// console.log(that.shopImg.addImg)
+					const obj = {
 						img: 'http://dummyimage.com/150x150/F9612E',
 						IsCheck: false
-					})
+					}
+					if(that.shopImg.FileIput == 'goods_image'){
+						that.shopImg.goods_image.push(obj)
+						that.GoodImgChange()
+					}else if(that.shopImg.FileIput == 'goods_sku_image'){
+						that.shopImg.goods_sku_image.push(obj)
+						that.GoodSkuImgChange()
+					}
 				};
 
 				reader.readAsDataURL(file);
 				e.target.value = ""; // ！！！重要 input上传图片，可以连续上传同一张图片
 			},
-			showChangeinput(index){
-				this.shopImg.changeIdx = index
-				this.$refs.changeimage.click();
+			showChangeinput(name,index){
+				
+				
+				if(name == 'goods_image'){
+					this.shopImg.GoodChangeIdx = index
+					this.shopImg.FileIput = 'goods_image'
+				}else if(name == 'goods_sku_image'){
+					this.shopImg.SkuChangeIdx = index
+					this.shopImg.FileIput = 'goods_sku_image'
+				}
+				this.$refs.imgchange.click();
 			},
 			ChangeFile(e){
 				var that = this
@@ -224,37 +269,64 @@
 				var reader = new FileReader();
 				reader.onload = (data) => {
 					that.shopImg.addImg = data.target.result; // 图片赋值
-					that.shopImg.ValData[that.shopImg.changeIdx].img = 'http://dummyimage.com/150x150/213123'
+					
+					if(that.shopImg.FileIput == 'goods_image' ){
+						that.shopImg.goods_image[that.shopImg.GoodChangeIdx].img = 'http://dummyimage.com/150x150/213123'
+						that.shopImg.GoodChangeIdx = ''
+						that.GoodImgChange()
+					}else if(that.shopImg.FileIput == 'goods_sku_image'){
+						that.shopImg.goods_sku_image[that.shopImg.SkuChangeIdx].img = 'http://dummyimage.com/150x150/213123'
+						that.shopImg.SkuChangeIdx = ''
+						that.GoodSkuImgChange()
+					}
+					
 				};
 				
 				reader.readAsDataURL(file);
 				e.target.value = ""; // ！！！重要 input上传图片，可以连续上传同一张图片
 			},
 			ToCheckAll(val) {
-				if (val) {
-					for (var i = 0; i < this.shopImg.ValData.length; i++) {
-						this.shopImg.ValData[i].IsCheck = true
-						this.shopImg.srcList.push(this.shopImg.ValData[i].img)
+				if(val == 'goods_image'){
+					if (this.shopImg.goodImgCheckAll) {
+						for (var i = 0; i < this.shopImg.goods_image.length; i++) {
+							this.shopImg.goods_image[i].IsCheck = true
+							this.shopImg.srcList.push(this.shopImg.goods_image[i].img)
+						}
+					
+					} else {
+						for (var i = 0; i < this.shopImg.goods_image.length; i++) {
+							this.shopImg.goods_image[i].IsCheck = false
+							this.shopImg.srcList = []
+						}
 					}
-
-				} else {
-					for (var i = 0; i < this.shopImg.ValData.length; i++) {
-						this.shopImg.ValData[i].IsCheck = false
-						this.shopImg.srcList = []
+				}else if(val == 'goods_sku_image'){
+					if (this.shopImg.skuImgCheckAll) {
+						for (var i = 0; i < this.shopImg.goods_sku_image.length; i++) {
+							this.shopImg.goods_sku_image[i].IsCheck = true
+							this.shopImg.srcList.push(this.shopImg.goods_sku_image[i].img)
+						}
+					
+					} else {
+						for (var i = 0; i < this.shopImg.goods_sku_image.length; i++) {
+							this.shopImg.goods_sku_image[i].IsCheck = false
+							this.shopImg.srcList = []
+						}
 					}
 				}
 			},
-			changeCheckState(val, idx) {
-				this.shopImg.ValData[idx].IsCheck = val ? true : false;
+			changeCheckState(name,val,idx) {
+				if(name == 'goods_image'){
+					this.shopImg.goods_image[idx].IsCheck = val ? true : false;
+				}else if(name == 'goods_sku_image'){
+					this.shopImg.goods_sku_image[idx].IsCheck = val ? true : false;
+				}
+				
 			},
 	  },
 	  computed:{
 		  getGood(){
-		  	if(this.goods_image != ''){
-				
 		  		this.shopImg.goods_image = this.goods_image
 		  		this.shopImg.goods_sku_image = this.goods_sku_image
-		  	}
 		  },
 	  },
 	 })

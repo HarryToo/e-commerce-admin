@@ -1,5 +1,5 @@
 <template>
-		<div class="stockPrice">
+		<div class="stockPrice" v-if="goods_specification !=[]">
 			<div class="stPrice-top">
 				<div class="stPrice-toptitle">库存价格</div>
 				<div class="stPrice-topbtn">
@@ -10,24 +10,24 @@
 			<div class="stPriceBox">
 				<div class="stPriceBoxTitle"><span>*</span>库存价格:</div>
 				<div class="stPriceBoxls">
-					<el-table :data="price.tableData" style="width: 100%">
-					  <el-table-column prop="name" label="规格" width="250" align="center">
+					<el-table :data="goods_specification" style="width: 100%">
+					  <el-table-column prop="specification_name" label="规格" width="250" align="center">
 					  </el-table-column>
-					  <el-table-column prop="skuNumber" label="SKU编号" width="250"  align="center">
+					  <el-table-column prop="sku_num" label="SKU编号" width="250"  align="center">
 						  <template #default="scope">
-						  	<el-input v-model="scope.row.skuNumber" placeholder="请输入内容" size="mini"></el-input>
+						  	<el-input v-model="scope.row.sku_num" placeholder="请输入内容" size="mini"></el-input>
 						  </template>
 					  </el-table-column>
-					  <el-table-column prop="SourPirce" label="来源价" align="center">
+					  <el-table-column prop="source_price" label="来源价" align="center">
 					  </el-table-column>
-					  <el-table-column prop="SalePirce" label="销售价" align="center">
+					  <el-table-column prop="market_price" label="销售价" align="center">
 						  <template #default="scope">
-						  	<el-input v-model="scope.row.SalePirce" placeholder="请输入内容" size="mini"></el-input>
+						  	<el-input v-model="scope.row.market_price" placeholder="请输入内容" size="mini"></el-input>
 						  </template>
 					  </el-table-column>
-					  <el-table-column prop="stock" label="库存" align="center">
+					  <el-table-column prop="inventory" label="库存" align="center">
 						  <template #default="scope">
-						  	<el-input v-model="scope.row.stock" placeholder="请输入内容" size="mini"></el-input>
+						  	<el-input v-model="scope.row.inventory" placeholder="请输入内容" size="mini"></el-input>
 						  </template>
 					  </el-table-column>
 					<el-table-column align="right">
@@ -108,7 +108,12 @@
 	import draggable from "vuedraggable";
 	export default defineComponent({
 	  name: "price",
-	  props: [''],
+	  props: {
+		  goods_specification:{
+			  type:[Array,Object],
+			  default:[],
+		  }
+	  },
 	  components: {
 	  	draggable,
 	  },
@@ -190,34 +195,33 @@
 	  methods:{
 			//库存价格
 			PriceCheckAll(val){
-				console.log(this.sku)
 					if (val) {
-						for (var i = 0; i < this.price.tableData.length; i++) {
-							this.price.tableData[i].IsUse = true
+						for (var i = 0; i < this.goods_specification.length; i++) {
+							this.goods_specification[i].IsUse = true
 						}
 					
 					} else {
-						for (var i = 0; i < this.price.tableData.length; i++) {
-							this.price.tableData[i].IsUse = false
+						for (var i = 0; i < this.goods_specification.length; i++) {
+							this.goods_specification[i].IsUse = false
 						}
 					}
 			},
 			modfiyAllStock(){
 				var _this = this
-				this.price.tableData.forEach(function(item,dex){
+				this.goods_specification.forEach(function(item,dex){
 					if(item.IsUse){
 						if(_this.price.StockDialog.radio == 1){
 							if(!_this.price.StockDialog.input1){return;}
-							item.stock = Number(_this.price.StockDialog.input1)
+							item.inventory = Number(_this.price.StockDialog.input1)
 						}else if(_this.price.StockDialog.radio == 2){
 							if(!_this.price.StockDialog.input2){return;}
-							item.stock = Number(_this.price.StockDialog.input2) + Number(item.stock)
+							item.inventory = Number(_this.price.StockDialog.input2) + Number(item.inventory)
 						}else if(_this.price.StockDialog.radio == 3){
 							if(!_this.price.StockDialog.input3){return;}
-							item.stock = Number(item.stock) -Number( _this.price.StockDialog.input3)
+							item.inventory = Number(item.inventory) -Number( _this.price.StockDialog.input3)
 
-							if(Number(item.stock)<0){
-								item.stock = 0
+							if(Number(item.inventory)<0){
+								item.inventory = 0
 							}
 						}
 					}
@@ -226,30 +230,30 @@
 			},
 			PriceChange(){
 				var _this = this
-				this.price.tableData.forEach(function(item,dex){
+				this.goods_specification.forEach(function(item,dex){
 					if(item.IsUse){
 						if(_this.price.PriceDialog.radioTp == '1'){//同源
-							item.SalePirce = item.SourPirce
+							item.market_price = item.source_price
 						}else if(_this.price.PriceDialog.radioTp == '2'){//直接设置
-							item.SalePirce = _this.price.PriceDialog.inputPrice
+							item.market_price = _this.price.PriceDialog.inputPrice
 						}else if(_this.price.PriceDialog.radioTp == '3'){//公式
-							var Cprice = Number(item.SourPirce)*Number(_this.price.PriceDialog.formula.percent)/100 + Number(_this.price.PriceDialog.formula.add) - Number(_this.price.PriceDialog.formula.subtract);
+							var Cprice = Number(item.source_price)*Number(_this.price.PriceDialog.formula.percent)/100 + Number(_this.price.PriceDialog.formula.add) - Number(_this.price.PriceDialog.formula.subtract);
 							if(_this.price.PriceDialog.retain == '1'){//保留1位小时
 								if(_this.price.PriceDialog.rounding == '1'){//四舍五入
-									item.SalePirce = Cprice.toFixed(1)
+									item.market_price = Cprice.toFixed(1)
 								}else if(_this.price.PriceDialog.rounding == '2'){//向上取整
-									item.SalePirce = Math.ceil(Cprice*10)/10
+									item.market_price = Math.ceil(Cprice*10)/10
 								}else if(_this.price.PriceDialog.rounding == '3'){//向下取整
 									console.log(Math.floor(Cprice*10))
-									item.SalePirce = Math.floor(Cprice*10)/10
+									item.market_price = Math.floor(Cprice*10)/10
 								}
 							}else if(_this.price.PriceDialog.retain == '2'){//保留2位小时
 									if(_this.price.PriceDialog.rounding == '1'){//四舍五入
-										item.SalePirce = Cprice.toFixed(2)
+										item.market_price = Cprice.toFixed(2)
 									}else if(_this.price.PriceDialog.rounding == '2'){//向上取整
-										 item.SalePirce = Math.ceil(Cprice*100)/100
+										 item.market_price = Math.ceil(Cprice*100)/100
 									}else if(_this.price.PriceDialog.rounding == '3'){//向下取整
-										item.SalePirce = Math.floor(Cprice*100)/100
+										item.market_price = Math.floor(Cprice*100)/100
 									}
 							}
 						}

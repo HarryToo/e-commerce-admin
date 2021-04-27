@@ -1,30 +1,33 @@
 <template>
-		<div class="logistics" :Id='getGood'>
+		<div class="logistics"  v-if='is_postage'>
+			{{is_postage}}
+			{{typeof(is_postage)}}
 			<div class='logistics-r0'>物流信息</div>
 			<div class='logistics-r1'>
 				<div class="logistics-r1-w0"><span>*</span>是否包邮</div>
 				<div class="logistics-r1-w1">
-					<el-radio v-model="logistics.IsFreeShipping" label="1" @change="modeVal('is_postage',$event)">包邮</el-radio>
-					<el-radio v-model="logistics.IsFreeShipping" label="2" @change="modeVal('is_postage',$event)">不包邮</el-radio>
+					<el-radio-group :value='Number(is_postage)' v-model="logistics.IsFreeShipping"  @change="modeVal('is_postage',$event)">
+					<el-radio  label="1">包邮</el-radio>
+					<el-radio  label="2">不包邮</el-radio>
+					</el-radio-group> 
 				</div>
 			</div>
 			<div class='logistics-r2'>
 				<div class="logistics-r2-w0"><span>*</span>包裹重量</div>
 				<div class="logistics-r2-w1">
-					<el-input v-model="logistics.weight" placeholder="请输入重量" suffix-icon="el-icon-date" @input="modeVal('parcel_weight',$event)">
+					<el-input :value='parcel_weight' v-model="logistics.weight" placeholder="请输入重量" suffix-icon="el-icon-date" @input="modeVal('parcel_weight',$event)">
 					</el-input>
 				</div>
 			</div>
 			<div class='logistics-r3'>
 				<div class="logistics-r3-w0"><span>*</span>包裹尺寸</div>
 				<div class="logistics-r3-w1">
-					<el-input v-model="logistics.long" placeholder="长" suffix-icon="el-icon-date" @input="modeVal('parcel_length',$event)">
+					<el-input :value='parcel_length' v-model="logistics.long" placeholder="长" suffix-icon="el-icon-date" @input="modeVal('parcel_length',$event)">
 					</el-input>
-					<el-input v-model="logistics.width" placeholder="宽" suffix-icon="el-icon-date" @input="modeVal('parcel_width',$event)">
+					<el-input :value='parcel_width' v-model="logistics.width" placeholder="宽" suffix-icon="el-icon-date" @input="modeVal('parcel_width',$event)">
 					</el-input>
-					<el-input v-model="logistics.height" placeholder="高" suffix-icon="el-icon-date" @input="modeVal('parcel_high',$event)">
+					<el-input :value='parcel_high' v-model="logistics.height" placeholder="高" suffix-icon="el-icon-date" @input="modeVal('parcel_high',$event)">
 					</el-input>
-		
 				</div>
 			</div>
 		</div>
@@ -35,17 +38,20 @@
 	import {defineComponent, ref, toRefs, watch} from 'vue' 
 	export default defineComponent({
 	  name: "logistics",
-	  props: [
-		  'parcel_weight',
-		  'parcel_length',
-		  'parcel_width',
-		  'parcel_high',
-		  'is_postage',
-	  ],
+	  props: {
+		  parcel_weight:[String,Number],
+		  parcel_length:[String,Number],
+		  parcel_width:[String,Number],
+		  parcel_high:[String,Number],
+		  is_postage:{
+			  type:[Number,String],
+			  default: '', 
+		  },
+	  },
 	  data(){
 		  return{
 			  logistics: {
-			  	IsFreeShipping: '1',
+			  	IsFreeShipping: '',
 			  	weight: 100.12,
 			  	long: 200,
 			  	width: 180,
@@ -55,7 +61,6 @@
 		  }
 	  },
 	  mounted(){
-
 	  },
 	  methods:{
 	      modeVal(val,e){
@@ -63,16 +68,6 @@
 		  },
 	  },
 	  computed:{
-	  		  getGood(){
-	  			  if(this.gc_name_val != ''){
-	  				  this.logistics.IsFreeShipping = this.is_postage+''
-
-	  				  this.logistics.weight = this.parcel_weight
-	  				  this.logistics.long = this.parcel_length
-	  				  this.logistics.width = this.parcel_width
-					  this.logistics.height = this.parcel_high
-	  			  }
-	  		  },
 	  },
 	 })
 </script>
