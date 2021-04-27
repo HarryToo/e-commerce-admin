@@ -51,7 +51,9 @@ export default defineComponent({
     // 快递公司列表
     const courierCompanyList = ref([])
     const getCourierCompanyList = async () => {
-      const {list} = await $api.commonApi.getCourierCompanyList()
+      const {list} = await $api.commonApi.getCourierCompanyList({
+          dialogLoading: true
+      })
       courierCompanyList.value = list
     }
     getCourierCompanyList()

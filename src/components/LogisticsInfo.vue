@@ -38,7 +38,10 @@ export default defineComponent({
   setup(props) {
     const logisticsInfo = ref({})
     const getLogisticsInfo = async () => {
-      logisticsInfo.value = await $api.commonApi.getLogisticsInfo(props)
+      logisticsInfo.value = await $api.commonApi.getLogisticsInfo({
+        ...props,
+        dialogLoading: true
+      })
     }
     getLogisticsInfo()
 

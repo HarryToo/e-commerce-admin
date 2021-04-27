@@ -113,7 +113,7 @@ export default defineComponent({
         }
       },
       delHandler: async (ids) => {
-        // const {code} = await $api.operationApi.special.removeGoods({
+        // const {code} = await $api.operationApi.special-channel.removeGoods({
         //   id: ids
         // })
         // if (code === 200) {

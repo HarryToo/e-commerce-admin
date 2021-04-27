@@ -6,21 +6,21 @@
     </div>
     <div class="tabs-content">
       <mass v-show="tabIndex === 0"></mass>
-      <div class="tabs-content-item" v-show="tabIndex === 1">
-        456789
-      </div>
+      <organization v-show="tabIndex === 1"></organization>
     </div>
   </div>
 </template>
 
 <script>
-import {defineComponent, reactive, ref} from 'vue'
+import {defineComponent, ref} from 'vue'
 import Mass from './Mass'
+import Organization from './Organization'
 
 export default defineComponent({
   name: "WebSitDecoration",
   components: {
-    Mass
+    Mass,
+    Organization
   },
   setup() {
     const tabIndex = ref(0)

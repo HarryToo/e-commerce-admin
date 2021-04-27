@@ -5,7 +5,7 @@
         <el-form :model="formData" size="small" label-position="left" label-width="70px">
           <el-form-item label="图片上传">
             <div style="display: flex;align-items: flex-end;">
-              <file-upload v-model="formData.img"></file-upload>
+              <file-upload v-model="formData.img" img-size="1920*490"></file-upload>
               <span style="margin-left: 15px;font-size: 12px;color: #F9612E;">尺寸建议：1920*490</span>
             </div>
           </el-form-item>

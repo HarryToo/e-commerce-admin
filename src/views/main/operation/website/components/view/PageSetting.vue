@@ -7,14 +7,19 @@
     </div>
     <div class="bottom">
       <div class="bottom-content">
+        <!--首页-->
         <div v-show="pageIndex === 0">
           <logo-config v-show="moduleIndex === 0"></logo-config>
           <classify-config v-show="moduleIndex === 1"></classify-config>
           <banner-config v-show="moduleIndex === 2"></banner-config>
+          <!--楼层区域动态组件-->
           <keep-alive>
             <component :is="floorComponent" v-show="moduleIndex === 3"></component>
           </keep-alive>
+          <base-goods-list-config v-show="moduleIndex === 4"></base-goods-list-config>
         </div>
+        <!--专场频道-->
+        <leader-board-config v-show="pageIndex === 1"></leader-board-config>
       </div>
     </div>
   </div>
@@ -23,10 +28,17 @@
 <script>
 import {computed, defineComponent, inject} from 'vue'
 import {useStore} from 'vuex'
+// 首页部分
 import LogoConfig from '../settings/homepage/LogoConfig'
 import ClassifyConfig from '../settings/homepage/ClassifyConfig'
 import BannerConfig from '../settings/homepage/BannerConfig'
-import FloorStyle1 from '../settings/homepage/floor/FloorStyle1'
+import FloorStyle1Config from '../settings/homepage/floor/FloorStyle1Config'
+import FloorStyle2Config from '../settings/homepage/floor/FloorStyle2Config'
+import FloorStyle3Config from '../settings/homepage/floor/FloorStyle3Config'
+import FloorStyle4Config from '../settings/homepage/floor/FloorStyle4Config'
+import BaseGoodsListConfig from '../settings/homepage/BaseGoodsListConfig'
+// 专场频道
+import LeaderBoardConfig from '../settings/LeaderBoardConfig'
 
 export default defineComponent({
   name: "PageSetting",
@@ -34,22 +46,27 @@ export default defineComponent({
     LogoConfig,
     ClassifyConfig,
     BannerConfig,
-    FloorStyle1
+    FloorStyle1Config,
+    FloorStyle2Config,
+    FloorStyle3Config,
+    FloorStyle4Config,
+    BaseGoodsListConfig,
+    LeaderBoardConfig
   },
   setup() {
     const store = useStore()
     // 选中的页面序号
     const pageIndex = inject('pageIndex')
-    // 页面上选中的模块（0:logo,1:分类,2:banner,3:可活动楼层区域,4:推荐商品列表）
+    // 页面上选中的模块（0:logo,1:分类,2:banner,3:可活动楼层区域,4:底部商品列表）
     const moduleIndex = inject('moduleIndex')
     // 可活动楼层板块序号
     const floorIndex = inject('floorIndex')
 
-    // 选中楼层板块类型对应的配置栏组件名
+    // 动态获取选中楼层板块类型对应的配置栏组件名
     const floorComponent = computed(() => {
-      const compNameArr = ['floor-style1', 'floor-style2', 'floor-style3', 'floor-style4']
-      const type = store.state.decoration.massWebsite.homePage.floor[floorIndex.value].type
-      return compNameArr[type - 1]
+      const compNameArr = ['floor-style1-config', 'floor-style2-config', 'floor-style3-config', 'floor-style4-config']
+      const floorType = store.state.decoration.massWebsite.homePage.floor[floorIndex.value].type
+      return compNameArr[floorType - 1]
     })
 
     return {

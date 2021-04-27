@@ -13,7 +13,7 @@ import PagePreview from './components/view/PagePreview'
 import PageSetting from './components/view/PageSetting'
 
 export default defineComponent({
-  name: "MassWebsite",
+  name: "OrganizationWebsite",
   components: {
     PageList,
     PagePreview,

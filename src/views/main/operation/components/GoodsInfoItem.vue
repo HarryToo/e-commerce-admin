@@ -1,6 +1,6 @@
 <template>
   <div class="goods-info-item">
-    <el-image :src="goods.cover" fit="cover"></el-image>
+    <el-image :src="goods.cover" lazy fit="cover"></el-image>
     <div class="info">
       <div class="title text-cut-2">{{goods.name}}</div>
       <div class="data">

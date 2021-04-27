@@ -60,7 +60,7 @@
                 </div>
               </el-popover>
               <el-button
-                  @click="$router.push({path: '/main/operation/special/goods', query: {specialId: scope.row.id}})"
+                  @click="$router.push({path: '/main/operation/special-channel/goods', query: {specialId: scope.row.id}})"
                   type="text" size="small" v-permission="[$route, 'edit']" v-if="!scope.row.children">
                 管理商品
               </el-button>

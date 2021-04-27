@@ -5,14 +5,14 @@ export default [
     {
         path: 'operation',
         redirect: to => {
-            return to.path + '/special'
+            return to.path + '/special-channel'
         },
         meta: {
             title: '运营管理'
         }
     },
     {
-        path: 'operation/special',
+        path: 'operation/special-channel',
         name: 'SpecialList',
         meta: {
             title: '专题管理'
@@ -20,7 +20,7 @@ export default [
         component: () => import('@/views/main/operation/special')
     },
     {
-        path: 'operation/special/goods',
+        path: 'operation/special-channel/goods',
         name: 'SpecialGoods',
         meta: {
             title: '商品管理'
@@ -28,7 +28,7 @@ export default [
         component: SpecialGoodsList
     },
     {
-        path: 'operation/special/goods/add',
+        path: 'operation/special-channel/goods/add',
         name: 'AddSpecialGoods',
         meta: {
             title: '添加商品'

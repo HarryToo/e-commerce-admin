@@ -5,8 +5,9 @@
       <span class="tips">下图仅供展示页面模块信息，实际效果根据配置的数据可能不同</span>
     </div>
     <div class="preview-img-wrapper">
+      <!--首页-->
       <div class="preview-img home-page" v-show="pageIndex === 0">
-        <img src="/images/operation/website/static_top.jpg" alt="" class="static_top">
+        <img src="/images/operation/website/static_top.jpg" alt="" class="static">
         <img src="/images/operation/website/logo.png" alt="" class="selectable position logo"
              :class="{selected: modelValue === 0}" title="logo"
              @click="$emit('update:modelValue', 0)">
@@ -18,7 +19,7 @@
              @click="$emit('update:modelValue', 2)">
         <!--可活动楼层区域-->
         <div class="rearrange-list">
-          <div class="rearrange-item" v-for="(item, index) in floorList" :key="index">
+          <div class="rearrange-item" v-for="(item, index) in floorList" :key="item.id">
             <img :src="floorTypes[item.type - 1].previewImg" alt="" class="selectable floor_item"
                  :class="{selected: modelValue === 3 && floorIndex === index}"
                  :title="floorTypes[item.type - 1].title"
@@ -32,13 +33,17 @@
               <!--可删除楼层类型为3/4板块（单此类型板块数须大于1）-->
               <i class="el-icon-close" title="删除此板块"
                  v-if="(item.type === 3 || item.type === 4) && deletableFloorNums[item.type - 1] > 1"
-                 @click="delFloorItem(index, item.type)"></i>
+                 @click="delFloorItem(index)"></i>
             </div>
           </div>
         </div>
         <img src="/images/operation/website/floor_5.jpg" alt="" class="selectable floor_item"
              :class="{selected: modelValue === 4}" title="为您推荐" @click="$emit('update:modelValue', 4)">
-        <img src="/images/operation/website/footer.png" alt="" class="footer">
+        <img src="/images/operation/website/footer.png" alt="" class="static">
+      </div>
+      <!--专场频道-->
+      <div class="preview-img" v-show="pageIndex === 1">
+        <img src="/images/operation/website/static_top.jpg" alt="" class="static">
       </div>
     </div>
   </div>
@@ -47,7 +52,8 @@
 <script>
 import {computed, defineComponent, inject, ref, watch} from 'vue'
 import {useStore} from 'vuex'
-import dataTemplate from '@/store/modules/decoration/dataTemplate'
+import {ElMessage, ElMessageBox} from "element-plus"
+import {website} from '@/store/modules/decoration/dataTemplate'
 
 // 可活动楼层区域类型
 const floorTypes = [
@@ -76,12 +82,12 @@ const floorTypes = [
 export default defineComponent({
   name: "PagePreview",
   props: {
-    // 页面上选中的模块（0:logo,1:分类,2:banner,3:可活动楼层区域,4:推荐商品列表）
+    // 页面上选中的模块（0:logo,1:分类,2:banner,3:可活动楼层区域,4:底部商品列表）
     modelValue: {
       type: Number,
       default: 0
     },
-    // 可活动楼层区域数据类型编号
+    // 可活动楼层区域板块序号
     floorIndex: {
       type: Number,
       default: 0
@@ -94,45 +100,53 @@ export default defineComponent({
     const moduleIndex = ref(0)
     // 可活动楼层区域数据
     const floorList = computed(() => store.state.decoration.massWebsite.homePage.floor)
-
     // 统计各楼层类型板块的总数
-    const deletableFloorNums = computed(() => {
-      const initialNums = floorList.value.map(() => 0)
-      return floorList.value.reduce((totals, item) => {
-        totals[item.type - 1]++
-        return totals
-      }, initialNums)
-    })
+    const deletableFloorNums = computed(() => store.getters['decoration/massWebsite/floorNumsGroupByType'])
 
     // 上移一层
     const moveUpFloorLevel = (index) => {
-      if (index > 0) {
-        const delArr = floorList.value.splice(index, 1)
-        floorList.value.splice(index - 1, 0, delArr[0])
-        // 若移动的是当前选中的板块
-        if (props.floorIndex === index) {
-          emit('update:floorIndex', index - 1)
-        }
-        // 若移动的是当前选中的板块的下面一个
-        if (props.floorIndex === index - 1) {
-          emit('update:floorIndex', index)
-        }
+      store.commit('decoration/massWebsite/moveUpFloorLevel', index)
+      // 若移动的是当前选中的板块
+      if (props.floorIndex === index) {
+        emit('update:floorIndex', index - 1)
       }
+      // 若移动的是当前选中的板块的下面一个
+      if (props.floorIndex === index - 1) {
+        emit('update:floorIndex', index)
+      }
+      ElMessage.success('移动成功')
     }
-    // 新增楼层板块
+    // 新增楼层板块（往下）
     const addFloorItem = (index, type) => {
-      floorList.value.splice(index + 1, 0, dataTemplate.website.homepage.floor[type - 1])
+      store.commit('decoration/massWebsite/addFloorItem', {index, type})
+      // 若当前选中的板块在所增加板块下方
+      if (props.floorIndex > index) {
+        emit('update:floorIndex', props.floorIndex + 1)
+      }
+      ElMessageBox.confirm('新增成功，是否立即配置新板块的数据?', {type: 'success'}).then(() => {
+        if (moduleIndex.value !== 3) {
+          emit('update:modelValue', 3)
+        }
+        emit('update:floorIndex', index + 1)
+      }).catch(() => {
+      })
     }
     // 删除楼层板块
-    const delFloorItem = (index, type) => {
-      floorList.value.splice(index, 1)
+    const delFloorItem = (index) => {
+      ElMessageBox.confirm('此操作将永久删除该板块及相应配置数据, 是否继续?', {type: 'warning'}).then(() => {
+        store.commit('decoration/massWebsite/delFloorItem', index)
+        // 若当前选中的板块在所删除板块下方
+        if (props.floorIndex > index) {
+          emit('update:floorIndex', props.floorIndex - 1)
+        }
+        ElMessage.success('删除成功')
+      }).catch(() => {
+      })
     }
 
     // 变动保存
     watch(floorList, (list) => {
       store.commit('decoration/massWebsite/saveFloorConfig', list)
-      console.log('网站装修本地数据变动：')
-      console.log(store.state.decoration.massWebsite.homePage)
     }, {deep: true})
 
     return {
@@ -198,6 +212,11 @@ export default defineComponent({
     .preview-img {
       position: relative;
 
+      .static {
+        display: block;
+        width: 100%;
+      }
+
       .position {
         position: absolute;
         z-index: 1;
@@ -224,7 +243,7 @@ export default defineComponent({
     }
 
     .home-page {
-      .static_top, .floor_item, .footer {
+      .floor_item {
         display: block;
         width: 100%;
       }

@@ -122,17 +122,17 @@ $mock.get('/permission/byAccount', [
         children: [
             {
                 name: '专题管理',
-                path: 'operation/special',
+                path: 'operation/specialChannel',
                 permission: ['edit', 'add', 'delete']
             },
             {
                 name: '商品管理',
-                path: 'operation/special/goods',
+                path: 'operation/specialChannel/goods',
                 permission: ['view', 'add', 'delete']
             },
             {
                 name: '添加商品',
-                path: 'operation/special/goods/add'
+                path: 'operation/specialChannel/goods/add'
             },
             {
                 name: '网站装修',
