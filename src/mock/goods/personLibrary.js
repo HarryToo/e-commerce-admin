@@ -9,7 +9,6 @@ $mock.get('/goods/PersonLbSourcePlatformData', {
 	            label: '@cword(2,5)平台',
 	        }
 	    ]
-
 })
 
 //搜索条件 来源平台
@@ -249,6 +248,7 @@ $mock.get('/goods/PersonLbShopListData',({url}) =>{
 	        stockNum: '@integer(500, 1000)',
 	        shopNum: '@integer(500, 1000)',
 	        purchaseNum: '@integer(100, 500)',
+			Ptime:'2021.@integer(1, 12).@integer(1, 30) @integer(0, 23):@integer(0, 60):@integer(0, 60)',
 	        status: '@integer(0, 2)',
 			stateReason:'@cword(2,5)',
 	    }
@@ -331,7 +331,7 @@ $mock.get('/goods/goodDetailData',({url}) =>{
 			img:'@image("150x150", "#F9612E")'},
 		],  //sku图片
 		goods_describe: "@cword(50,200)",  //文字描述
-		goods_describe_image: ['@image("500x150", "#F9612E")'],  //图片描述
+		goods_describe_image: ['@image("500x150", "#F9612E")','@image("500x150", "#F9612E")','@image("500x150", "#F9612E")'],  //图片描述
 		is_postage: '@integer(1, 2)'+'', //是否包邮 1-是 2-否
 		parcel_weight: '@float(10, 100, 2, 2)',  //包裹重量
 		parcel_length: '@float(10, 100, 2, 2)',   //包裹长度
@@ -364,3 +364,51 @@ $mock.get('/goods/goodDetailData',({url}) =>{
 	]
 return $mock.mock(data)
 })
+
+
+//平台商品库
+//商品列表
+$mock.get('/goods/platformShopListData',({url}) =>{
+	const {pageSize} = $mock.parseQuery(url)
+	const data = {
+	    total: 30
+	}
+	data[`list|${pageSize}`] = [
+	    {
+	        'id|+1': 10000,
+	        'number|+1': 10000000000,
+	        info: {
+	            cover: '@image("150x150", "#F9612E")',
+	            name: '@cword(30, 50)',
+	            classify: '@cword(15, 30)',
+	            origin: {
+	                platform: {
+	                    name: '@cword(2, 4)',
+	                    href: 'https://www.baidu.com'
+	                },
+	                id: {
+	                    'name|+1': 100000,
+	                    href: 'https://www.baidu.com'
+	                }
+	            }
+	        },
+	        minPrice: '@float(1000, 1500, 2, 2)',
+	        maxPrice: '@float(2000, 3000, 2, 2)',
+			PeoPle: '@cword(2,3)',
+	        stockNum: '@integer(500, 1000)',
+			Ptime:'2021.@integer(1, 12).@integer(1, 30) @integer(0, 23):@integer(0, 60):@integer(0, 60)',
+	        status: '@integer(0	, 1)',
+			stateReason:'@cword(2,5)',
+			Distribution:'@integer(500,1000)',
+			purchase:'@integer(500,1000)',
+	    }
+	]
+	return $mock.mock(data)
+})
+
+
+
+
+
+
+

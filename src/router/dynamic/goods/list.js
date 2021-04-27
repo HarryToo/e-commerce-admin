@@ -1,5 +1,5 @@
 import PersonalCollectionLibraryEdit from '@/views/main/goods/personal-library/edit'
-
+import PlatformCollectionLibraryEdit from '@/views/main/goods/platform-library/edit'
 export default [
     {
         path: 'goodsList',
@@ -34,4 +34,12 @@ export default [
         },
         component: () => import('@/views/main/goods/platform-library/PlatformGoodLibrary')
     },
+	{
+	    path: 'goodsList/PlatformGoodLibrary/edit',
+	    name: 'edit',
+	    meta: {
+	        title: '编辑'
+	    },
+	    component: PlatformCollectionLibraryEdit
+	},
 ]

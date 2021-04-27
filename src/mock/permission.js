@@ -39,11 +39,6 @@ $mock.get('/permission/byAccount', [
                 permission: ['view', 'edit', 'add', 'delete']
             },
             {
-                name: '编辑',
-                path: 'goodsList/PersonalCollectionLibrary/edit',
-                permission: ['view', 'edit', 'add', 'delete']
-            },
-            {
                 name: '平台商品库',
                 path: 'goodsList/PlatformGoodLibrary',
                 permission: ['view', 'edit', 'add', 'delete']

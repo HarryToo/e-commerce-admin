@@ -1,15 +1,13 @@
 <template>
-		<div class="logistics"  v-if='is_postage'>
-			{{is_postage}}
-			{{typeof(is_postage)}}
+		<div class="logistics"  :id='FreeShipping'>
 			<div class='logistics-r0'>物流信息</div>
 			<div class='logistics-r1'>
 				<div class="logistics-r1-w0"><span>*</span>是否包邮</div>
 				<div class="logistics-r1-w1">
-					<el-radio-group :value='Number(is_postage)' v-model="logistics.IsFreeShipping"  @change="modeVal('is_postage',$event)">
-					<el-radio  label="1">包邮</el-radio>
-					<el-radio  label="2">不包邮</el-radio>
-					</el-radio-group> 
+					<el-radio-group v-model="logistics.IsFreeShipping"  @change="modeVal('is_postage',$event)">
+					<el-radio :label="Number(1)">包邮</el-radio>
+					<el-radio :label="Number(2)">不包邮</el-radio>
+					</el-radio-group>
 				</div>
 			</div>
 			<div class='logistics-r2'>
@@ -43,15 +41,12 @@
 		  parcel_length:[String,Number],
 		  parcel_width:[String,Number],
 		  parcel_high:[String,Number],
-		  is_postage:{
-			  type:[Number,String],
-			  default: '', 
-		  },
+		  is_postage:[Number,String],
 	  },
 	  data(){
 		  return{
 			  logistics: {
-			  	IsFreeShipping: '',
+			  	IsFreeShipping:1,
 			  	weight: 100.12,
 			  	long: 200,
 			  	width: 180,
@@ -68,6 +63,9 @@
 		  },
 	  },
 	  computed:{
+		  FreeShipping(){
+			  this.logistics.IsFreeShipping = this.is_postage
+		  },
 	  },
 	 })
 </script>

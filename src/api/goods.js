@@ -11,6 +11,9 @@ export default {
 		getgoodDetailData: (data) => $http.get('/goods/goodDetailData', data),
 		//商品分类
 		getListData: (data) => $http.get('/goods/ListData', data),
+		
+		//平台采集库商品列表 商品信息
+		getplatformShopListData: (data) => $http.get('/goods/platformShopListData', data),
     },
     // 平台商品库
     platformLibrary: {

@@ -1,11 +1,14 @@
 <template>
-	<div class="sku" v-if='spec'>
+	<div class="sku" :id='showTp' v-if='spec'>
 		<div class="sku-r0">SKU属性</div>
 		<div class="sku-r1">
 			<div class="sku-r1-w1">
 				<div class="sku-r1-w0"><span>*</span>商品类型：</div>
-				<el-radio :value='type_id'  v-model="sku.SkuType" label="1" @change='TypeChange'>单SKU商品</el-radio>
-				<el-radio :value='type_id' v-model="sku.SkuType" label="2" @change='TypeChange'>多SKU商品</el-radio>
+
+				<el-radio-group v-model="sku.SkuType"  @change="modeVal('type_id',$event)">
+					<el-radio :label="Number(1)" >单SKU商品</el-radio>
+					<el-radio :label="Number(2)">多SKU商品</el-radio>
+				</el-radio-group>
 			</div>
 			<el-button v-show='sku.SkuType == 2' type="danger" @click='addSku()'>添加SKU</el-button>
 		</div>
@@ -18,18 +21,20 @@
 						<span>属性值</span><span>单属性最多50个属性值，多属性最多20个属性值，每个属性不超过20个字符，可拖动排序</span>
 					</div>
 					<div class="sku-r2-w1-list">
-						<draggable class="list-group" :list="val.data" group="moveOne" @change="log" itemKey="name">
-							<template #item="{ element, index }">
-								<div class="list-group-item">
-									<div>{{ element.text }} {{element.id}}</div>
-									<div @click='delAttr(idx,index)'><i class="el-icon-delete"></i>
+						<draggable class="list-group skuM" group="groupOne" :list="val.data" @change="log" itemKey="groupOne"
+						 animation="300" dragClass="dragClass"  ghostClass="ghostClass" chosenClass="chosenClass"
+						>
+							<template #item="{ element, itemkey }">
+								<div class="list-group-item" :itemKey='itemkey'>
+									<div>{{ element.text }} {{element.id}} {{itemkey}}</div>
+									<div @click='delAttr(idx,itemkey)'><i class="el-icon-delete"></i>
 									</div>
 								</div>
 							</template>
 						</draggable>
 						<el-button class="sku-r2-w1-add" @click='sku.liveSku = idx;sku.dialogAddAttr = true'>+添加属性值
 						</el-button>
-					</div>
+					</div>			
 				</div>
 			</div>
 		</div>
@@ -43,11 +48,12 @@
 						<span>属性值</span><span>单属性最多50个属性值，多属性最多20个属性值，每个属性不超过20个字符，可拖动排序</span>
 					</div>
 					<div class="sku-r2-w1-list">
-						<draggable class="list-group" :list="spec[0].data" group="moveOne" @change="log" itemKey="name">
+						<draggable class="list-group skuL" :list="spec[0].data" group="moveTwo" @change="log" itemKey="moveTwo"
+						animation="300" dragClass="dragClass"  ghostClass="ghostClass" chosenClass="chosenClass">
 							<template #item="{ element, index }">
 								<div class="list-group-item">
 									<div>{{ element.text }} {{element.id}}</div>
-									<div @click='delAttr(idx,index)'><i class="el-icon-delete"></i>
+									<div @click='delAttr(0,index)'><i class="el-icon-delete"></i>
 									</div>
 								</div>
 							</template>
@@ -58,6 +64,7 @@
 				</div>
 			</div>
 		</div>
+			
 		<el-dialog title="添加属性" v-model="sku.dialogAddAttr">
 			<el-input v-model="sku.AddAttrIpt" placeholder="请输入内容"></el-input>
 			<template #footer>
@@ -90,63 +97,22 @@
 		},
 		data() {
 			return {
+				drag:false,
 				sku: {
-					SkuType: '',
+					SkuType: 0,
 					dialogAddAttr: false,
 					AddAttrIpt: '',
 					liveSku: '',
 					spec:"",
-					list: [
-						{
-							name: 'sku_1',
-							single:true,
-							data: [{
-									id: '1',
-									text: '黑色-高配七重减震-变频节能-汽车电池约350公里',
-								}, {
-									id: '2',
-									text: '黑色-高配七重减震-变频节能-汽车电池约350公里',
-								}, {
-									id: '3',
-									text: '黑色-高配七重减震-变频节能-汽车电池约350公里',
-								}, {
-									id: '4',
-									text: '黑色-高配七重减震-变频节能-汽车电池约350公里',
-								}, {
-									id: '5',
-									text: '黑色-高配七重减震-变频节能-汽车电池约350公里',
-								}
-
-							],
-						},
-						{
-							name: 'sku_2',
-							data: [{
-									id: '1',
-									text: '黑色-高配七重减震-变频节能-汽车电池约350公里',
-								}, {
-									id: '2',
-									text: '黑色-高配七重减震-变频节能-汽车电池约350公里',
-								}, {
-									id: '3',
-									text: '黑色-高配七重减震-变频节能-汽车电池约350公里',
-								}, {
-									id: '4',
-									text: '黑色-高配七重减震-变频节能-汽车电池约350公里',
-								}, {
-									id: '5',
-									text: '黑色-高配七重减震-变频节能-汽车电池约350公里',
-								}
-
-							],
-						},
-					],
 				}
 			}
 		},
 		mounted() {
 		},
 		methods: {
+			modeVal(val,e){
+				this.$emit('ModSKU',{val,e})
+			},
 			TypeChange(e) {
 				console.log(e)
 				// this.$emit('skuTypeChange', e)
@@ -190,14 +156,73 @@
 			},
 
 		},
-		conputed:{
-			
+		computed:{
+
+		},
+		computed:{
+			showTp(){
+				console.log(this.type_id)
+				console.log(typeof(this.type_id))
+				this.sku.SkuType = Number(this.type_id)
+			},
 		},
 	})
 </script>
 
 
 <style scoped lang="scss">
+	
+	.ghostClass{
+	  background-color:  #f9612e !important;
+	  color: #fff!important;
+	}
+	.chosenClass{
+	  background-color: #f9612e !important;
+	  color: #fff!important;
+	  opacity: 1!important;
+	}
+	.dragClass{
+	  background-color: #f9612e !important;
+	   color: #fff!important;
+	  opacity: 1 !important;
+	  box-shadow:none !important;
+	  outline:none !important;
+	  background-image:none !important;
+	}
+	.itxst{
+	  margin: 10px;
+	  
+	}
+	.title{
+	  padding: 6px 12px;
+	}
+	.col{
+	  width: 40%;
+	  flex: 1;
+	  padding: 10px;
+	  border: solid 1px #eee;
+	  border-radius:5px ;
+	  float: left;
+	}
+	.col+.col{
+	 margin-left: 10px;
+	}
+	
+	.item{
+	  padding: 6px 12px;
+	  margin: 0px 10px 0px 10px;
+	  border:  solid 1px #eee;
+	   background-color: #f1f1f1;
+	}
+	.item:hover{
+	  background-color: #fdfdfd;
+	  cursor: move;
+	}
+	.item+.item{
+	  border-top:none ;
+	  margin-top: 6px;
+	}
+	
 	.sku {
 		padding-left: 20px;
 		padding-right: 56px;

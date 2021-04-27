@@ -16,7 +16,7 @@
 				</template>
 			</el-table-column>
 
-			<el-table-column label="来源价格" width="250" align="center">
+			<el-table-column label="销售价格" width="250" align="center">
 				<template #default="scope">
 					<div class="GoodPrice">
 						<span>￥{{scope.row.minPrice}}</span>~
@@ -32,24 +32,31 @@
 					</div>
 				</template>
 			</el-table-column>
-
-			<el-table-column label="采集时间/状态" width="250" show-overflow-tooltip align="center">
+			<el-table-column label="被铺货数/被采购数" width="250" align="center">
+				<template #default="scope">
+					<div class="GoodStock">
+						<span>{{scope.row.Distribution}}</span>/
+						<span>{{scope.row.purchase}}</span>
+					</div>
+				</template>
+			</el-table-column>
+			<el-table-column label="入库时间/状态&nbsp;" width="250" show-overflow-tooltip align="center">
 				<template #default="scope">
 					<div class="GoodState">
 						<div>
-							<div v-if="scope.row.status == 0" style="color:#1CB903;">采集成功</div>
-							<div v-if="scope.row.status == 1" style="color:#1679FB;">正在采集</div>
-							<div v-if="scope.row.status == 2" style="color:#FF3A30;">
-								采集失败<span> : {{scope.row.stateReason}}</span></div>
+							<div v-if="scope.row.status == 0" style="color:#1CB903;">上架中</div>
+							<div v-if="scope.row.status == 1" style="color:#FF3A30;">已下架</div>
+							<!-- <div v-if="scope.row.status == 2" style="color:#FF3A30;">
+								采集失败<span> : {{scope.row.stateReason}}</span></div> -->
 						</div>
-						<div class="" v-if="scope.row.status != 1">
+						<div class="">
 							<div>{{scope.row.Ptime}}</div>
 						</div>
 					</div>
 				</template>
 			</el-table-column>
 
-			<el-table-column prop="PeoPle" label="采集人" width="250" align="center">
+			<el-table-column prop="PeoPle" label="入库人" width="250" align="center">
 				<template #default="scope">
 					<div class="GoodPeoPle">
 						<span>{{scope.row.PeoPle}}</span>
@@ -57,14 +64,16 @@
 				</template>
 			</el-table-column>
 
-			<el-table-column fixed="right" prop="collectionPeoPle" label="操作" width="150" align="center">
+			<el-table-column fixed="right" prop="collectionPeoPle" label="操作" width="250" align="center">
 				<template #default="scope" align="center">
-					<div v-if="scope.row.status != 1" class="GoodOperation">
-						<div v-if="scope.row.status == 2" @click='RetryShop(scope.$index)'>重试</div>
-						<div v-else @click="$router.push({path: '/main/goodsList/PersonalCollectionLibrary/edit', query: {specialId: [scope.row.id],Cpage:page.currentPage,Spage:page.PageSize}})"  v-permission="[$route, 'edit']">
+					<div class="GoodOperation">
+						<div @click='showDetail(scope.$index)'>查看</div>|
+						<div @click="$router.push({path: '/main/goodsList/PlatformGoodLibrary/edit', query: {specialId: [scope.row.id],Cpage:page.currentPage,Spage:page.PageSize}})">
 							编辑
 						</div>|
-						<div @click='DeleteShop(scope.$index)'>删除</div>
+						<div v-if="scope.row.status == 0" @click='Putdown(scope.$index)'>下架</div>
+						<div v-else @click='PutOn(scope.$index)'>上架</div>|
+						<div v-if="scope.row.status == 1" @click='DeleteShop(scope.$index)'>删除</div>
 					</div>
 				</template>
 			</el-table-column>
@@ -72,18 +81,32 @@
 		</el-table>
 		<div class="footerBox">
 			<div class="footerBtm" v-show="selectId" style="padding-left: 10px;">
-				<el-button @click='BatchRetryShop()' :disabled="!selectId[0]" type="danger" size="small">批量重试</el-button>
+				<el-button @click='BatchPutOn()' :disabled="!selectId[0]" type="danger" size="small">批量上架</el-button>
+				<el-button @click='BatchPutdown()' :disabled="!selectId[0]" type="danger" size="small">批量下架</el-button>
 				<el-button @click='BatchDeleteShop()' :disabled="!selectId[0]" type="danger" size="small">批量删除</el-button>
-		<!-- 		<el-button @click="$router.push({path: '/main/goodsList/PersonalCollectionLibrary/edit',query: {specialId:selectId,Cpage:page.currentPage,Spage:page.PageSize}})"
-				:disabled="!selectId[0]" type="danger" size="small">批量编辑</el-button> -->
 			</div>
 			<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page.currentPage"
 				:page-sizes="page.PageSizeS" :page-size="page.PageSize" layout="total, sizes, prev, pager, next, jumper" 
 				:total="TabData.total">
 			</el-pagination>
 		</div>
+		<el-dialog
+		  title="预览"
+		  v-model="PreviewShow"
+		  top='5vh'
+		  center>
+		  <preview  
+		  :previewData='editData?editData:[]'
+		  >
+		  </preview>
+		  <template #footer>
+		    <span class="dialog-footer">
+		      <el-button type="primary" @click="PreviewShow = false">确 定</el-button>
+		    </span>
+		  </template>
+		
+		</el-dialog>
 	</div>
-
 </template>
 
 <script>
@@ -91,16 +114,20 @@
 		defineComponent
 	} from 'vue'
 	import WideGoodsItem from "@/components/goods/WideGoodsItem.vue"
+	import preview from "@/components/goods/edit/preview"
 	import $api from "@/api"
 
 	export default defineComponent({
-		name: "personalList",
+		name: "platformList",
 		components: {
 		  // edit,
 		  WideGoodsItem,
+		  preview,
 		},
 		data() {
 			return {
+				editData:'',
+				PreviewShow:false,
 				TabData: [],
 				multipleSelection: [],
 				selectId:[],
@@ -116,12 +143,19 @@
 			this.getPersonLbShopListData()
 		},
 		methods: {
-
-
+			//查看
+			showDetail(sl_id){
+				var _this = this
+				$api.goodsApi.personLibrary.getgoodDetailData({
+					id: sl_id,
+				}).then((data) => {
+					_this.editData = data.list
+					_this.PreviewShow = true;
+				})	
+			},
 			//批量删除
 			BatchDeleteShop() {
 				var that = this
-				var arr = [];
 				var data = this.multipleSelection;
 				
 				this.$confirm('删除后，将无法恢复该商品记录，请谨慎删除！', '确认要删除这件商品吗？', {
@@ -153,40 +187,73 @@
 				})
 				console.log(data)
 			},
-
-
-			BatchRetryShop(){	
+			//批量上架
+			BatchPutOn(){	
 				var that = this
-				var arr = [];
+
 				var data = this.multipleSelection;
-				
-				this.$confirm('重试，将重新采集该商品', '是否批量重试？', {
+				this.$confirm('是否批量上架', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
 					type: 'warning'
 				}).then(() => {
 					data.forEach(function(item, index) {
-						if(item.collectionState != 2){
-							// that.$message({
-							//           message: '只能重试采集失败商品',
-							//           type: 'warning'
-							//         });
+						if(item.status != '1'){
 							 return false
 						}
 						that.TabData.list.forEach(function(itemI, indexI) {							
 							if (item.id === itemI.id) {
-								that.TabData.list[indexI].collectionState = '0'
+								that.TabData.list[indexI].status = '0'
 							}
 					
 						})
 					
 					})
-					// this.$message({
-					//           message: '删除成功',
-					//           type: 'success'
-					//         });
 				})
-				console.log(data)
+			},
+			//批量下架
+			BatchPutdown(){
+				var that = this
+			
+				var data = this.multipleSelection;
+				this.$confirm('是否批量下架', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					data.forEach(function(item, index) {
+						if(item.status != '0'){
+							 return false
+						}
+						that.TabData.list.forEach(function(itemI, indexI) {							
+							if (item.id === itemI.id) {
+								that.TabData.list[indexI].status = '1'
+							}
+					
+						})
+					
+					})
+				})
+			},
+			//上架
+			PutOn(idx){
+				this.$confirm('是否上架', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					this.TabData.list[idx].status = '0';
+				})
+			},
+			//下架
+			Putdown(idx){
+				this.$confirm('是否下架', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					this.TabData.list[idx].status = '1';
+				})
 			},
 			//删除当前商品
 			DeleteShop(index) {
@@ -200,24 +267,9 @@
 					this.TabData.list.splice(index, 1);
 				})
 			},
-			RetryShop(index) {
-				this.$confirm('重试，将重新采集该商品', '是否重试', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					console.log(this.TabData.list[index])
-					this.TabData.list[index].status = '1';
-					console.log(this.TabData.list[index])
-					this.$message({
-					          message: '正在采集',
-					          type: 'success'
-					        });
-				})
-			},
 			getPersonLbShopListData() {
 				var that = this
-				$api.goodsApi.personLibrary.getPersonLbShopListData({
+				$api.goodsApi.personLibrary.getplatformShopListData({
 				  page: that.page.currentPage,
 				  pageSize: that.page.PageSize,
 				}).then((data) => {
