@@ -1,8 +1,8 @@
 <template>
   <div class="preview">
     <div class="header">
-      <h3>编辑页面：</h3>
-      <span class="tips">下图仅供展示页面及模块信息，实际效果根据配置的数据可能不同</span>
+      <h3>页面概览：</h3>
+      <span class="tips">下图仅供展示页面及模块结构信息，实际效果根据配置的数据可能不同</span>
     </div>
     <div class="preview-img-wrapper">
       <!--首页-->
@@ -301,6 +301,10 @@ export default defineComponent({
 
               &:hover {
                 background-color: #F9612E;
+
+                &.el-icon-close {
+                  background-color: #F56C6C;
+                }
               }
             }
           }

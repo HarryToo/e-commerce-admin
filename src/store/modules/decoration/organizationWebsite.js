@@ -103,6 +103,7 @@ export default {
         // 保存网站装修-机构版全部配置数据
         async saveAllConfigs({commit, state}) {
             commit('setUpdateTime')
+            console.log(state)
             return await $api.operationApi.website.organization.saveConfigs({
                 configs: JSON.stringify(state)
             })

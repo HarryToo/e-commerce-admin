@@ -25,7 +25,10 @@
             </div>
           </el-form-item>
         </el-form>
-        <i class="el-icon-error" title="删除此项" v-if="formDataList.length > 1" @click="deleteItem(index)"></i>
+        <div class="operating-area">
+          <i class="el-icon-top" title="上移一层" v-if="index > 0" @click="moveUpItem(index)"></i>
+          <i class="el-icon-close" title="删除此项" v-if="formDataList.length > 1" @click="deleteItem(index)"></i>
+        </div>
       </div>
     </div>
     <el-button size="small" icon="el-icon-circle-plus" class="custom" style="display: block;width: 100%;"
@@ -46,6 +49,7 @@ import {computed, defineComponent, provide, ref, watch} from 'vue'
 import {useStore} from 'vuex'
 import FileUpload from '@/components/common/FileUpload'
 import ConfigDialogInner from '../../../../../components/config-dialog-inner'
+import {ElMessage} from "element-plus";
 
 const maxLength = 5
 
@@ -73,6 +77,12 @@ export default defineComponent({
       })
     }
 
+    const moveUpItem = (index) => {
+      const delArr = formDataList.value.splice(index, 1)
+      formDataList.value.splice(index - 1, 0, delArr[0])
+      ElMessage.success('移动成功')
+    }
+
     const deleteItem = (index) => {
       formDataList.value.splice(index, 1)
     }
@@ -96,6 +106,7 @@ export default defineComponent({
       formDataList,
       currOperationIndex,
       addItem,
+      moveUpItem,
       deleteItem,
       setLink
     }
@@ -108,8 +119,7 @@ export default defineComponent({
   margin-bottom: 20px;
 
   .form-item {
-    display: flex;
-    align-items: flex-start;
+    position: relative;
     padding: 18px 10px 0;
     border-bottom: 1px dashed #EEEEEE;
     overflow: hidden;
@@ -126,17 +136,37 @@ export default defineComponent({
       border-bottom: none;
     }
 
-    .el-form {
-      flex-grow: 1;
+    .operating-area {
+      position: absolute;
+      top: 20px;
+      right: 10px;
+
+      i {
+        display: block;
+        width: 17px;
+        height: 17px;
+        text-align: center;
+        line-height: 17px;
+        margin-bottom: 10px;
+        font-size: 12px;
+        color: #FFFFFF;
+        background-color: #333333;
+        border-radius: 50%;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #F9612E;
+
+          &.el-icon-close {
+            background-color: #F56C6C;
+          }
+        }
+      }
     }
 
-    .el-icon-error {
-      margin-left: 10px;
-      font-size: 20px;
-      cursor: pointer;
-
-      &:hover {
-        color: #F56C6C;
+    &:first-child {
+      .operating-area {
+        top: 0;
       }
     }
   }

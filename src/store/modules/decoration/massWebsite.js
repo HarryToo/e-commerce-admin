@@ -103,6 +103,7 @@ export default {
         // 保存网站装修-大众版全部配置数据
         async saveAllConfigs({commit, state}) {
             commit('setUpdateTime')
+            console.log(state)
             return await $api.operationApi.website.mass.saveConfigs({
                 configs: JSON.stringify(state)
             })
